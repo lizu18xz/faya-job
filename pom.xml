@@ -30,6 +30,7 @@
     <quartz.version>2.3.0</quartz.version>
     <codehaus.jackson.version>1.9.13</codehaus.jackson.version>
     <curator.version>2.12.0</curator.version>
+    <kryo-shaded.version>4.0.1</kryo-shaded.version>
   </properties>
 
   <dependencyManagement>
@@ -133,7 +134,7 @@
       <dependency>
         <groupId>com.esotericsoftware</groupId>
         <artifactId>kryo-shaded</artifactId>
-        <version>4.0.1</version>
+        <version>${kryo-shaded.version}</version>
       </dependency>
 
       <dependency>
