@@ -11,3 +11,8 @@ server:
   servlet:
     context-path: /manager
 
+faya-job:
+  zookeeperServer: 192.168.76.139:2181
+  registerPath: /job-register
+
+

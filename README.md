@@ -19,7 +19,7 @@ jar-executor  可执行jar执行器
 ### zk 整合 进行服务注册和发现
 - auto configureation
 - 服务端启动后创建zkClient   客户端启动后也需要创建zkClient
-
+- 注册服务  发现服务
 
 
 

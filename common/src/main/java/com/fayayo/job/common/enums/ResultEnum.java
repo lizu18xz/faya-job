@@ -16,6 +16,12 @@ public enum ResultEnum {
      * */
     NO_AUTH_ACCESS(400,"无权限访问,请联系管理员"),
 
+
+    /**
+     * zk异常
+     * */
+    GET_CHILDNODE_ERROR(11001,"get childNode error!!!"),
+    DISCOVER_SERVICE_NULL(11002,"get service is null!!!"),
     ;
 
     private Integer code;

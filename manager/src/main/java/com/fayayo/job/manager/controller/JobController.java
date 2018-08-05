@@ -1,5 +1,7 @@
 package com.fayayo.job.manager.controller;
 
+import com.fayayo.job.common.enums.ResultEnum;
+import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.common.result.ResultVO;
 import com.fayayo.job.common.result.ResultVOUtil;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +17,9 @@ public class JobController {
     @GetMapping("/test")
     public ResultVO<String>test(){
 
-        return ResultVOUtil.success("www");
+        throw new CommonException(ResultEnum.LOGIN_FAIL);
+
+        //return ResultVOUtil.success("www");
     }
 
 
