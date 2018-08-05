@@ -128,31 +128,21 @@ public class ZKCuratorClient {
     }
 
 
-    public String getData(String path,String address){
+    /**
+     *@描述 获取节点下面的值  ip地址
+     */
+    public String getData(String path){
 
-        String dataPath=path+"/"+address;
-
+        String dataPath=path;
         try {
             byte[] result=client.getData().forPath(dataPath);
-
             return new String(result);
-
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
 
     }
-
-
-
-
-
-
-
-
-
-
 
 
 }

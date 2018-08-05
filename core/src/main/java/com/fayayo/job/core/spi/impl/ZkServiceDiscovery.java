@@ -5,6 +5,7 @@ import com.fayayo.job.core.zookeeper.ZKCuratorClient;
 import com.fayayo.job.core.zookeeper.ZkProperties;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author dalizu on 2018/8/4.
@@ -41,7 +42,16 @@ public class ZkServiceDiscovery implements ServiceDiscovery {
 
         List<String> list=zkCuratorClient.getChildNode(serviceNode);
 
+        list=list.stream().map(e->{
+            return serviceNode+"/"+e;//加上前缀返回完整的路径
+        }).collect(Collectors.toList());
+
         return list;
+    }
+
+    @Override
+    public String getData(String path) {
+        return zkCuratorClient.getData(path);
     }
 
 

@@ -25,5 +25,6 @@ public interface ServiceDiscovery {
      */
     List<String> discover(String serviceName);
 
+    String getData(String path);
 
 }

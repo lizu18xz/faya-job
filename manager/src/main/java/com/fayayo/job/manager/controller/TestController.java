@@ -41,11 +41,6 @@ public class TestController {
 
 
 
-
-
-
-
-
     @GetMapping("/discover")
     public ResultVO<String> test(){
 
@@ -59,7 +54,9 @@ public class TestController {
         }
 
         for (String s:list){
-            System.out.println(s);
+
+            System.out.println("address:{}"+zkServiceDiscovery.getData(s));
+
         }
 
         return ResultVOUtil.success();
