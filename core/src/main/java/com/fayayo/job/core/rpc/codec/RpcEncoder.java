@@ -4,7 +4,11 @@ import com.fayayo.job.core.rpc.util.SerializationUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
-
+/**
+ * @author dalizu on 2018/8/7.
+ * @version v1.0
+ * @desc netty编码器
+ */
 public class RpcEncoder extends MessageToByteEncoder {
 
     private Class<?> genericClass;

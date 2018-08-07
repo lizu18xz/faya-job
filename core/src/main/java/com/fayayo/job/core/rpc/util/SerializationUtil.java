@@ -9,7 +9,11 @@ import org.objenesis.ObjenesisStd;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
+/**
+ * @author dalizu on 2018/8/7.
+ * @version v1.0
+ * @desc 序列化工具
+ */
 public class SerializationUtil {
 
     private static Map<Class<?>, Schema<?>> cachedSchema = new ConcurrentHashMap<>();

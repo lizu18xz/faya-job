@@ -6,7 +6,11 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 
 import java.util.List;
-
+/**
+ * @author dalizu on 2018/8/7.
+ * @version v1.0
+ * @desc netty解码器
+ */
 public class RpcDecoder extends ByteToMessageDecoder {
 
     private Class<?> genericClass;

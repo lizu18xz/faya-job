@@ -5,7 +5,14 @@ import com.fayayo.job.core.rpc.bean.RpcResponse;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import lombok.extern.slf4j.Slf4j;
 
+/**
+ * @author dalizu on 2018/8/7.
+ * @version v1.0
+ * @desc netty 服务端处理类
+ */
+@Slf4j
 public class NettyServerHandler  extends SimpleChannelInboundHandler<RpcRequest> {
 
 

@@ -9,8 +9,14 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import lombok.extern.slf4j.Slf4j;
 
-
+/**
+ * @author dalizu on 2018/8/7.
+ * @version v1.0
+ * @desc netty 服务端类
+ */
+@Slf4j
 public class NettyServer {
 
     //服务启动

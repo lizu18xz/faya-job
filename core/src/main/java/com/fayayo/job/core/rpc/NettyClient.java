@@ -9,8 +9,14 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import lombok.extern.slf4j.Slf4j;
 
-
+/**
+ * @author dalizu on 2018/8/7.
+ * @version v1.0
+ * @desc netty 客户端类
+ */
+@Slf4j
 public class NettyClient {
     private static final String SERVER_HOST = "127.0.0.1";
     //模拟调用
