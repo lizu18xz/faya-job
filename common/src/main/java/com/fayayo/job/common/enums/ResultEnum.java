@@ -22,6 +22,11 @@ public enum ResultEnum {
      * */
     GET_CHILDNODE_ERROR(11001,"get childNode error!!!"),
     DISCOVER_SERVICE_NULL(11002,"get service is null!!!"),
+
+
+    CREATE_SCHEDULE_ERROR(20001,"创建调度任务失败!!!")
+
+
     ;
 
     private Integer code;
