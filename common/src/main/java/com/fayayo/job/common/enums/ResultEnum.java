@@ -24,8 +24,8 @@ public enum ResultEnum {
     DISCOVER_SERVICE_NULL(11002,"get service is null!!!"),
 
 
-    CREATE_SCHEDULE_ERROR(20001,"创建调度任务失败!!!")
-
+    CREATE_SCHEDULE_ERROR(20001,"创建调度任务失败!!!"),
+    JOB_REPEAT_ERROR(20002,"不能重复添加相同的调度任务!!!")
 
     ;
 

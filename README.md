@@ -75,6 +75,10 @@ jar-executor  可执行jar执行器
 6-  默认提供执行器是进行数据交换 或者 运行可执行jar的 
 7-  可以扩展执行器，会新建监听的端口
 
+### 参考学习:
+- https://www.jianshu.com/p/634d2a6fae7b  quartz任务misfire策略
+
+
 
 ### 开发中 欢迎加入QQ群进行技术讨论
 ### QQ:854622503

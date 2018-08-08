@@ -25,25 +25,32 @@ public class JobSchedulerCore {
 
        *@参数  任务id,任务组,任务调度表达式
      */
-    public void addJob(String jobName,String jobGroup,String cron){
+    public void addJob(String jobName,String jobGroup,String cron,String startAt){
 
         try {
             //TODO 判断是否重复添加job
+
+            if (checkExists(jobName, jobGroup)) {
+                log.info("addJob fail, job already exist, jobGroup:{}, jobName:{}", jobGroup, jobName);
+                throw new CommonException(ResultEnum.CREATE_SCHEDULE_ERROR);
+            }
 
             JobKey jobKey = new JobKey(jobName, jobGroup);
             TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
 
             //加入job到quartz
             JobDetail jobDetail= JobBuilder.newJob(RpcJobBean.class)
-                    .withIdentity(jobName,jobGroup)
-                    //.usingJobData()  传递参数
+                    .withIdentity(jobKey)
                     .build();
             CronTrigger trigger = (CronTrigger) TriggerBuilder
                     .newTrigger()
-                    .withIdentity(jobName,jobGroup)
+                    //.startAt()      开始时间
+                    .withIdentity(triggerKey)
                     .withSchedule(
-                            CronScheduleBuilder.cronSchedule(cron)
+                            CronScheduleBuilder.cronSchedule(cron).//quartz提出了misfire的理论，让任务在错过之后，还能正常的运行。
+                                    withMisfireHandlingInstructionDoNothing()//所有的misfire不管，执行下一个周期的任务
                     ).build();
+
             try {
                 scheduler.start();
                 scheduler.scheduleJob(jobDetail,trigger);
@@ -56,25 +63,12 @@ public class JobSchedulerCore {
         }
     }
 
-   /* TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
-    JobKey jobKey = new JobKey(jobName, jobGroup);
-    // TriggerKey valid if_exists
-        if (checkExists(jobName, jobGroup)) {
-        logger.info(">>>>>>>>> addJob fail, job already exist, jobGroup:{}, jobName:{}", jobGroup, jobName);
-        return false;
-    }
-        logger.info(">>>>>>>>> addJob cronScheduleBuilder,{},{}", jobName, jobGroup);
-    // CronTrigger : TriggerKey + cronExpression	// withMisfireHandlingInstructionDoNothing 忽略掉调度终止过程中忽略的调度
-    CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression).withMisfireHandlingInstructionDoNothing();
-    CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).withSchedule(cronScheduleBuilder).build();
-    Class<? extends Job> jobClass_ = RemoteHttpJobBean.class;   // Class.forName(jobInfo.getJobClass());
-    JobDetail jobDetail = JobBuilder.newJob(jobClass_).withIdentity(jobKey).build();*/
 
 
-   /* public static boolean checkExists(String jobName, String jobGroup) throws SchedulerException{
+   public boolean checkExists(String jobName, String jobGroup) throws SchedulerException{
         TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
         return scheduler.checkExists(triggerKey);
-    }*/
+    }
 
 
 }
