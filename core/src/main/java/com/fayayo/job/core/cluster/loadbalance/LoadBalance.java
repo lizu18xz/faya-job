@@ -1,4 +1,4 @@
-package com.fayayo.job.core.loadbalance;
+package com.fayayo.job.core.cluster.loadbalance;
 
 import java.util.List;
 

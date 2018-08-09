@@ -43,7 +43,7 @@ public class DataAccessConfiguration {
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(
             EntityManagerFactoryBuilder builder,@Qualifier("dataSource") DataSource dataSource) {
 
         return builder
@@ -62,9 +62,9 @@ public class DataAccessConfiguration {
 
     //配置事务
     @Bean
-    public PlatformTransactionManager platformTransactionManager(@Qualifier("entityManagerFactoryBean")
-                                                                             LocalContainerEntityManagerFactoryBean entityManagerFactoryBean) {
-        JpaTransactionManager transactionManager = new JpaTransactionManager(entityManagerFactoryBean.getObject());
+    public PlatformTransactionManager platformTransactionManager(@Qualifier("entityManagerFactory")
+                                                                             LocalContainerEntityManagerFactoryBean entityManagerFactory) {
+        JpaTransactionManager transactionManager = new JpaTransactionManager(entityManagerFactory.getObject());
 
         return transactionManager;
     }

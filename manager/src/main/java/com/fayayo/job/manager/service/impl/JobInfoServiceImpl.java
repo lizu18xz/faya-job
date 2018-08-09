@@ -21,6 +21,9 @@ public class JobInfoServiceImpl implements JobInfoService {
     @Autowired
     private JobInfoRepository jobInfoRepository;
 
+    @Autowired
+    private JobSchedulerCore jobSchedulerCore;
+
     @Override
     public JobInfo addJob(JobInfoParams jobInfoParams) {
 
@@ -32,7 +35,7 @@ public class JobInfoServiceImpl implements JobInfoService {
         jobInfo=jobInfoRepository.save(jobInfo);
         //把任务加入到quartz调度
 
-
+        //jobSchedulerCore.addJob(jobInfo.getId(),jobInfo.getJobGroup(),jobInfo.getCron(),jobInfo.getStartAt());
 
         return jobInfo;
     }

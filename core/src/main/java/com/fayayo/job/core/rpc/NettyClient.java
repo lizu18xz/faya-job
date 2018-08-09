@@ -27,7 +27,7 @@ public class NettyClient {
         rpcRequest.setServerAddress("10.10.10.119");
         RpcResponse rpcResponse=client.send(rpcRequest);
 
-        System.out.println(rpcResponse.getResult());
+        log.info("result:{}",rpcResponse.getResult());
 
     }
 
@@ -38,7 +38,8 @@ public class NettyClient {
             final Bootstrap bootstrap = new Bootstrap();
             bootstrap.group(eventLoopGroup);
             bootstrap.channel(NioSocketChannel.class);
-            bootstrap.option(ChannelOption.SO_REUSEADDR, true);
+            bootstrap.option(ChannelOption.TCP_NODELAY, true);
+            bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
 
             NettyClientHandler nettyClientHandler=new NettyClientHandler();
 

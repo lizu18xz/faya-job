@@ -34,6 +34,7 @@ public class NettyServer {
                 protected void initChannel(SocketChannel ch) throws Exception {
                     //outBound(处理写)  encoder
                     ch.pipeline().addLast(new RpcEncoder(RpcResponse.class));
+
                     //inBound (处理读)  decoder  -->send
                     ch.pipeline().addLast(new RpcDecoder(RpcRequest.class));
                     ch.pipeline().addLast(new NettyServerHandler());

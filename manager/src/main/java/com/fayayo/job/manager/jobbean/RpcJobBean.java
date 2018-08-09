@@ -15,8 +15,6 @@ public class RpcJobBean extends QuartzJobBean {
 
         log.info("RpcJobBean start......");
 
-
-
     }
 
 
