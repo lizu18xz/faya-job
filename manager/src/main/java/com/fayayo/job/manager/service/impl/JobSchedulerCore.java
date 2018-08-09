@@ -5,7 +5,6 @@ import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.common.util.DateTimeUtil;
 import com.fayayo.job.manager.jobbean.RpcJobBean;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,17 +28,17 @@ public class JobSchedulerCore {
 
        *@参数  任务id,任务组,任务调度表达式
      */
-    public void addJob(String jobName,String jobGroup,String cron,String startAt){
+    public void addJob(String jobId,String jobGroup,String cron,Date startAt){
 
         try {
             //判断是否重复添加job
-            if (checkExists(jobName, jobGroup)) {
-                log.info("addJob fail, job already exist, jobGroup:{}, jobName:{}", jobGroup, jobName);
+            if (checkExists(jobId, jobGroup)) {
+                log.info("addJob fail, job already exist, jobGroup:{}, jobName:{}", jobGroup, jobId);
                 throw new CommonException(ResultEnum.CREATE_SCHEDULE_ERROR);
             }
 
-            JobKey jobKey = new JobKey(jobName, jobGroup);
-            TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
+            JobKey jobKey = new JobKey(jobId, jobGroup);
+            TriggerKey triggerKey = TriggerKey.triggerKey(jobId, jobGroup);
 
             //加入job到quartz
             JobDetail jobDetail= JobBuilder.newJob(RpcJobBean.class)
@@ -50,10 +49,10 @@ public class JobSchedulerCore {
                     withMisfireHandlingInstructionDoNothing();//所有的misfire不管，执行下一个周期的任务
 
             CronTrigger trigger=null;
-            if(StringUtils.isNotEmpty(startAt)){
+            if(startAt!=null){
                  trigger = (CronTrigger) TriggerBuilder
                         .newTrigger()
-                        .startAt(DateTimeUtil.strToDate(startAt))      //开始时间
+                        .startAt(startAt)      //开始时间
                         .withIdentity(triggerKey)
                         .withSchedule(cronScheduleBuilder).build();
             }else {
@@ -65,7 +64,7 @@ public class JobSchedulerCore {
             try {
                 scheduler.start();
                 Date date=scheduler.scheduleJob(jobDetail,trigger);
-                log.info("成功加入任务到调度中心-->jobName:{},jobGroup:{},加入时间:{}",jobName,jobGroup,DateTimeUtil.dateToStr(date));
+                log.info("成功加入任务到调度中心-->jobName:{},jobGroup:{},任务开始启动时间:{}",jobId,jobGroup,DateTimeUtil.dateToStr(date));
             } catch (SchedulerException e) {
                 e.printStackTrace();
                 log.error("创建调度任务失败");
@@ -83,6 +82,25 @@ public class JobSchedulerCore {
         TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
         return scheduler.checkExists(triggerKey);
     }
+
+
+    /**
+
+     *@描述 从quartz中删除某个任务
+
+     *@创建人  dalizu
+
+     *@创建时间  2018/8/9
+
+     */
+    public void removeJob(){
+
+    }
+
+
+
+
+
 
 
 }

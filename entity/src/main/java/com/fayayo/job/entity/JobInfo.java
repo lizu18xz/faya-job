@@ -3,9 +3,8 @@ package com.fayayo.job.entity;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+
+import javax.persistence.*;
 import java.util.Date;
 
 @Getter
@@ -15,6 +14,7 @@ import java.util.Date;
 public class JobInfo {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private Integer jobGroup;

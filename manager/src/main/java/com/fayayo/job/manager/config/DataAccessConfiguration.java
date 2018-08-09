@@ -61,7 +61,7 @@ public class DataAccessConfiguration {
     }
 
     //配置事务
-    @Bean
+    @Bean("transactionManager")
     public PlatformTransactionManager platformTransactionManager(@Qualifier("entityManagerFactory")
                                                                              LocalContainerEntityManagerFactoryBean entityManagerFactory) {
         JpaTransactionManager transactionManager = new JpaTransactionManager(entityManagerFactory.getObject());

@@ -3,6 +3,7 @@ package com.fayayo.job.entity.params;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -17,20 +18,20 @@ import java.util.Date;
 public class JobInfoParams {
 
 
-    @NotNull(message = "任务名称不能为空")
-    private String jobName;
 
     @NotNull(message = "任务的jobGroup不能为空")
-    private String jobGroup;
+    private Integer jobGroup;
 
     @NotNull(message = "执行周期不能为空")
     private String cron;
 
+    @NotNull(message = "任务的描述不能为空")
     private String jobDesc;
 
     @NotNull(message = "执行类型不能为空")
     private String jobType;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startAt;
 
     @Override
