@@ -1,6 +1,6 @@
-package com.fayayo.job.core.rpc.codec;
+package com.fayayo.job.core.transport.codec;
 
-import com.fayayo.job.core.rpc.util.SerializationUtil;
+import com.fayayo.job.core.transport.util.SerializationUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;

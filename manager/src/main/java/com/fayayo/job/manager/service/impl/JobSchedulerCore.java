@@ -3,7 +3,7 @@ package com.fayayo.job.manager.service.impl;
 import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.common.util.DateTimeUtil;
-import com.fayayo.job.manager.jobbean.RpcJobBean;
+import com.fayayo.job.manager.core.jobbean.RpcJobBean;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;

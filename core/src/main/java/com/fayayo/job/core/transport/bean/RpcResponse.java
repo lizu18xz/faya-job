@@ -1,4 +1,4 @@
-package com.fayayo.job.core.rpc.bean;
+package com.fayayo.job.core.transport.bean;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,7 +1,7 @@
-package com.fayayo.job.core.rpc;
+package com.fayayo.job.core.transport;
 
-import com.fayayo.job.core.rpc.bean.RpcRequest;
-import com.fayayo.job.core.rpc.bean.RpcResponse;
+import com.fayayo.job.core.transport.bean.RpcRequest;
+import com.fayayo.job.core.transport.bean.RpcResponse;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;

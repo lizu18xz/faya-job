@@ -1,4 +1,4 @@
-package com.fayayo.job.core.cluster.loadbalance;
+package com.fayayo.job.manager.core.cluster.loadbalance;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,8 +6,12 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+/**
+ * @author dalizu on 2018/8/10.
+ * @version v1.0
+ * @desc 负载均衡算法 权重
+ */
 public class WeightRoundRobinLoadBalance implements LoadBalance {
-
 
     private volatile EndpointHolder endpointHolder;
 
@@ -77,11 +81,8 @@ public class WeightRoundRobinLoadBalance implements LoadBalance {
 
 
     public static void main(String[] args) {
-
         LoadBalance loadBalance=new WeightRoundRobinLoadBalance();
-
         List<Endpoint>list=new ArrayList<>();
-
         list.add(new Endpoint("10",9001,8));
         list.add(new Endpoint("11",9002,5));
         list.add(new Endpoint("12",9003,7));
@@ -90,8 +91,6 @@ public class WeightRoundRobinLoadBalance implements LoadBalance {
         loadBalance.onRefresh(list);//刷新地址
         Endpoint endpoint=loadBalance.select();//获取一个地址
         System.out.println(endpoint.toString());
-
-
     }
 
 

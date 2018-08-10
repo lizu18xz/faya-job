@@ -1,6 +1,6 @@
-package com.fayayo.job.core.rpc;
+package com.fayayo.job.core.transport;
 
-import com.fayayo.job.core.rpc.bean.RpcResponse;
+import com.fayayo.job.core.transport.bean.RpcResponse;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package com.fayayo.job.core.rpc.util;
+package com.fayayo.job.core.transport.util;
 
 import com.dyuproject.protostuff.LinkedBuffer;
 import com.dyuproject.protostuff.ProtostuffIOUtil;

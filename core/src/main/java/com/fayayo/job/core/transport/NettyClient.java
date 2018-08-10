@@ -1,9 +1,9 @@
-package com.fayayo.job.core.rpc;
+package com.fayayo.job.core.transport;
 
-import com.fayayo.job.core.rpc.bean.RpcRequest;
-import com.fayayo.job.core.rpc.bean.RpcResponse;
-import com.fayayo.job.core.rpc.codec.RpcDecoder;
-import com.fayayo.job.core.rpc.codec.RpcEncoder;
+import com.fayayo.job.core.transport.bean.RpcRequest;
+import com.fayayo.job.core.transport.bean.RpcResponse;
+import com.fayayo.job.core.transport.codec.RpcDecoder;
+import com.fayayo.job.core.transport.codec.RpcEncoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
