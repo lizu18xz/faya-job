@@ -1,5 +1,7 @@
 package com.fayayo.job.manager.core.jobpool;
 
+import com.fayayo.job.manager.core.trigger.TriggerHelper;
+
 /**
  * @author dalizu on 2018/8/10.
  * @version v1.0
@@ -30,7 +32,7 @@ public class RpcJobHelper {
         rpcJobThreadPool.execute(new Runnable() {
             @Override
             public void run() {
-
+                TriggerHelper.Trigger(jobId);
             }
         });
 

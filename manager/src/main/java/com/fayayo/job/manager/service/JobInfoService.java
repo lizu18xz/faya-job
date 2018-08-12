@@ -11,9 +11,16 @@ import com.fayayo.job.entity.params.JobInfoParams;
 public interface JobInfoService {
 
      /**
-       *@描述 新增job
-     */
-    public JobInfo addJob(JobInfoParams jobInfoParams);
+      *@描述 新增job
+      */
+
+     JobInfo addJob(JobInfoParams jobInfoParams);
+
+     /**
+      *@描述 获取jobInfo
+      */
+     JobInfo findOne(Integer jobId);
+
 
 
 }

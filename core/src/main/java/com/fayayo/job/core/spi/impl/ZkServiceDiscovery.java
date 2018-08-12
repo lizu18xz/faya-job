@@ -1,8 +1,11 @@
 package com.fayayo.job.core.spi.impl;
 
+import com.fayayo.job.common.constants.CommonConstants;
 import com.fayayo.job.core.spi.ServiceDiscovery;
 import com.fayayo.job.core.zookeeper.ZKCuratorClient;
 import com.fayayo.job.core.zookeeper.ZkProperties;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,6 +15,7 @@ import java.util.stream.Collectors;
  * @version v1.0
  * @desc
  */
+@Slf4j
 public class ZkServiceDiscovery implements ServiceDiscovery {
 
 
@@ -35,12 +39,16 @@ public class ZkServiceDiscovery implements ServiceDiscovery {
 
      */
     @Override
-    public List<String> discover(String serviceName) {
+    public List<String> discover(String groupId) {
 
         //获取service节点
-        String serviceNode=zkProperties.getRegisterPath()+"/"+serviceName;
+        String serviceNode=zkProperties.getRegisterPath()+"/"+groupId;
 
         List<String> list=zkCuratorClient.getChildNode(serviceNode);
+        if(CollectionUtils.isEmpty(list)){
+            log.info(CommonConstants.FAYA_LOG+"找不到对应执行器:{} 的注册地址,请先确定服务是否部署",groupId);
+            return null;
+        }
 
         list=list.stream().map(e->{
             return serviceNode+"/"+e;//加上前缀返回完整的路径

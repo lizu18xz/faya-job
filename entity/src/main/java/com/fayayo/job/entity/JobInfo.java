@@ -25,6 +25,8 @@ public class JobInfo {
 
     private String jobType;
 
+    private Integer jobLoadBalance;
+
     private Date startAt;
 
     private Date endAt;

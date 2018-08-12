@@ -41,4 +41,14 @@ public class JobInfoServiceImpl implements JobInfoService {
         return jobInfo;
     }
 
+    @Override
+    public JobInfo findOne(Integer jobId) {
+
+        JobInfo jobInfo=jobInfoRepository.findById(jobId).orElse(null);
+
+        log.debug("查询单个任务信息, 结果:{}", jobInfo);
+
+        return jobInfo;
+    }
+
 }

@@ -10,6 +10,7 @@ import com.fayayo.job.core.zookeeper.ZKCuratorClient;
 import com.fayayo.job.core.zookeeper.ZkProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,12 +31,12 @@ public class TestController {
     @Autowired
     private ZkProperties zkProperties;
 
-    @GetMapping("/register")
-    public void register(){
+    @GetMapping("/register/{ip}")
+    public void register(@PathVariable("ip") String ip){
 
         ZkServiceRegistry zkServiceRegistry=new ZkServiceRegistry(zkCuratorClient,zkProperties);
 
-        zkServiceRegistry.register("testService","192.168.76.111");
+        zkServiceRegistry.register("1",ip);
 
     }
 

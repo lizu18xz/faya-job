@@ -13,7 +13,7 @@ public interface ServiceRegistry {
 
      *@描述 服务注册
 
-     *@参数  服务名称，服务地址
+     *@参数  服务名称(执行器标示)，服务地址
 
      *@返回值  void
 

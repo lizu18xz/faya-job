@@ -32,7 +32,9 @@ public class ZkRegisterTest {
 
         ZkServiceRegistry zkServiceRegistry=new ZkServiceRegistry(zkCuratorClient,zkProperties);
 
-        zkServiceRegistry.register("testService","192.168.76.111");
+        //groupId=1
+
+        zkServiceRegistry.register("1","192.168.76.111");
 
     }
 

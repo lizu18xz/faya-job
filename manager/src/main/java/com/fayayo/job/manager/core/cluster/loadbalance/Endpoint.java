@@ -25,10 +25,6 @@ public class Endpoint {
         return port;
     }
 
-    public String toString() {
-        return host + ":" + port;
-    }
-
     public boolean equals(Object o) {
         if (!(o instanceof Endpoint)) {
             return false;
@@ -47,5 +43,14 @@ public class Endpoint {
 
     public void setWeight(Integer weight) {
         this.weight = weight;
+    }
+
+    @Override
+    public String toString() {
+        return "Endpoint{" +
+                "host='" + host + '\'' +
+                ", port=" + port +
+                ", weight=" + weight +
+                '}';
     }
 }

@@ -13,6 +13,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class RoundRobinLoadBalance implements LoadBalance {
 
+
+    public RoundRobinLoadBalance() {
+        System.out.println("init  RoundRobinLoadBalance");
+    }
+
     private volatile List<Endpoint> endpoints;
     @Override
     public void onRefresh(List<Endpoint> endpoints) {
@@ -21,9 +26,9 @@ public class RoundRobinLoadBalance implements LoadBalance {
 
     private AtomicInteger idx = new AtomicInteger(0);
 
+
     @Override
     public Endpoint select() {
-
         int index = getNextNonNegative();
         for (int i = 0; i < endpoints.size(); i++) {
             Endpoint ref = endpoints.get((i + index) % endpoints.size());
@@ -33,7 +38,7 @@ public class RoundRobinLoadBalance implements LoadBalance {
     }
 
     private int getNextNonNegative() {
-        return MathUtil.getNonNegative(idx.incrementAndGet());
+        return MathUtil.getNonNegative(idx.getAndIncrement());
     }
 
     public static void main(String[] args) throws InterruptedException {
@@ -50,6 +55,10 @@ public class RoundRobinLoadBalance implements LoadBalance {
             System.out.println(endpoint.toString());
             Thread.sleep(1000);
         }
+
+
+
+
     }
 
 }

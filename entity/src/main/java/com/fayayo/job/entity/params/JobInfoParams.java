@@ -34,6 +34,8 @@ public class JobInfoParams {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startAt;
 
+    private Integer jobLoadBalance=3;
+
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this);
