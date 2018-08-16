@@ -2,6 +2,8 @@ package com.fayayo.job.core.zookeeper;
 
 import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
+import com.fayayo.job.core.closable.Closable;
+import com.fayayo.job.core.closable.ShutDownHook;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
@@ -20,7 +22,7 @@ import java.util.List;
  * @desc zk的客户端连接实现
  */
 @Slf4j
-public class ZKCuratorClient {
+public class ZKCuratorClient implements Closable {
 
     private CuratorFramework client = null;
 
@@ -55,6 +57,9 @@ public class ZKCuratorClient {
                 log.info("zookeeper初始化成功...");
 
                 log.info("zookeeper服务器状态：{}", client.getState());
+
+                ShutDownHook.registerShutdownHook(this);//加入到hook事件
+
             }
         } catch (Exception e) {
             log.error("zookeeper客户端连接、初始化错误...");
@@ -142,6 +147,17 @@ public class ZKCuratorClient {
             return null;
         }
 
+    }
+
+    /**
+     *@描述 关闭zk连接
+     */
+    @Override
+    public void close() {
+        if(client!=null){
+            log.info("断开与zk的连接......");
+            client.close();
+        }
     }
 
 
