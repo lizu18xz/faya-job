@@ -9,6 +9,8 @@ import com.fayayo.job.core.zookeeper.ZkProperties;
 import com.fayayo.job.entity.JobInfo;
 import com.fayayo.job.manager.config.SpringHelper;
 import com.fayayo.job.manager.core.cluster.loadbalance.Endpoint;
+import com.fayayo.job.manager.core.cluster.support.Cluster;
+import com.fayayo.job.manager.core.cluster.support.ClusterSupport;
 import com.fayayo.job.manager.core.route.JobRouteExchange;
 import com.fayayo.job.manager.service.JobInfoService;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +42,6 @@ public class TriggerHelper {
         if(jobInfo==null){
             throw new CommonException(ResultEnum.JOB_NOT_EXIST);
         }
-
         //从zk中获取 服务ip地址列表
         ZKCuratorClient zkCuratorClient=SpringHelper.popBean(ZKCuratorClient.class);
         ZkProperties zkProperties=SpringHelper.popBean(ZkProperties.class);
@@ -50,13 +51,18 @@ public class TriggerHelper {
         if(CollectionUtils.isEmpty(list)){
             throw new CommonException(ResultEnum.JOB_NOT_FIND_ADDRESS);
         }
-        //log.info("获取服务地址列表,jobid:{},groupId:{},addressList:{}",jobId,jobInfo.getJobGroup(), StringUtils.join(list,","));
         //获取具体的ip
         List<String>addressList=list.stream().map(e->{
             return zkCuratorClient.getData(e);
         }).collect(Collectors.toList());
         log.info("获取服务地址列表,jobid:{},groupId:{},addressList:{}",jobId,jobInfo.getJobGroup(), StringUtils.join(addressList,","));
 
+        //build cluster  配置机器的ha和选择服务的策略
+        ClusterSupport clusterSupport=new ClusterSupport();
+        Cluster cluster=clusterSupport.buildClusterSupport();
+        cluster.call(jobId);
+
+        //TODO  此处待调整到cluster中，通过cluster进行路由
         //获取负载均衡的策略  +  Ha策略  然后对选择的机器发送请求任务
         JobRouteExchange jobRouteExchange=new JobRouteExchange(addressList);
         Endpoint endpoint=jobRouteExchange.getLoadBalance(jobInfo);
