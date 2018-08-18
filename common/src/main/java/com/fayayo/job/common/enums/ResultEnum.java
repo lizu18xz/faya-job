@@ -30,7 +30,12 @@ public enum ResultEnum {
     CREATE_SCHEDULE_ERROR(20001,"创建调度任务失败!!!"),
     JOB_REPEAT_ERROR(20002,"不能重复添加相同的调度任务!!!"),
     JOB_NOT_EXIST(20003,"任务不存在了!!!"),
-    JOB_NOT_FIND_ADDRESS(20004,"任务获取不到执行地址!!!")
+    JOB_NOT_FIND_ADDRESS(20004,"任务获取不到执行地址!!!"),
+
+
+    //ha
+    HA_NOT_EXIST(30001,"任务ha策略配置不存在，请检查!!!")
+
     ;
 
     private Integer code;

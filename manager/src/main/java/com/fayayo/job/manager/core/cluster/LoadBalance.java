@@ -1,4 +1,5 @@
-package com.fayayo.job.manager.core.cluster.loadbalance;
+package com.fayayo.job.manager.core.cluster;
+
 
 import java.util.List;
 
@@ -9,4 +10,5 @@ public interface LoadBalance {
 
     void onRefresh(List<Endpoint> endpoints);
 
+    void selectToHolder(List<Endpoint> endpointHolder);
 }

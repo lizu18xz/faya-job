@@ -10,6 +10,11 @@ public class ClusterSpi implements Cluster {
 
     private LoadBalance loadBalance;
 
+    public ClusterSpi(HaStrategy haStrategy, LoadBalance loadBalance) {
+        this.haStrategy = haStrategy;
+        this.loadBalance = loadBalance;
+    }
+
     @Override
     public void call(Integer jobId) {
             try {

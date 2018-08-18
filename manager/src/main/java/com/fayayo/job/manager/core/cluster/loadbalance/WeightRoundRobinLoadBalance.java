@@ -1,5 +1,8 @@
 package com.fayayo.job.manager.core.cluster.loadbalance;
 
+import com.fayayo.job.manager.core.cluster.Endpoint;
+import com.fayayo.job.manager.core.cluster.LoadBalance;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +14,7 @@ import java.util.stream.Collectors;
  * @version v1.0
  * @desc 负载均衡算法 权重
  */
-public class WeightRoundRobinLoadBalance implements LoadBalance {
+public class WeightRoundRobinLoadBalance extends AbstractLoadBalance {
 
     private volatile EndpointHolder endpointHolder;
 
@@ -66,13 +69,19 @@ public class WeightRoundRobinLoadBalance implements LoadBalance {
     }
 
     @Override
-    public Endpoint select() {
+    public Endpoint doSelect() {
         return endpointHolder.next();
     }
 
     @Override
     public void onRefresh(List<Endpoint> endpoints) {
+        super.onRefresh(endpoints);
         this.endpointHolder = new EndpointHolder(endpoints);
+    }
+
+    @Override
+    protected void doSelectToHolder(List<Endpoint> refersHolder) {
+
     }
 
     public Endpoint[] getOriginEndpoints() {

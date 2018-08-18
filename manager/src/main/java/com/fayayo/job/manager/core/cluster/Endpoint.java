@@ -1,4 +1,4 @@
-package com.fayayo.job.manager.core.cluster.loadbalance;
+package com.fayayo.job.manager.core.cluster;
 
 public class Endpoint {
     private final String host;

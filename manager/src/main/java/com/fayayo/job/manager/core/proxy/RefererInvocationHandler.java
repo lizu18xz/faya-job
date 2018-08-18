@@ -1,5 +1,8 @@
 
 package com.fayayo.job.manager.core.proxy;
+import com.fayayo.job.manager.core.cluster.Endpoint;
+import lombok.extern.slf4j.Slf4j;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 /**
@@ -7,14 +10,16 @@ import java.lang.reflect.Method;
  * @version v1.0
  * @desc 动态代理核心类
  */
+@Slf4j
 public class RefererInvocationHandler<T> implements InvocationHandler {
 
     protected Class<T> clz;
 
-    public RefererInvocationHandler(Class<T> clz) {
+    private Endpoint endpoint;
+
+    public RefererInvocationHandler(Class<T> clz,Endpoint endpoint) {
         this.clz = clz;
-        /*init();
-        interfaceName = MotanFrameworkUtil.removeAsyncSuffix(clz.getName());*/
+        this.endpoint=endpoint;
     }
 
      /**
@@ -23,9 +28,13 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
-        //获取Ha的配置
-
-
+        log.info("RefererInvocationHandler invock start......");
+        log.info("serverAddress:{}",endpoint.getHost());
+        log.info("setCreateMillisTime:{}",System.currentTimeMillis());
+        log.info("setClassName:{}",method.getDeclaringClass().getName());
+        log.info("setMethodName:{}",method.getName());
+        log.info("setParameterTypes:{}",method.getParameterTypes());
+        log.info("setParameters:{}",args);
 
         return null;
     }

@@ -1,5 +1,7 @@
 package com.fayayo.job.manager.core.cluster.loadbalance;
 import com.fayayo.job.common.util.MathUtil;
+import com.fayayo.job.manager.core.cluster.Endpoint;
+import com.fayayo.job.manager.core.cluster.LoadBalance;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,9 +12,7 @@ import java.util.List;
  * @version v1.0
  * @desc 负载均衡算法 hash  暂时不开启
  */
-public class ConsistentHashLoadBalance implements LoadBalance {
-
-    private volatile List<Endpoint> endpoints;
+public class ConsistentHashLoadBalance extends AbstractLoadBalance {
 
     /**
      * 默认的consistent的hash的数量
@@ -23,7 +23,7 @@ public class ConsistentHashLoadBalance implements LoadBalance {
 
     @Override
     public void onRefresh(List<Endpoint> endpoints) {
-        this.endpoints = endpoints;
+        super.onRefresh(endpoints);
 
         List<Endpoint> copyReferers = new ArrayList<Endpoint>(endpoints);
         List<Endpoint> tempRefers = new ArrayList<Endpoint>();
@@ -37,10 +37,15 @@ public class ConsistentHashLoadBalance implements LoadBalance {
     }
 
     @Override
-    public Endpoint select() {
+    protected void doSelectToHolder(List<Endpoint> refersHolder) {
+
+    }
+
+    @Override
+    public Endpoint doSelect() {
         int hash = getHash(1);
         Endpoint ref;
-        for (int i = 0; i < endpoints.size(); i++) {
+        for (int i = 0; i < getEndpoints().size(); i++) {
             ref = consistentHashReferers.get((hash + i) % consistentHashReferers.size());
             return ref;
         }

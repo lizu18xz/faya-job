@@ -28,7 +28,7 @@ public class JobSchedulerCore {
 
        *@参数  任务id,任务组,任务调度表达式
      */
-    public void addJob(String jobId,String jobGroup,String cron,Date startAt){
+    public Date addJob(String jobId,String jobGroup,String cron,Date startAt){
 
         try {
             //判断是否重复添加job
@@ -65,11 +65,14 @@ public class JobSchedulerCore {
                 scheduler.start();
                 Date date=scheduler.scheduleJob(jobDetail,trigger);
                 log.info("成功加入任务到调度中心-->jobName:{},jobGroup:{},任务开始启动时间:{}",jobId,jobGroup,DateTimeUtil.dateToStr(date));
+                return date;
             } catch (SchedulerException e) {
                 e.printStackTrace();
                 log.error("创建调度任务失败");
+                throw new CommonException(ResultEnum.CREATE_SCHEDULE_ERROR);
             }
         }catch (Exception e){
+            e.printStackTrace();
             throw new CommonException(ResultEnum.CREATE_SCHEDULE_ERROR);
         }
     }

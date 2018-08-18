@@ -1,6 +1,5 @@
 package com.fayayo.job.manager.core.route;
 
-import com.fayayo.job.common.util.EnumUtil;
 import com.fayayo.job.entity.JobInfo;
 import com.fayayo.job.manager.core.cluster.loadbalance.*;
 import lombok.extern.slf4j.Slf4j;
@@ -30,18 +29,15 @@ public class JobRouteExchange {
     }
 
     /**
-     *@描述 根据配置的规则选择一个ip
+     *@描述 获取loadBalance
      *@创建人  dalizu
      *@创建时间  2018/8/12
      */
-    public Endpoint getLoadBalance(JobInfo jobInfo){
+    public LoadBalance getLoadBalance(JobInfo jobInfo){
         LoadBalance loadBalance=null;
-        Integer jobLoadBalance=jobInfo.getJobLoadBalance();
-
         loadBalance=JobLoadBalanceFactory.getLoadBalance(jobInfo);
-
         loadBalance.onRefresh(endpoints);
-        return loadBalance.select();
+        return loadBalance;
     }
 
 
@@ -61,9 +57,9 @@ public class JobRouteExchange {
                     JobInfo jobInfo=new JobInfo();
                     jobInfo.setJobLoadBalance(3);
                     jobInfo.setId(1);
-                    Endpoint endpoint=jobRouteExchange.getLoadBalance(jobInfo);
+                    LoadBalance loadBalance=jobRouteExchange.getLoadBalance(jobInfo);
 
-                    System.out.println(endpoint.toString());
+                    System.out.println(loadBalance.select().toString());
 
                     try {
                         Thread.sleep(1000);
@@ -89,9 +85,9 @@ public class JobRouteExchange {
                     JobInfo jobInfo1=new JobInfo();
                     jobInfo1.setJobLoadBalance(3);
                     jobInfo1.setId(2);
-                    Endpoint endpoint1=jobRouteExchange1.getLoadBalance(jobInfo1);
+                    LoadBalance loadBalance1=jobRouteExchange1.getLoadBalance(jobInfo1);
 
-                    System.out.println(endpoint1.toString());
+                    System.out.println(loadBalance1.select().toString());
 
                     try {
                         Thread.sleep(1000);

@@ -9,6 +9,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 /**
  * @author dalizu on 2018/8/8
  * @version v1.0
@@ -35,9 +37,10 @@ public class JobInfoServiceImpl implements JobInfoService {
         jobInfo=jobInfoRepository.save(jobInfo);
 
         //把任务加入到quartz调度
-
-        jobSchedulerCore.addJob(String.valueOf(jobInfo.getId()),String.valueOf(jobInfo.getJobGroup()),jobInfo.getCron(),jobInfo.getStartAt());
-
+        Date date=jobSchedulerCore.addJob(String.valueOf(jobInfo.getId()),String.valueOf(jobInfo.getJobGroup()),jobInfo.getCron(),jobInfo.getStartAt());
+        //保存startAt
+        jobInfo.setStartAt(date);
+        jobInfo=jobInfoRepository.save(jobInfo);
         return jobInfo;
     }
 

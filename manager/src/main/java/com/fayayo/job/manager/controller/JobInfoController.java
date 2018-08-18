@@ -27,7 +27,7 @@ public class JobInfoController {
     *@描述 新增任务
     */
     @PostMapping("/add")
-    public ResultVO<JobInfo> addJob(@Valid JobInfoParams jobInfoParams, BindingResult bindingResult){
+    public ResultVO addJob(@Valid JobInfoParams jobInfoParams, BindingResult bindingResult){
 
         if(bindingResult.hasErrors()){
             throw new CommonException(ResultEnum.PARAM_ERROR.getCode(),bindingResult.getFieldError().getDefaultMessage());
@@ -35,7 +35,7 @@ public class JobInfoController {
 
         log.info(CommonConstants.FAYA_LOG+"新增任务,参数:{}",jobInfoParams);
         JobInfo jobInfo=jobInfoService.addJob(jobInfoParams);
-        return ResultVOUtil.success(jobInfo);
+        return ResultVOUtil.success();
     }
 
 

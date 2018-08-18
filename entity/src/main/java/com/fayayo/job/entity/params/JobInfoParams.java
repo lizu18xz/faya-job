@@ -36,6 +36,8 @@ public class JobInfoParams {
 
     private Integer jobLoadBalance=3;
 
+    private Integer jobHa=1;
+
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this);

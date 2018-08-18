@@ -1,6 +1,9 @@
 
 package com.fayayo.job.manager.core.cluster.loadbalance;
 
+import com.fayayo.job.manager.core.cluster.Endpoint;
+import com.fayayo.job.manager.core.cluster.LoadBalance;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -10,17 +13,12 @@ import java.util.concurrent.ThreadLocalRandom;
  * @version v1.0
  * @desc 负载均衡算法 随机
  */
-public class RandomLoadBalance implements LoadBalance {
-
-    private volatile List<Endpoint> endpoints;
+public class RandomLoadBalance extends AbstractLoadBalance {
 
     @Override
-    public void onRefresh(List<Endpoint> endpoints) {
-        this.endpoints = endpoints;
-    }
+    public Endpoint doSelect() {
 
-    @Override
-    public Endpoint select() {
+        List<Endpoint>endpoints=getEndpoints();
 
         int idx = (int) (ThreadLocalRandom.current().nextDouble() * endpoints.size());
         for (int i = 0; i < endpoints.size(); i++) {
@@ -46,4 +44,8 @@ public class RandomLoadBalance implements LoadBalance {
         System.out.println(endpoint.toString());
     }
 
+    @Override
+    protected void doSelectToHolder(List<Endpoint> refersHolder) {
+
+    }
 }

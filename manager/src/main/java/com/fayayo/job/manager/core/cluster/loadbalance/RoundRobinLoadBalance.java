@@ -1,6 +1,8 @@
 package com.fayayo.job.manager.core.cluster.loadbalance;
 
 import com.fayayo.job.common.util.MathUtil;
+import com.fayayo.job.manager.core.cluster.Endpoint;
+import com.fayayo.job.manager.core.cluster.LoadBalance;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,24 +13,19 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @version v1.0
  * @desc 负载均衡算法 轮训
  */
-public class RoundRobinLoadBalance implements LoadBalance {
+public class RoundRobinLoadBalance extends AbstractLoadBalance {
 
 
     public RoundRobinLoadBalance() {
         System.out.println("init  RoundRobinLoadBalance");
     }
 
-    private volatile List<Endpoint> endpoints;
-    @Override
-    public void onRefresh(List<Endpoint> endpoints) {
-        this.endpoints = endpoints;
-    }
-
     private AtomicInteger idx = new AtomicInteger(0);
 
 
     @Override
-    public Endpoint select() {
+    public Endpoint doSelect() {
+        List<Endpoint>endpoints=getEndpoints();
         int index = getNextNonNegative();
         for (int i = 0; i < endpoints.size(); i++) {
             Endpoint ref = endpoints.get((i + index) % endpoints.size());
@@ -61,4 +58,8 @@ public class RoundRobinLoadBalance implements LoadBalance {
 
     }
 
+    @Override
+    protected void doSelectToHolder(List<Endpoint> refersHolder) {
+
+    }
 }
