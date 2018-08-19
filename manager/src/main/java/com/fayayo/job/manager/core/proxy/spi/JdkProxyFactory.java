@@ -1,6 +1,6 @@
 package com.fayayo.job.manager.core.proxy.spi;
 
-import com.fayayo.job.manager.core.cluster.Endpoint;
+import com.fayayo.job.manager.core.cluster.support.Cluster;
 import com.fayayo.job.manager.core.proxy.ProxyFactory;
 import com.fayayo.job.manager.core.proxy.RefererInvocationHandler;
 
@@ -15,7 +15,7 @@ public class JdkProxyFactory implements ProxyFactory {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getProxy(Class<T> clz, Endpoint endpoint) {
-        return (T) Proxy.newProxyInstance(clz.getClassLoader(), new Class[]{clz}, new RefererInvocationHandler<>(clz,endpoint));
+    public <T> T getProxy(Class<T> clz, Cluster cluster) {
+        return (T) Proxy.newProxyInstance(clz.getClassLoader(), new Class[]{clz}, new RefererInvocationHandler<>(clz,cluster));
     }
 }

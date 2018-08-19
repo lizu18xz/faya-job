@@ -1,6 +1,7 @@
 package com.fayayo.job.manager.core.cluster.loadbalance;
 
 import com.fayayo.job.common.util.MathUtil;
+import com.fayayo.job.core.bean.Request;
 import com.fayayo.job.manager.core.cluster.Endpoint;
 import com.fayayo.job.manager.core.cluster.LoadBalance;
 
@@ -24,8 +25,8 @@ public class RoundRobinLoadBalance extends AbstractLoadBalance {
 
 
     @Override
-    public Endpoint doSelect() {
-        List<Endpoint>endpoints=getEndpoints();
+    public Endpoint doSelect(Request request) {
+        List<Endpoint> endpoints = getEndpoints();
         int index = getNextNonNegative();
         for (int i = 0; i < endpoints.size(); i++) {
             Endpoint ref = endpoints.get((i + index) % endpoints.size());
@@ -34,32 +35,37 @@ public class RoundRobinLoadBalance extends AbstractLoadBalance {
         return null;
     }
 
+    @Override
+    protected void doSelectToHolder(Request request,List<Endpoint> refersHolder) {
+        List<Endpoint> endpoints = getEndpoints();
+
+        int index = getNextNonNegative();
+        for (int i = 0, count = 0; i < endpoints.size() && count < MAX_REFERER_COUNT; i++) {
+            Endpoint referer = endpoints.get((i + index) % endpoints.size());
+            refersHolder.add(referer);
+            count++;
+        }
+    }
+
     private int getNextNonNegative() {
         return MathUtil.getNonNegative(idx.getAndIncrement());
     }
 
     public static void main(String[] args) throws InterruptedException {
-        LoadBalance loadBalance=new RoundRobinLoadBalance();
-        List<Endpoint>list=new ArrayList<>();
-        list.add(new Endpoint("10",9001));
-        list.add(new Endpoint("11",9002));
-        list.add(new Endpoint("12",9003));
-        list.add(new Endpoint("13",9004));
+        LoadBalance loadBalance = new RoundRobinLoadBalance();
+        List<Endpoint> list = new ArrayList<>();
+        list.add(new Endpoint("10", 9001));
+        list.add(new Endpoint("11", 9002));
+        list.add(new Endpoint("12", 9003));
+        list.add(new Endpoint("13", 9004));
 
         loadBalance.onRefresh(list);//刷新地址
-        while (true){
-            Endpoint endpoint=loadBalance.select();//获取一个地址
+        while (true) {
+            Endpoint endpoint = loadBalance.select(new Request());//获取一个地址
             System.out.println(endpoint.toString());
             Thread.sleep(1000);
         }
 
-
-
-
     }
 
-    @Override
-    protected void doSelectToHolder(List<Endpoint> refersHolder) {
-
-    }
 }

@@ -1,9 +1,12 @@
 package com.fayayo.job.manager.core.cluster.ha;
 
-
+import com.fayayo.job.common.constants.Constants;
+import com.fayayo.job.common.exception.CommonException;
+import com.fayayo.job.core.bean.Request;
+import com.fayayo.job.core.bean.Response;
 import com.fayayo.job.manager.core.cluster.Endpoint;
 import com.fayayo.job.manager.core.cluster.LoadBalance;
-
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +17,8 @@ import java.util.List;
  * 然后只调用第一个，当出现错误的时候（非业务异常），我们尝试调用n次（可配置），
  * 如果n次都失败了，那么我们就调用下一个Referer，如果这组Referer都调用失败，则抛出异常。
  */
-public class FailoverHaStrategy implements HaStrategy{
+@Slf4j
+public class FailoverHaStrategy extends AbstractHaStrategy {
 
     protected ThreadLocal<List<Endpoint>> endpointHolder = new ThreadLocal<List<Endpoint>>() {
         @Override
@@ -23,40 +27,45 @@ public class FailoverHaStrategy implements HaStrategy{
         }
     };
 
-    //TODO  重试策略的使用
-    @Override
-    public void call(Integer jobId, LoadBalance loadBalance) {
+    public Response call(Request request,LoadBalance loadBalance) {
 
         //根据规则获取一组endpoint
-
-
-
-        int tryCount =3;
+        List<Endpoint> endpointList = selectReferers(request,loadBalance);
+        if (endpointList.isEmpty()) {
+            throw new CommonException(999999, String.format("FailoverHaStrategy No Endpoint　loadbalance:%s", loadBalance));
+        }
+        int tryCount = 3;//TODO 获取用户配置的重试次数
         // 如果有问题，则设置为不重试
         if (tryCount < 0) {
             tryCount = 0;
         }
         for (int i = 0; i <= tryCount; i++) {
+            Endpoint endpoint = endpointList.get(i % endpointList.size());
+            log.info("{}FailoverHaStrategy start to call ......{},tryCount:{},request:{}", Constants.LOG_PREFIX,endpoint.getHost(),(i+1),request.toString());
             try {
+                //获取nettyClient  发送RPC请求
+                request();
 
+                return null;
             } catch (RuntimeException e) {
-                // 对于业务异常，直接抛出
-                /*if (ExceptionUtil.isBizException(e)) {
+                // 对于业务异常，直接抛出，不进行重试
+                if (e instanceof CommonException) {
                     throw e;
                 } else if (i >= tryCount) {
+                    log.info("{}tryCount is over......throw e",Constants.LOG_PREFIX);
                     throw e;
-                }*/
+                }
+                log.info("{}try run ,tryCount:{}",Constants.LOG_PREFIX,(i+1));
             }
         }
+        throw new CommonException(999999,"FailoverHaStrategy.call should not come here!");
     }
 
-
-    protected List<Endpoint> selectReferers(LoadBalance loadBalance) {
+    protected List<Endpoint> selectReferers(Request request,LoadBalance loadBalance) {
         List<Endpoint> endpoints = endpointHolder.get();
         endpoints.clear();
-        loadBalance.selectToHolder(endpoints);
+        loadBalance.selectToHolder(request,endpoints);
         return endpoints;
     }
-
 
 }

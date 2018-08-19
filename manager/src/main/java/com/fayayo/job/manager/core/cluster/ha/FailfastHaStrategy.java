@@ -1,11 +1,11 @@
 package com.fayayo.job.manager.core.cluster.ha;
 
 
-import com.fayayo.job.core.spi.ExecutorSpi;
+import com.fayayo.job.common.constants.Constants;
+import com.fayayo.job.core.bean.Request;
+import com.fayayo.job.core.bean.Response;
 import com.fayayo.job.manager.core.cluster.Endpoint;
 import com.fayayo.job.manager.core.cluster.LoadBalance;
-import com.fayayo.job.manager.core.proxy.ProxyFactory;
-import com.fayayo.job.manager.core.proxy.spi.JdkProxyFactory;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -14,25 +14,21 @@ import lombok.extern.slf4j.Slf4j;
  * @desc 快速失败，失败之后直接报错
  */
 @Slf4j
-public class FailfastHaStrategy implements HaStrategy {
+public class FailfastHaStrategy extends AbstractHaStrategy {
 
     //快速失败策略
-    @Override
-    public void call(Integer jobId,LoadBalance loadBalance) {
+    public Response call(Request request,LoadBalance loadBalance) {
         //获取执行的服务
-        Endpoint endpoint=loadBalance.select();
-        log.info("FailfastHaStrategy start to call ......{}",endpoint.getHost());
-        //定义一个接口，获取其代理类，然后调用   走invock方法，发送请求，  服务端获取方法名称然后调用
-        ExecutorSpi executorSpi=getExecutorSpi(endpoint);
-        executorSpi.run();//执行具体的方法 invoke
+        Endpoint endpoint = loadBalance.select(request);
+        log.info("{}FailfastHaStrategy start to call ......{},request:{}", Constants.LOG_PREFIX,endpoint.getHost(),request.toString());
+
+        //获取nettyClient  发送RPC请求
+        request();
+
+        return null;
     }
 
-     /**
-       *@描述 获取代理类
-     */
-    private ExecutorSpi getExecutorSpi(Endpoint endpoint) {
-        ProxyFactory proxyFactory=new JdkProxyFactory();
-        return proxyFactory.getProxy(ExecutorSpi.class, endpoint);
-    }
+
+
 
 }

@@ -1,7 +1,7 @@
 package com.fayayo.job.common.constants;
 
 
-public class CommonConstants {
+public class Constants {
 
     /**
      * http返回码
@@ -13,6 +13,6 @@ public class CommonConstants {
     /**
      * 系统日志前缀
      * */
-    public static final String FAYA_LOG="FAYA_LOG=======>";
+    public static final String LOG_PREFIX="RPC_SCHEDULER_JOB========>";
 
 }

@@ -2,7 +2,7 @@ package com.fayayo.job.common.result;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fayayo.job.common.constants.CommonConstants;
+import com.fayayo.job.common.constants.Constants;
 import lombok.Data;
 
 /**
@@ -23,6 +23,6 @@ public class ResultVO<T> {
 
     @JsonIgnore
     public boolean isSuccess(){
-        return  this.code== CommonConstants.CODE_SUCCESS;
+        return  this.code== Constants.CODE_SUCCESS;
     }
 }

@@ -1,6 +1,9 @@
 package com.fayayo.job.manager.core.route;
 
+import com.fayayo.job.core.bean.Request;
 import com.fayayo.job.entity.JobInfo;
+import com.fayayo.job.manager.core.cluster.Endpoint;
+import com.fayayo.job.manager.core.cluster.LoadBalance;
 import com.fayayo.job.manager.core.cluster.loadbalance.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,7 +62,7 @@ public class JobRouteExchange {
                     jobInfo.setId(1);
                     LoadBalance loadBalance=jobRouteExchange.getLoadBalance(jobInfo);
 
-                    System.out.println(loadBalance.select().toString());
+                    System.out.println(loadBalance.select(new Request()).toString());
 
                     try {
                         Thread.sleep(1000);
@@ -87,7 +90,7 @@ public class JobRouteExchange {
                     jobInfo1.setId(2);
                     LoadBalance loadBalance1=jobRouteExchange1.getLoadBalance(jobInfo1);
 
-                    System.out.println(loadBalance1.select().toString());
+                    System.out.println(loadBalance1.select(new Request()).toString());
 
                     try {
                         Thread.sleep(1000);

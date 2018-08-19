@@ -1,7 +1,9 @@
 package com.fayayo.job.manager.core.cluster.loadbalance;
 
+import com.fayayo.job.core.bean.Request;
 import com.fayayo.job.manager.core.cluster.Endpoint;
 import com.fayayo.job.manager.core.cluster.LoadBalance;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
  * @version v1.0
  * @desc 负载均衡算法 权重
  */
+@Slf4j
 public class WeightRoundRobinLoadBalance extends AbstractLoadBalance {
 
     private volatile EndpointHolder endpointHolder;
@@ -28,7 +31,7 @@ public class WeightRoundRobinLoadBalance extends AbstractLoadBalance {
         AtomicInteger cursor = new AtomicInteger(0);
 
         EndpointHolder(List<Endpoint> endpoints) {
-            System.out.println("WeightRoundRobinLoadBalance build new EndpointHolder. weights:" + endpoints);
+            log.info("WeightRoundRobinLoadBalance build new EndpointHolder. weights:{}", endpoints);
             List<Integer> weightsArr = endpoints.stream().map(Endpoint::getWeight).collect(Collectors.toList());
             // 求出最大公约数，若不为1，对权重做除法
             int weightGcd = findGcd(weightsArr.toArray(new Integer[]{}));
@@ -69,7 +72,7 @@ public class WeightRoundRobinLoadBalance extends AbstractLoadBalance {
     }
 
     @Override
-    public Endpoint doSelect() {
+    public Endpoint doSelect(Request request) {
         return endpointHolder.next();
     }
 
@@ -80,8 +83,15 @@ public class WeightRoundRobinLoadBalance extends AbstractLoadBalance {
     }
 
     @Override
-    protected void doSelectToHolder(List<Endpoint> refersHolder) {
-
+    protected void doSelectToHolder(Request request,List<Endpoint> refersHolder) {
+        int i = 0, j = 0;
+        while (i++ < getEndpoints().size()) {
+            Endpoint r = this.endpointHolder.next();
+            refersHolder.add(r);
+            if (++j == MAX_REFERER_COUNT) {
+                return;
+            }
+        }
     }
 
     public Endpoint[] getOriginEndpoints() {
@@ -90,18 +100,16 @@ public class WeightRoundRobinLoadBalance extends AbstractLoadBalance {
 
 
     public static void main(String[] args) {
-        LoadBalance loadBalance=new WeightRoundRobinLoadBalance();
-        List<Endpoint>list=new ArrayList<>();
-        list.add(new Endpoint("10",9001,8));
-        list.add(new Endpoint("11",9002,5));
-        list.add(new Endpoint("12",9003,7));
-        list.add(new Endpoint("13",9004,1));
+        LoadBalance loadBalance = new WeightRoundRobinLoadBalance();
+        List<Endpoint> list = new ArrayList<>();
+        list.add(new Endpoint("10", 9001, 8));
+        list.add(new Endpoint("11", 9002, 5));
+        list.add(new Endpoint("12", 9003, 7));
+        list.add(new Endpoint("13", 9004, 1));
 
         loadBalance.onRefresh(list);//刷新地址
-        Endpoint endpoint=loadBalance.select();//获取一个地址
+        Endpoint endpoint = loadBalance.select(new Request());//获取一个地址
         System.out.println(endpoint.toString());
     }
-
-
 
 }

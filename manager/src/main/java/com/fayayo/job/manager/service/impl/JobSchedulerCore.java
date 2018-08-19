@@ -1,5 +1,6 @@
 package com.fayayo.job.manager.service.impl;
 
+import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.common.util.DateTimeUtil;
@@ -64,7 +65,7 @@ public class JobSchedulerCore {
             try {
                 scheduler.start();
                 Date date=scheduler.scheduleJob(jobDetail,trigger);
-                log.info("成功加入任务到调度中心-->jobName:{},jobGroup:{},任务开始启动时间:{}",jobId,jobGroup,DateTimeUtil.dateToStr(date));
+                log.info("{}成功加入任务到调度中心-->jobName:{},jobGroup:{},任务开始启动时间:{}", Constants.LOG_PREFIX,jobId,jobGroup,DateTimeUtil.dateToStr(date));
                 return date;
             } catch (SchedulerException e) {
                 e.printStackTrace();

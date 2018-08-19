@@ -1,5 +1,8 @@
 package com.fayayo.job.core.spi;
 
+import com.fayayo.job.core.bean.Response;
+import com.fayayo.job.entity.JobInfo;
+
 /**
  * @author dalizu on 2018/8/18.
  * @version v1.0
@@ -8,7 +11,7 @@ package com.fayayo.job.core.spi;
 public interface ExecutorSpi {
 
 
-    void run();
+    Response run(JobInfo jobInfo);
 
 
 

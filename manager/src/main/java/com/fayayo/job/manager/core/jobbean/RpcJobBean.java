@@ -1,6 +1,6 @@
 package com.fayayo.job.manager.core.jobbean;
 
-import com.fayayo.job.common.constants.CommonConstants;
+import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.manager.core.jobpool.RpcJobHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
@@ -18,7 +18,7 @@ public class RpcJobBean extends QuartzJobBean {
 
         //获取任务的jobKey和groupId
         String jobId=jobExecutionContext.getJobDetail().getKey().getName();
-        log.info(CommonConstants.FAYA_LOG+"start to execute job key：{}",jobId);
+        log.info("{}start to execute job key：{}",Constants.LOG_PREFIX,jobId);
 
         //执行具体的业务逻辑  发送rpc请求
         RpcJobHelper.getInstance().addJobInPool(Integer.valueOf(jobId));

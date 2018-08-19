@@ -1,9 +1,11 @@
 package com.fayayo.job.manager.core.cluster.loadbalance;
 import com.fayayo.job.common.util.MathUtil;
+import com.fayayo.job.core.bean.Request;
 import com.fayayo.job.manager.core.cluster.Endpoint;
 import com.fayayo.job.manager.core.cluster.LoadBalance;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,13 +39,20 @@ public class ConsistentHashLoadBalance extends AbstractLoadBalance {
     }
 
     @Override
-    protected void doSelectToHolder(List<Endpoint> refersHolder) {
+    protected void doSelectToHolder(Request request,List<Endpoint> refersHolder) {
+        List<Endpoint> endpoints = getEndpoints();
 
+        //TODO  待修改动态
+        int hash = getHash(request);
+        for (int i = 0; i < endpoints.size(); i++) {
+            Endpoint ref = consistentHashReferers.get((hash + i) % consistentHashReferers.size());
+                refersHolder.add(ref);
+        }
     }
 
     @Override
-    public Endpoint doSelect() {
-        int hash = getHash(1);
+    public Endpoint doSelect(Request request) {
+        int hash = getHash(request);
         Endpoint ref;
         for (int i = 0; i < getEndpoints().size(); i++) {
             ref = consistentHashReferers.get((hash + i) % consistentHashReferers.size());
@@ -52,11 +61,16 @@ public class ConsistentHashLoadBalance extends AbstractLoadBalance {
         return null;
     }
 
-    private int getHash(Integer jobId) {
-        int hashcode=jobId.hashCode();
-        System.out.println(hashcode);
+    private int getHash(Request request) {
+        int hashcode;
+        if (request.getArguments() == null || request.getArguments().length == 0) {
+            hashcode = request.hashCode();
+        } else {
+            hashcode = Arrays.hashCode(request.getArguments());
+        }
         return MathUtil.getNonNegative(hashcode);
     }
+
 
     public static void main(String[] args) throws InterruptedException {
         LoadBalance loadBalance=new ConsistentHashLoadBalance();
@@ -67,7 +81,7 @@ public class ConsistentHashLoadBalance extends AbstractLoadBalance {
         list.add(new Endpoint("13",9004));
         loadBalance.onRefresh(list);//刷新地址
         while (true){
-            Endpoint endpoint=loadBalance.select();//获取一个地址
+            Endpoint endpoint=loadBalance.select(new Request());//获取一个地址
             System.out.println(endpoint.toString());
             Thread.sleep(1000);
         }

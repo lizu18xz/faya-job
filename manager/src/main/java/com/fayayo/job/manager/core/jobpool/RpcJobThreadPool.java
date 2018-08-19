@@ -1,6 +1,6 @@
 package com.fayayo.job.manager.core.jobpool;
 
-import com.fayayo.job.common.constants.CommonConstants;
+import com.fayayo.job.common.constants.Constants;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.*;
@@ -19,7 +19,7 @@ public class RpcJobThreadPool {
     private int maxTimeRecycle = 60;
 
     public RpcJobThreadPool() {
-        log.info(CommonConstants.FAYA_LOG+"初始化RpcJobThreadPool......");
+        log.info("{}初始化RpcJobThreadPool......",Constants.LOG_PREFIX);
         //无界 也可以指定大小的队列
         final LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>(maxThread);
         threadPoolExecutor = new ThreadPoolExecutor(coreThread, maxThread, maxTimeRecycle, TimeUnit.SECONDS,
@@ -36,7 +36,7 @@ public class RpcJobThreadPool {
             public void run() {
                 while (true) {
                     if (queue.size() > maxThread) {
-                        log.info(CommonConstants.FAYA_LOG+"current thread task size:{} exceed thread pool define size:{}",queue.size(),maxThread);
+                        log.info("{}current thread task size:{} exceed thread pool define size:{}",Constants.LOG_PREFIX,queue.size(),maxThread);
                     }
                     try {
                         Thread.sleep(100);

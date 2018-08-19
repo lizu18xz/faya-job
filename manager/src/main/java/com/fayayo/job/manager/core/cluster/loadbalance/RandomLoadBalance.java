@@ -1,6 +1,7 @@
 
 package com.fayayo.job.manager.core.cluster.loadbalance;
 
+import com.fayayo.job.core.bean.Request;
 import com.fayayo.job.manager.core.cluster.Endpoint;
 import com.fayayo.job.manager.core.cluster.LoadBalance;
 
@@ -16,9 +17,9 @@ import java.util.concurrent.ThreadLocalRandom;
 public class RandomLoadBalance extends AbstractLoadBalance {
 
     @Override
-    public Endpoint doSelect() {
+    public Endpoint doSelect(Request request) {
 
-        List<Endpoint>endpoints=getEndpoints();
+        List<Endpoint> endpoints = getEndpoints();
 
         int idx = (int) (ThreadLocalRandom.current().nextDouble() * endpoints.size());
         for (int i = 0; i < endpoints.size(); i++) {
@@ -29,23 +30,28 @@ public class RandomLoadBalance extends AbstractLoadBalance {
         return null;
     }
 
+    @Override
+    protected void doSelectToHolder(Request request,List<Endpoint> refersHolder) {
+        List<Endpoint> endpoints = getEndpoints();
+        int idx = (int) (ThreadLocalRandom.current().nextDouble() * endpoints.size());
+        for (int i = 0; i < endpoints.size(); i++) {
+            Endpoint endpoint = endpoints.get((i + idx) % endpoints.size());
+            refersHolder.add(endpoint);
+        }
+    }
 
     public static void main(String[] args) {
 
-        LoadBalance loadBalance=new RandomLoadBalance();
-        List<Endpoint>list=new ArrayList<>();
-        list.add(new Endpoint("10",9001));
-        list.add(new Endpoint("11",9002));
-        list.add(new Endpoint("12",9003));
-        list.add(new Endpoint("13",9004));
+        LoadBalance loadBalance = new RandomLoadBalance();
+        List<Endpoint> list = new ArrayList<>();
+        list.add(new Endpoint("10", 9001));
+        list.add(new Endpoint("11", 9002));
+        list.add(new Endpoint("12", 9003));
+        list.add(new Endpoint("13", 9004));
 
         loadBalance.onRefresh(list);//刷新地址
-        Endpoint endpoint=loadBalance.select();//获取一个地址
+        Endpoint endpoint = loadBalance.select(new Request());//获取一个地址
         System.out.println(endpoint.toString());
     }
 
-    @Override
-    protected void doSelectToHolder(List<Endpoint> refersHolder) {
-
-    }
 }

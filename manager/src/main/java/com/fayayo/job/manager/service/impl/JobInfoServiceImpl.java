@@ -1,5 +1,6 @@
 package com.fayayo.job.manager.service.impl;
 
+import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.entity.JobInfo;
 import com.fayayo.job.entity.params.JobInfoParams;
 import com.fayayo.job.manager.repository.JobInfoRepository;
@@ -8,8 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
 
 /**
  * @author dalizu on 2018/8/8
@@ -37,10 +36,7 @@ public class JobInfoServiceImpl implements JobInfoService {
         jobInfo=jobInfoRepository.save(jobInfo);
 
         //把任务加入到quartz调度
-        Date date=jobSchedulerCore.addJob(String.valueOf(jobInfo.getId()),String.valueOf(jobInfo.getJobGroup()),jobInfo.getCron(),jobInfo.getStartAt());
-        //保存startAt
-        jobInfo.setStartAt(date);
-        jobInfo=jobInfoRepository.save(jobInfo);
+        jobSchedulerCore.addJob(String.valueOf(jobInfo.getId()),String.valueOf(jobInfo.getJobGroup()),jobInfo.getCron(),jobInfo.getStartAt());
         return jobInfo;
     }
 
@@ -49,7 +45,7 @@ public class JobInfoServiceImpl implements JobInfoService {
 
         JobInfo jobInfo=jobInfoRepository.findById(jobId).orElse(null);
 
-        log.debug("查询单个任务信息, 结果:{}", jobInfo);
+        log.debug("{}查询单个任务信息, 结果:{}", Constants.LOG_PREFIX, jobInfo);
 
         return jobInfo;
     }

@@ -1,6 +1,6 @@
 package com.fayayo.job.core.spi.impl;
 
-import com.fayayo.job.common.constants.CommonConstants;
+import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.core.spi.ServiceDiscovery;
 import com.fayayo.job.core.zookeeper.ZKCuratorClient;
 import com.fayayo.job.core.zookeeper.ZkProperties;
@@ -46,7 +46,7 @@ public class ZkServiceDiscovery implements ServiceDiscovery {
 
         List<String> list=zkCuratorClient.getChildNode(serviceNode);
         if(CollectionUtils.isEmpty(list)){
-            log.info(CommonConstants.FAYA_LOG+"找不到对应执行器:{} 的注册地址,请先确定服务是否部署",groupId);
+            log.info("{}找不到对应执行器:{} 的注册地址,请先确定服务是否部署",Constants.LOG_PREFIX,groupId);
             return null;
         }
 

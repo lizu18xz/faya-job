@@ -16,9 +16,10 @@ create table faya_job_info(
   job_type varchar(16) not null comment '任务类型',
   job_load_balance int not null comment '任务执行策略',
   job_ha int not null comment '任务ha的策略',
-  start_at datetime comment '任务开始时间',
-  end_at datetime comment '任务结束时间',
+  start_at datetime comment '第一次任务开始时间',
   create_time timestamp not null default current_timestamp comment '创建时间',
   update_time timestamp not null default current_timestamp on update current_timestamp comment '修改时间',
   primary key (id)
 )comment '任务信息表';
+
+-- 任务执行记录表 job_log

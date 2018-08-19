@@ -1,14 +1,16 @@
 package com.fayayo.job.manager.core.cluster;
 
 
+import com.fayayo.job.core.bean.Request;
+
 import java.util.List;
 
 
 public interface LoadBalance {
 
-    Endpoint select();
+    Endpoint select(Request request);
 
     void onRefresh(List<Endpoint> endpoints);
 
-    void selectToHolder(List<Endpoint> endpointHolder);
+    void selectToHolder(Request request,List<Endpoint> endpointHolder);
 }

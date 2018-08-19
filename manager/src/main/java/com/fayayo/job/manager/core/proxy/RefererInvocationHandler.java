@@ -1,8 +1,9 @@
 
 package com.fayayo.job.manager.core.proxy;
-import com.fayayo.job.manager.core.cluster.Endpoint;
+import com.fayayo.job.common.util.ReflectUtil;
+import com.fayayo.job.core.bean.Request;
+import com.fayayo.job.manager.core.cluster.support.Cluster;
 import lombok.extern.slf4j.Slf4j;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 /**
@@ -15,11 +16,11 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
 
     protected Class<T> clz;
 
-    private Endpoint endpoint;
+    private Cluster cluster;
 
-    public RefererInvocationHandler(Class<T> clz,Endpoint endpoint) {
+    public RefererInvocationHandler(Class<T> clz, Cluster cluster) {
         this.clz = clz;
-        this.endpoint=endpoint;
+        this.cluster=cluster;
     }
 
      /**
@@ -27,16 +28,14 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
      */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-
         log.info("RefererInvocationHandler invock start......");
-        log.info("serverAddress:{}",endpoint.getHost());
-        log.info("setCreateMillisTime:{}",System.currentTimeMillis());
-        log.info("setClassName:{}",method.getDeclaringClass().getName());
-        log.info("setMethodName:{}",method.getName());
-        log.info("setParameterTypes:{}",method.getParameterTypes());
-        log.info("setParameters:{}",args);
-
-        return null;
+        Request request=new Request();
+        request.setArguments(args);
+        String methodName = method.getName();
+        request.setMethodName(methodName);
+        request.setParamtersDesc(ReflectUtil.getMethodParamDesc(method));
+        request.setInterfaceName(method.getDeclaringClass().getName());
+        return cluster.call(request);
     }
 
     /**

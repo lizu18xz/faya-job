@@ -1,6 +1,9 @@
 package com.fayayo.job.core.spi.impl;
 
+import com.fayayo.job.common.constants.Constants;
+import com.fayayo.job.core.bean.Response;
 import com.fayayo.job.core.spi.ExecutorSpi;
+import com.fayayo.job.entity.JobInfo;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -11,9 +14,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ExecutorSpiImpl implements ExecutorSpi{
 
+     /**
+       *@描述 真正执行业务逻辑的地方,在rpc server里面通过反射调用
+     */
     @Override
-    public void run() {
+    public Response run(JobInfo jobInfo) {
+        log.info("{}start to run job......params:{}", Constants.LOG_PREFIX,jobInfo);
 
+        //获取返回
+        return null;
     }
 
 }

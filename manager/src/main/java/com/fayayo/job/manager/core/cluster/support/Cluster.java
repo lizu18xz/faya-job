@@ -1,12 +1,14 @@
 
 package com.fayayo.job.manager.core.cluster.support;
 
+import com.fayayo.job.core.bean.Request;
+import com.fayayo.job.core.bean.Response;
+import com.fayayo.job.manager.core.cluster.LoadBalance;
 import com.fayayo.job.manager.core.cluster.ha.HaStrategy;
-import com.fayayo.job.manager.core.cluster.loadbalance.LoadBalance;
 
-public interface Cluster{
+public interface Cluster {
 
-    void call(Integer jobId);
+    Response call(Request request);
 
     void setLoadBalance(LoadBalance loadBalance);
 

@@ -1,7 +1,7 @@
 package com.fayayo.job.manager.core.proxy;
 
 
-import com.fayayo.job.manager.core.cluster.Endpoint;
+import com.fayayo.job.manager.core.cluster.support.Cluster;
 
 /**
  * @author dalizu on 2018/8/7.
@@ -10,6 +10,6 @@ import com.fayayo.job.manager.core.cluster.Endpoint;
  */
 public interface ProxyFactory {
 
-    <T> T getProxy(Class<T> clz, Endpoint endpoint);
+    <T> T getProxy(Class<T> clz, Cluster cluster);
 
 }

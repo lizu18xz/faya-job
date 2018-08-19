@@ -1,6 +1,6 @@
 package com.fayayo.job.manager.controller;
 
-import com.fayayo.job.common.constants.CommonConstants;
+import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.common.result.ResultVO;
@@ -33,7 +33,7 @@ public class JobInfoController {
             throw new CommonException(ResultEnum.PARAM_ERROR.getCode(),bindingResult.getFieldError().getDefaultMessage());
         }
 
-        log.info(CommonConstants.FAYA_LOG+"新增任务,参数:{}",jobInfoParams);
+        log.info("{}新增任务,参数:{}",Constants.LOG_PREFIX,jobInfoParams);
         JobInfo jobInfo=jobInfoService.addJob(jobInfoParams);
         return ResultVOUtil.success();
     }

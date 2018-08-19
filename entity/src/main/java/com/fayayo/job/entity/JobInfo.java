@@ -31,8 +31,6 @@ public class JobInfo {
 
     private Date startAt;
 
-    private Date endAt;
-
     //@JsonFormat(pattern = "YYYY-MM-DD HH:mm:ss")
     private Date createTime;
 

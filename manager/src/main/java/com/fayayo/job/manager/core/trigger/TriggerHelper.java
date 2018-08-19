@@ -2,10 +2,15 @@ package com.fayayo.job.manager.core.trigger;
 
 import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
+import com.fayayo.job.core.bean.Response;
+import com.fayayo.job.core.spi.ExecutorSpi;
 import com.fayayo.job.entity.JobInfo;
 import com.fayayo.job.manager.config.SpringHelper;
+import com.fayayo.job.manager.core.cluster.Endpoint;
 import com.fayayo.job.manager.core.cluster.support.Cluster;
 import com.fayayo.job.manager.core.cluster.support.ClusterSupport;
+import com.fayayo.job.manager.core.proxy.ProxyFactory;
+import com.fayayo.job.manager.core.proxy.spi.JdkProxyFactory;
 import com.fayayo.job.manager.service.JobInfoService;
 import lombok.extern.slf4j.Slf4j;
 /**
@@ -15,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class TriggerHelper {
-
 
      /**
        *@描述 处理job的业务
@@ -34,19 +38,22 @@ public class TriggerHelper {
         //build cluster  配置机器的ha和选择服务的策略
         ClusterSupport clusterSupport=new ClusterSupport();
         Cluster cluster=clusterSupport.buildClusterSupport(jobInfo);
-        cluster.call(jobId);
+
+        //获取代理类
+        ExecutorSpi executorSpi=getExecutorSpi(cluster);
+        Response response=executorSpi.run(jobInfo);
+
+        //获取执行结果
 
     }
 
-
-
-
-
-
-
-
-
-
+    /**
+     * @描述 获取代理类
+     */
+    public static ExecutorSpi getExecutorSpi(Cluster cluster) {
+        ProxyFactory proxyFactory = new JdkProxyFactory();
+        return proxyFactory.getProxy(ExecutorSpi.class, cluster);
+    }
 
 
 }
