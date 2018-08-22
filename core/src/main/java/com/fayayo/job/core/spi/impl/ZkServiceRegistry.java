@@ -26,7 +26,7 @@ public class ZkServiceRegistry implements ServiceRegistry {
 
      *@描述 服务注册
 
-     *@参数  服务名称 服务的地址
+     *@参数  服务所属执行器 服务的地址
 
      */
     @Override

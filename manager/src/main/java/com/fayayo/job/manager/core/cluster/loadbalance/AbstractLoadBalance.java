@@ -3,7 +3,7 @@ package com.fayayo.job.manager.core.cluster.loadbalance;
 
 
 import com.fayayo.job.common.exception.CommonException;
-import com.fayayo.job.core.bean.Request;
+import com.fayayo.job.core.transport.spi.Request;
 import com.fayayo.job.manager.core.cluster.Endpoint;
 import com.fayayo.job.manager.core.cluster.LoadBalance;
 

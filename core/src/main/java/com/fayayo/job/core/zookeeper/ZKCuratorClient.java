@@ -1,5 +1,6 @@
 package com.fayayo.job.core.zookeeper;
 
+import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.core.closable.Closable;
@@ -8,6 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.framework.recipes.cache.PathChildrenCache;
+import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
+import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.ZooDefs;
@@ -31,14 +35,14 @@ public class ZKCuratorClient implements Closable {
 
     public void init() {
 
-        if(client!=null){
+        if (client != null) {
             return;
         }
 
         //启动zk客户端
-        RetryPolicy retryPolicy=new ExponentialBackoffRetry(1000,5);
+        RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 5);
         client = CuratorFrameworkFactory
-                .newClient(zkProperties.getZookeeperServer(), 10000, 10000,retryPolicy);
+                .newClient(zkProperties.getZookeeperServer(), 10000, 10000, retryPolicy);
         client.start();
         client = client.usingNamespace("admin");
 
@@ -51,78 +55,124 @@ public class ZKCuratorClient implements Closable {
                  * 临时节点: 你创建一个节点之后，会话断开，会自动删除，当然也可以手动删除
                  */
                 client.create().creatingParentsIfNeeded()
-                        .withMode(CreateMode.PERSISTENT)		// 节点类型：持久节点
-                        .withACL(ZooDefs.Ids.OPEN_ACL_UNSAFE)			// acl：匿名权限
+                        .withMode(CreateMode.PERSISTENT)        // 节点类型：持久节点
+                        .withACL(ZooDefs.Ids.OPEN_ACL_UNSAFE)            // acl：匿名权限
                         .forPath(zkProperties.getRegisterPath());
-                log.info("zookeeper初始化成功...");
-
-                log.info("zookeeper服务器状态：{}", client.getState());
-
-                ShutDownHook.registerShutdownHook(this);//加入到hook事件
-
             }
+            log.info("zookeeper初始化成功...");
+            log.info("zookeeper服务器状态：{}", client.getState());
+            addChildWatch(zkProperties.getRegisterPath());
+            ShutDownHook.registerShutdownHook(this);//加入到hook事件
+
         } catch (Exception e) {
             log.error("zookeeper客户端连接、初始化错误...");
             e.printStackTrace();
         }
     }
 
+    /**
+     * @描述 监听事件
+     * 永久监听指定节点下的节点,只能监听指定节点下一级节点的变化,可以监听到的事件：节点创建、节点数据的变化、节点删除等
+     */
+    private void addChildWatch(String registerPath) throws Exception {
+        log.info("{}启动zk监听", Constants.LOG_PREFIX);
+        final PathChildrenCache cache = new PathChildrenCache(client, registerPath, true);
+        cache.start();
+        cache.getListenable().addListener(new PathChildrenCacheListener() {
+            @Override
+            public void childEvent(CuratorFramework curatorFramework, PathChildrenCacheEvent event) throws Exception {
+
+                if (event.getType().equals(PathChildrenCacheEvent.Type.CHILD_ADDED)) {
+
+                    String path = event.getData().getPath();
+                    log.info("{}新注册执行器path:{}", Constants.LOG_PREFIX, path);
+
+                    addChildsWatch(path);
+
+                } else if (event.getType().equals(PathChildrenCacheEvent.Type.CHILD_REMOVED)) {
+
+                }
+
+            }
+        });
+    }
+
+    private void addChildsWatch(String registerPath) throws Exception {
+        log.info("{}zk监听执行器", Constants.LOG_PREFIX);
+        final PathChildrenCache cache = new PathChildrenCache(client, registerPath, true);
+        cache.start();
+        cache.getListenable().addListener(new PathChildrenCacheListener() {
+            @Override
+            public void childEvent(CuratorFramework curatorFramework, PathChildrenCacheEvent event) throws Exception {
+
+                if (event.getType().equals(PathChildrenCacheEvent.Type.CHILD_ADDED)) {
+
+                    String path = event.getData().getPath();
+                    //log.info("{}新服务注册path:{}",Constants.LOG_PREFIX,path);
+                    String data = new String(event.getData().getData());
+                    log.info("{}执行器:{}有新服务加入:{}", Constants.LOG_PREFIX, registerPath, data);
+
+                } else if (event.getType().equals(PathChildrenCacheEvent.Type.CHILD_REMOVED)) {
+
+                }
+            }
+        });
+    }
 
     /**
-     *@描述 创建持久节点
+     * @描述 创建持久节点
      */
-    public void createPersistentNode(String path){
+    public void createPersistentNode(String path) {
 
         try {
-            if(client.checkExists().forPath(path) == null){
+            if (client.checkExists().forPath(path) == null) {
                 client.create().creatingParentsIfNeeded()
-                        .withMode(CreateMode.PERSISTENT)		// 节点类型：持久节点
-                        .withACL(ZooDefs.Ids.OPEN_ACL_UNSAFE)			// acl：匿名权限
+                        .withMode(CreateMode.PERSISTENT)        // 节点类型：持久节点
+                        .withACL(ZooDefs.Ids.OPEN_ACL_UNSAFE)            // acl：匿名权限
                         .forPath(path);
-                log.info("create createPersistentNode:{}",path);
+                log.info("create createPersistentNode:{}", path);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("zookeeper创建持久节点失败...{}",path);
+            log.error("zookeeper创建持久节点失败...{}", path);
         }
 
     }
-
 
 
     /**
-     *@描述 创建临时顺序节点(和持久节点不同的是，临时节点的生命周期和客户端会话绑定。也就是说，如果客户端会话失效，那么这个节点就会自动被清除掉)
+     * @描述 创建临时顺序节点(和持久节点不同的是 ， 临时节点的生命周期和客户端会话绑定 。 也就是说 ， 如果客户端会话失效 ， 那么这个节点就会自动被清除掉)
      */
-    public void createPhemeralEphemeralNode(String path,String address){
+    public void createPhemeralEphemeralNode(String path, String address) {
 
         try {
-            if(client.checkExists().forPath(path) == null){
+            if (client.checkExists().forPath(path) == null) {
                 client.create().creatingParentsIfNeeded()
-                        .withMode(CreateMode.EPHEMERAL_SEQUENTIAL)		// 临时顺序节点
-                        .withACL(ZooDefs.Ids.OPEN_ACL_UNSAFE)			// acl：匿名权限
-                        .forPath(path,address.getBytes());
-                log.info("create createePhemeralEphemeralNode:{}",path);
+                        .withMode(CreateMode.EPHEMERAL_SEQUENTIAL)        // 临时顺序节点
+                        .withACL(ZooDefs.Ids.OPEN_ACL_UNSAFE)            // acl：匿名权限
+                        .forPath(path, address.getBytes());
+                log.info("create createePhemeralEphemeralNode:{}", path);
 
             }
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("zookeeper创建临时顺序节点失败...{}",path);
+            log.error("zookeeper创建临时顺序节点失败...{}", path);
         }
 
     }
 
 
-    public List<String> getChildNode(String path){
+    public List<String> getChildNode(String path) {
 
         try {
-            if(client.checkExists().forPath(path) == null){
-                log.info("serviceNode is not exists:{}",path);
+            if (client.checkExists().forPath(path) == null) {
+                log.info("serviceNode is not exists:{}", path);
                 return null;
             }
 
-            List<String> list=client.getChildren().forPath(path);//获取所有子节点
-            if(CollectionUtils.isEmpty(list)){
-                log.info("can not find any address node on path:{}",path);
+            List<String> list = client.getChildren().forPath(path);//获取所有子节点
+            if (CollectionUtils.isEmpty(list)) {
+                log.info("can not find any address node on path:{}", path);
                 return null;
             }
             return list;
@@ -134,13 +184,13 @@ public class ZKCuratorClient implements Closable {
 
 
     /**
-     *@描述 获取节点下面的值  ip地址
+     * @描述 获取节点下面的值  ip地址
      */
-    public String getData(String path){
+    public String getData(String path) {
 
-        String dataPath=path;
+        String dataPath = path;
         try {
-            byte[] result=client.getData().forPath(dataPath);
+            byte[] result = client.getData().forPath(dataPath);
             return new String(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -150,11 +200,11 @@ public class ZKCuratorClient implements Closable {
     }
 
     /**
-     *@描述 关闭zk连接
+     * @描述 关闭zk连接
      */
     @Override
     public void close() {
-        if(client!=null){
+        if (client != null) {
             log.info("断开与zk的连接......");
             client.close();
         }

@@ -1,7 +1,6 @@
 package com.fayayo.job.core.transport;
 
-import com.fayayo.job.core.transport.bean.RpcRequest;
-import com.fayayo.job.core.transport.bean.RpcResponse;
+import com.fayayo.job.core.transport.bean.*;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -16,18 +15,20 @@ import java.util.concurrent.ConcurrentMap;
  * @desc netty 服务端处理类
  */
 @Slf4j
-public class NettyServerHandler  extends SimpleChannelInboundHandler<RpcRequest> {
+public class NettyServerHandler  extends SimpleChannelInboundHandler<DefaultRequest> {
 
     private ConcurrentMap<String, Channel> channels = new ConcurrentHashMap<>();
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, RpcRequest request) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, DefaultRequest request) throws Exception {
 
-        log.info("receive:{}",request.getServerAddress());
+        log.info("receive:{}",request.getRequestId());
         //TODO 处理请求的地方  优化  改为异步处理
-        RpcResponse rpcResponse=new RpcResponse();
-        rpcResponse.setResult("ok");
-        ctx.channel().writeAndFlush(rpcResponse).addListener(ChannelFutureListener.CLOSE);
+        DefaultResponse response=new DefaultResponse();
+        System.out.println("request.getRequestId():"+request.getRequestId());
+        response.setRequestId(request.getRequestId());
+        response.setValue("ok.....");
+        ctx.channel().writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
 
     }
 

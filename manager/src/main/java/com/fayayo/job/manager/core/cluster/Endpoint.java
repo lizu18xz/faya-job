@@ -8,7 +8,7 @@ public class Endpoint {
     public Endpoint(String host, int port) {
         this.host = host;
         this.port = port;
-        this.weight = 1;
+        this.weight = 1;//默认不给是1
     }
 
     public Endpoint(String host, int port, Integer weight) {

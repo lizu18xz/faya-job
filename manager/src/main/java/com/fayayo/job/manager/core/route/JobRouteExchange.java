@@ -1,6 +1,8 @@
 package com.fayayo.job.manager.core.route;
 
-import com.fayayo.job.core.bean.Request;
+import com.fayayo.job.common.constants.Constants;
+import com.fayayo.job.common.params.JobInfoParam;
+import com.fayayo.job.core.transport.bean.DefaultRequest;
 import com.fayayo.job.entity.JobInfo;
 import com.fayayo.job.manager.core.cluster.Endpoint;
 import com.fayayo.job.manager.core.cluster.LoadBalance;
@@ -24,9 +26,16 @@ public class JobRouteExchange {
 
     public JobRouteExchange(List<String>addressList) {
         endpoints=addressList.stream().map(e->{
-
-            return new Endpoint(e,1,1);//构造Endpoint
-
+            //解析address:port:weight
+            String[]servers=e.split(":");
+            if(servers.length==3){
+                return new Endpoint(servers[0],Integer.parseInt(servers[1]),Integer.parseInt(servers[2]));//构造Endpoint
+            }else if(servers.length==2){
+                return new Endpoint(servers[0],Integer.parseInt(servers[1]));//构造Endpoint
+            }else {
+                log.info("{}服务地址注册格式有误!!!", Constants.LOG_PREFIX);
+                return null;
+            }
         }).collect(Collectors.toList());
 
     }
@@ -36,7 +45,7 @@ public class JobRouteExchange {
      *@创建人  dalizu
      *@创建时间  2018/8/12
      */
-    public LoadBalance getLoadBalance(JobInfo jobInfo){
+    public LoadBalance getLoadBalance(JobInfoParam jobInfo){
         LoadBalance loadBalance=null;
         loadBalance=JobLoadBalanceFactory.getLoadBalance(jobInfo);
         loadBalance.onRefresh(endpoints);
@@ -56,14 +65,11 @@ public class JobRouteExchange {
                     list.add("10.10.10.2");
                     list.add("10.10.10.3");
                     JobRouteExchange jobRouteExchange=new JobRouteExchange(list);
-
-                    JobInfo jobInfo=new JobInfo();
+                    JobInfoParam jobInfo=new JobInfoParam();
                     jobInfo.setJobLoadBalance(3);
                     jobInfo.setId(1);
                     LoadBalance loadBalance=jobRouteExchange.getLoadBalance(jobInfo);
-
-                    System.out.println(loadBalance.select(new Request()).toString());
-
+                    System.out.println(loadBalance.select(new DefaultRequest()).toString());
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -72,7 +78,6 @@ public class JobRouteExchange {
                 }
             }
         }).start();
-
 
         new Thread(new Runnable() {
             @Override
@@ -85,13 +90,11 @@ public class JobRouteExchange {
                     lists.add("10.10.10.87");
                     JobRouteExchange jobRouteExchange1=new JobRouteExchange(lists);
 
-                    JobInfo jobInfo1=new JobInfo();
+                    JobInfoParam jobInfo1=new JobInfoParam();
                     jobInfo1.setJobLoadBalance(3);
                     jobInfo1.setId(2);
                     LoadBalance loadBalance1=jobRouteExchange1.getLoadBalance(jobInfo1);
-
-                    System.out.println(loadBalance1.select(new Request()).toString());
-
+                    System.out.println(loadBalance1.select(new DefaultRequest()).toString());
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -101,11 +104,6 @@ public class JobRouteExchange {
             }
         }).start();
 
-
     }
-
-
-
-
 
 }

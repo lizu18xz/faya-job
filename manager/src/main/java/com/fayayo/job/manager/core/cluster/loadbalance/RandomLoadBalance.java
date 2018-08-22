@@ -1,7 +1,8 @@
 
 package com.fayayo.job.manager.core.cluster.loadbalance;
 
-import com.fayayo.job.core.bean.Request;
+import com.fayayo.job.core.transport.bean.DefaultRequest;
+import com.fayayo.job.core.transport.spi.Request;
 import com.fayayo.job.manager.core.cluster.Endpoint;
 import com.fayayo.job.manager.core.cluster.LoadBalance;
 
@@ -50,7 +51,7 @@ public class RandomLoadBalance extends AbstractLoadBalance {
         list.add(new Endpoint("13", 9004));
 
         loadBalance.onRefresh(list);//刷新地址
-        Endpoint endpoint = loadBalance.select(new Request());//获取一个地址
+        Endpoint endpoint = loadBalance.select(new DefaultRequest());//获取一个地址
         System.out.println(endpoint.toString());
     }
 

@@ -1,0 +1,17 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /datax-executor
+
+faya-job:
+  zookeeperServer: 192.168.88.130:2181
+  #zookeeperServer: 192.168.76.139:2181
+  registerPath: /job-register
+  datax-executor:
+     server: 127.0.0.1
+     port: 8888
+     weight: 1
+
+
+
+

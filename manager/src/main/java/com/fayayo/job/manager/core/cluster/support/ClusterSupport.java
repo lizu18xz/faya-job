@@ -3,6 +3,7 @@ package com.fayayo.job.manager.core.cluster.support;
 import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
+import com.fayayo.job.common.params.JobInfoParam;
 import com.fayayo.job.core.spi.ServiceDiscovery;
 import com.fayayo.job.core.spi.impl.ZkServiceDiscovery;
 import com.fayayo.job.core.zookeeper.ZKCuratorClient;
@@ -31,7 +32,7 @@ public class ClusterSupport {
     /**
      * @描述 构造cluster
      */
-    public Cluster buildClusterSupport(JobInfo jobInfo) {
+    public Cluster buildClusterSupport(JobInfoParam jobInfo) {
         //获取ha的实现
         Integer ha = jobInfo.getJobHa();
         HaStrategy haStrategy = HaStrategyFactory.createHaStrategy(ha);
@@ -45,7 +46,7 @@ public class ClusterSupport {
     /**
      * @描述 获取负载策略
      */
-    public LoadBalance getLoadBalance(JobInfo jobInfo) {
+    public LoadBalance getLoadBalance(JobInfoParam jobInfo) {
 
         //从zk中获取 服务ip地址列表
         ZKCuratorClient zkCuratorClient = SpringHelper.popBean(ZKCuratorClient.class);

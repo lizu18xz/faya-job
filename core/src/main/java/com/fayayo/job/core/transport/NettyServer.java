@@ -1,7 +1,6 @@
 package com.fayayo.job.core.transport;
 
-import com.fayayo.job.core.transport.bean.RpcRequest;
-import com.fayayo.job.core.transport.bean.RpcResponse;
+import com.fayayo.job.core.transport.bean.*;
 import com.fayayo.job.core.transport.codec.RpcDecoder;
 import com.fayayo.job.core.transport.codec.RpcEncoder;
 import io.netty.bootstrap.ServerBootstrap;
@@ -33,15 +32,15 @@ public class NettyServer {
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
                     //outBound(处理写)  encoder
-                    ch.pipeline().addLast(new RpcEncoder(RpcResponse.class));
+                    ch.pipeline().addLast(new RpcEncoder(DefaultResponse.class));
 
                     //inBound (处理读)  decoder  -->send
-                    ch.pipeline().addLast(new RpcDecoder(RpcRequest.class));
+                    ch.pipeline().addLast(new RpcDecoder(DefaultRequest.class));
                     ch.pipeline().addLast(new NettyServerHandler());
 
                 }
             });
-            //bootstrap.bind(8888).addListener((ChannelFutureListener) future -> System.out.println("bind success in port: " + 8888));
+            //同步
             ChannelFuture f = bootstrap.bind(8888).sync().
                     addListener((ChannelFutureListener) future -> System.out.println("bind success in port: " + 8888));//服务端启动的入口
             f.channel().closeFuture().sync();

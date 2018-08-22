@@ -1,6 +1,6 @@
 package com.fayayo.job.manager.core.cluster.loadbalance;
 
-import com.fayayo.job.entity.JobInfo;
+import com.fayayo.job.common.params.JobInfoParam;
 import com.fayayo.job.manager.core.cluster.LoadBalance;
 
 import java.util.Map;
@@ -21,7 +21,7 @@ public class JobLoadBalanceFactory {
     private static final Map<Integer,LoadBalance> jobMap=new ConcurrentHashMap<Integer,LoadBalance>();
 
 
-    public static LoadBalance getLoadBalance(JobInfo jobInfo){
+    public static LoadBalance getLoadBalance(JobInfoParam jobInfo){
 
         LoadBalance loadBalance=null;
 

@@ -1,28 +1,32 @@
-package com.fayayo.job.core.bean;
+package com.fayayo.job.core.transport.bean;
 
+import com.fayayo.job.core.transport.spi.Request;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author dalizu on 2018/8/19.
+ * @author dalizu on 2018/8/7.
  * @version v1.0
- * @desc rpc请求对象
+ * @desc 请求对象
  */
 @Getter
 @Setter
-public class Request implements Serializable {
+public class DefaultRequest implements Serializable, Request {
 
-    private String interfaceName;
-    private String methodName;
-    private String paramtersDesc;
-    private Object[] arguments;
+    private static final long serialVersionUID = 1168814620391610215L;
+
+    private String interfaceName;//
+    private String methodName;//
+    private String paramtersDesc;//
+    private Object[] arguments;//
     private Map<String, String> attachments;
+    private int retries = 0;
+
+    private long requestId;//
 
     public void setAttachment(String key, String value) {
         if (this.attachments == null) {
@@ -40,8 +44,10 @@ public class Request implements Serializable {
         this.attachments = attachments;
     }
 
+
     @Override
     public String toString() {
-        return ReflectionToStringBuilder.toString(this);
+        return interfaceName + "." + methodName + "(" + paramtersDesc + ") requestId=" + requestId;
     }
+
 }

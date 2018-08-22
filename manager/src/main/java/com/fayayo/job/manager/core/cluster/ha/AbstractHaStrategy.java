@@ -1,14 +1,11 @@
 package com.fayayo.job.manager.core.cluster.ha;
 
 import com.fayayo.job.common.constants.Constants;
-import com.fayayo.job.core.bean.Request;
-import com.fayayo.job.core.bean.Response;
-import com.fayayo.job.core.spi.ExecutorSpi;
-import com.fayayo.job.entity.JobInfo;
+import com.fayayo.job.core.transport.NettyClient;
+import com.fayayo.job.core.transport.spi.Request;
+import com.fayayo.job.core.transport.spi.Response;
 import com.fayayo.job.manager.core.cluster.Endpoint;
 import com.fayayo.job.manager.core.cluster.LoadBalance;
-import com.fayayo.job.manager.core.proxy.ProxyFactory;
-import com.fayayo.job.manager.core.proxy.spi.JdkProxyFactory;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -20,17 +17,27 @@ import lombok.extern.slf4j.Slf4j;
 public abstract class AbstractHaStrategy implements HaStrategy {
 
     @Override
-    public Response doCall(Request request,LoadBalance loadBalance) {
+    public Response doCall(Request request, LoadBalance loadBalance) {
         log.info("{}HaStrategy start on loadBalance:{}", Constants.LOG_PREFIX, loadBalance);
         return call(request,loadBalance);
     }
 
-    protected abstract Response call(Request request,LoadBalance loadBalance);
+    protected abstract Response call(Request request, LoadBalance loadBalance);
 
 
-    public void request(){
-        log.info("start request......");
-        int a=1/0;
+    public Response request(Endpoint endpoint,Request request){
+        log.info("{}start request......:{}",Constants.LOG_PREFIX,request.toString());
+
+        NettyClient client=new NettyClient(endpoint.getHost(),endpoint.getPort());
+        try {
+            client.open();
+            Response response=client.request(request);
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
+            //TODO
+            return null;
+        }
     }
 
 

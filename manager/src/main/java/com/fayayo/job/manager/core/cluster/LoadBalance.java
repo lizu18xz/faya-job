@@ -1,7 +1,8 @@
 package com.fayayo.job.manager.core.cluster;
 
 
-import com.fayayo.job.core.bean.Request;
+
+import com.fayayo.job.core.transport.spi.Request;
 
 import java.util.List;
 

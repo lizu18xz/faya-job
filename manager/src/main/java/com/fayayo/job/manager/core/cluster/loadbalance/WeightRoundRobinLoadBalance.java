@@ -1,6 +1,7 @@
 package com.fayayo.job.manager.core.cluster.loadbalance;
 
-import com.fayayo.job.core.bean.Request;
+import com.fayayo.job.core.transport.bean.DefaultRequest;
+import com.fayayo.job.core.transport.spi.Request;
 import com.fayayo.job.manager.core.cluster.Endpoint;
 import com.fayayo.job.manager.core.cluster.LoadBalance;
 import lombok.extern.slf4j.Slf4j;
@@ -83,7 +84,7 @@ public class WeightRoundRobinLoadBalance extends AbstractLoadBalance {
     }
 
     @Override
-    protected void doSelectToHolder(Request request,List<Endpoint> refersHolder) {
+    protected void doSelectToHolder(Request request, List<Endpoint> refersHolder) {
         int i = 0, j = 0;
         while (i++ < getEndpoints().size()) {
             Endpoint r = this.endpointHolder.next();
@@ -108,7 +109,7 @@ public class WeightRoundRobinLoadBalance extends AbstractLoadBalance {
         list.add(new Endpoint("13", 9004, 1));
 
         loadBalance.onRefresh(list);//刷新地址
-        Endpoint endpoint = loadBalance.select(new Request());//获取一个地址
+        Endpoint endpoint = loadBalance.select(new DefaultRequest());//获取一个地址
         System.out.println(endpoint.toString());
     }
 

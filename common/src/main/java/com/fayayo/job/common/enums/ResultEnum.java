@@ -34,7 +34,12 @@ public enum ResultEnum {
 
 
     //ha
-    HA_NOT_EXIST(30001,"任务ha策略配置不存在，请检查!!!")
+    HA_NOT_EXIST(30001,"任务ha策略配置不存在，请检查!!!"),
+
+
+    //transport
+    NETTY_SEND_ERROR(40001,"NettyChannel send request to server Error")
+
 
     ;
 

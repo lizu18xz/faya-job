@@ -1,6 +1,7 @@
 package com.fayayo.job.core.transport;
 
-import com.fayayo.job.core.transport.bean.RpcResponse;
+import com.fayayo.job.core.transport.bean.*;
+import com.fayayo.job.core.transport.spi.MessageHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -11,18 +12,19 @@ import lombok.extern.slf4j.Slf4j;
  * @desc netty 客户端处理类
  */
 @Slf4j
-public class NettyClientHandler extends SimpleChannelInboundHandler<RpcResponse> {
+public class NettyClientHandler extends SimpleChannelInboundHandler<DefaultResponse> {
 
-    private RpcResponse rpcResponse;
+    private MessageHandler messageHandler;
 
-    public RpcResponse getRpcResponse() {
-        return rpcResponse;
+    public NettyClientHandler(MessageHandler messageHandler){
+        this.messageHandler=messageHandler;
     }
 
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, RpcResponse rpcResponse) throws Exception {
-        this.rpcResponse=rpcResponse;
+    protected void channelRead0(ChannelHandlerContext ctx, DefaultResponse response) throws Exception {
+
+        messageHandler.handle(response);
     }
 
     @Override

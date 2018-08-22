@@ -1,6 +1,7 @@
 package com.fayayo.job.manager.core.cluster.loadbalance;
 import com.fayayo.job.common.util.MathUtil;
-import com.fayayo.job.core.bean.Request;
+import com.fayayo.job.core.transport.bean.DefaultRequest;
+import com.fayayo.job.core.transport.spi.Request;
 import com.fayayo.job.manager.core.cluster.Endpoint;
 import com.fayayo.job.manager.core.cluster.LoadBalance;
 
@@ -39,10 +40,9 @@ public class ConsistentHashLoadBalance extends AbstractLoadBalance {
     }
 
     @Override
-    protected void doSelectToHolder(Request request,List<Endpoint> refersHolder) {
+    protected void doSelectToHolder(Request request, List<Endpoint> refersHolder) {
         List<Endpoint> endpoints = getEndpoints();
 
-        //TODO  待修改动态
         int hash = getHash(request);
         for (int i = 0; i < endpoints.size(); i++) {
             Endpoint ref = consistentHashReferers.get((hash + i) % consistentHashReferers.size());
@@ -81,7 +81,7 @@ public class ConsistentHashLoadBalance extends AbstractLoadBalance {
         list.add(new Endpoint("13",9004));
         loadBalance.onRefresh(list);//刷新地址
         while (true){
-            Endpoint endpoint=loadBalance.select(new Request());//获取一个地址
+            Endpoint endpoint=loadBalance.select(new DefaultRequest());//获取一个地址
             System.out.println(endpoint.toString());
             Thread.sleep(1000);
         }

@@ -1,7 +1,10 @@
 
 package com.fayayo.job.manager.core.proxy;
+import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.common.util.ReflectUtil;
-import com.fayayo.job.core.bean.Request;
+import com.fayayo.job.core.transport.bean.DefaultRequest;
+import com.fayayo.job.core.transport.spi.Request;
+import com.fayayo.job.core.transport.util.RequestIdGenerator;
 import com.fayayo.job.manager.core.cluster.support.Cluster;
 import lombok.extern.slf4j.Slf4j;
 import java.lang.reflect.InvocationHandler;
@@ -28,8 +31,9 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
      */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        log.info("RefererInvocationHandler invock start......");
-        Request request=new Request();
+        log.info("{}RefererInvocationHandler invock start......", Constants.LOG_PREFIX);
+        DefaultRequest request=new DefaultRequest();
+        request.setRequestId(RequestIdGenerator.getRequestId());
         request.setArguments(args);
         String methodName = method.getName();
         request.setMethodName(methodName);

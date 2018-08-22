@@ -2,8 +2,8 @@ package com.fayayo.job.manager.core.cluster.ha;
 
 import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.common.exception.CommonException;
-import com.fayayo.job.core.bean.Request;
-import com.fayayo.job.core.bean.Response;
+import com.fayayo.job.core.transport.spi.Request;
+import com.fayayo.job.core.transport.spi.Response;
 import com.fayayo.job.manager.core.cluster.Endpoint;
 import com.fayayo.job.manager.core.cluster.LoadBalance;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class FailoverHaStrategy extends AbstractHaStrategy {
         }
     };
 
-    public Response call(Request request,LoadBalance loadBalance) {
+    public Response call(Request request, LoadBalance loadBalance) {
 
         //根据规则获取一组endpoint
         List<Endpoint> endpointList = selectReferers(request,loadBalance);
@@ -44,9 +44,8 @@ public class FailoverHaStrategy extends AbstractHaStrategy {
             log.info("{}FailoverHaStrategy start to call ......{},tryCount:{},request:{}", Constants.LOG_PREFIX,endpoint.getHost(),(i+1),request.toString());
             try {
                 //获取nettyClient  发送RPC请求
-                request();
+                return request(endpoint,request);
 
-                return null;
             } catch (RuntimeException e) {
                 // 对于业务异常，直接抛出，不进行重试
                 if (e instanceof CommonException) {

@@ -1,8 +1,8 @@
 
 package com.fayayo.job.manager.core.cluster.support;
 
-import com.fayayo.job.core.bean.Request;
-import com.fayayo.job.core.bean.Response;
+import com.fayayo.job.core.transport.spi.Request;
+import com.fayayo.job.core.transport.spi.Response;
 import com.fayayo.job.manager.core.cluster.LoadBalance;
 import com.fayayo.job.manager.core.cluster.ha.HaStrategy;
 
