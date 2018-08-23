@@ -113,7 +113,13 @@ public class NettyClient {
                 response.addListener(new FutureListener() {//新增监听器，当整个请求完成后会调用此回调方法
                     @Override
                     public void operationComplete(Future future) throws Exception {
-                        log.info("服务端返回数据完成");
+                        //判断有没有异常
+                        if (future.isSuccess() || (future.isDone() && future.getException() instanceof CommonException)) {
+                            log.info("服务端返回数据完成.");
+                        }else {
+                            //TODO 可以设置异常次数然后禁用此服务
+                            log.info("服务端未知异常请确认!!!");
+                        }
                     }
                 });
                 return response;
@@ -123,7 +129,6 @@ public class NettyClient {
             if (response != null) {
                 response.cancel();
             }
-
             throw new CommonException(ResultEnum.NETTY_SEND_ERROR);
         }finally {
 
@@ -151,21 +156,37 @@ public class NettyClient {
 
     //模拟调用
     public static void main(String[] args) throws Exception {
-        NettyClient client=new NettyClient("127.0.0.1",8888);
-        for (int i=0;i<1;i++){
-            client.open();
-            DefaultRequest request=new DefaultRequest();
-            request = new DefaultRequest();
-            request.setRequestId(RequestIdGenerator.getRequestId());
-            request.setInterfaceName("xxxxxxxx");
-            request.setMethodName("hello");
-            request.setParamtersDesc("void");
-            Response response=client.request(request);
-            System.out.println("start  get result");
-            System.out.println("result:"+response.getValue());//获取执行结果   会阻塞  知道服务端返回后调用onSuccess回调
-            //eventLoopGroup.shutdownGracefully();
+        try {
+            for (int i=0;i<100;i++){
+                NettyClient client=new NettyClient("127.0.0.1",8888);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            client.open();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        DefaultRequest request=new DefaultRequest();
+                        request = new DefaultRequest();
+                        request.setRequestId(RequestIdGenerator.getRequestId());
+                        request.setInterfaceName("xxxxxxxx");
+                        request.setMethodName("hello");
+                        request.setParamtersDesc("void");
+                        Response response=client.request(request);
+                        System.out.println("start  get result");
+                        System.out.println("result:"+response.getValue());//获取执行结果   会阻塞  知道服务端返回后调用onSuccess回调
+                    }
+                }).start();
+
+                //eventLoopGroup.shutdownGracefully();
+            }
+            //client.close();
+        }catch (Exception e){
+            e.printStackTrace();
+            //client.close();
         }
-        client.close();
+
     }
 
 }

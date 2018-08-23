@@ -21,7 +21,7 @@ public class dataxConfig {
     public JobExecutor jobExecutor(){
 
         return new JobExecutor(executorProperties.getServer(),
-                executorProperties.getPort(),executorProperties.getWeight());
+                executorProperties.getPort(),executorProperties.getWeight(),executorProperties.getName());
 
     }
 

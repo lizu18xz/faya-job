@@ -53,6 +53,9 @@ public class ClusterSupport {
         ZkProperties zkProperties = SpringHelper.popBean(ZkProperties.class);
 
         ServiceDiscovery serviceDiscovery = new ZkServiceDiscovery(zkCuratorClient, zkProperties);
+        //TODO 根据groupId获取group的名称  注册是根据名称进行的
+        Integer groupId=jobInfo.getJobGroup();
+
         List<String> list = serviceDiscovery.discover(String.valueOf(jobInfo.getJobGroup()));//根据所属执行器查询ip地址
         if (CollectionUtils.isEmpty(list)) {
             throw new CommonException(ResultEnum.JOB_NOT_FIND_ADDRESS);

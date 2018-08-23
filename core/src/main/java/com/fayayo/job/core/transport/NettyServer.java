@@ -18,11 +18,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class NettyServer {
 
-    //服务启动
-    public static void main(String[] args) {
+    private Integer port;
+
+    public NettyServer(Integer port) {
+        this.port = port;
+    }
+
+
+     /**
+       *@描述 启动服务端
+     */
+    public void start(){
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
-        //EventLoopGroup businessGroup = new NioEventLoopGroup(1000);
+
+        //ConnectionCountHandler connectionCountHandler=new ConnectionCountHandler();//统计
+
         try {
             ServerBootstrap bootstrap = new ServerBootstrap();
             bootstrap.group(bossGroup, workerGroup);
@@ -33,16 +44,15 @@ public class NettyServer {
                 protected void initChannel(SocketChannel ch) throws Exception {
                     //outBound(处理写)  encoder
                     ch.pipeline().addLast(new RpcEncoder(DefaultResponse.class));
-
                     //inBound (处理读)  decoder  -->send
+                    //ch.pipeline().addLast(connectionCountHandler);//统计连接数
                     ch.pipeline().addLast(new RpcDecoder(DefaultRequest.class));
                     ch.pipeline().addLast(new NettyServerHandler());
-
                 }
             });
             //同步
-            ChannelFuture f = bootstrap.bind(8888).sync().
-                    addListener((ChannelFutureListener) future -> System.out.println("bind success in port: " + 8888));//服务端启动的入口
+            ChannelFuture f = bootstrap.bind(port).sync().
+                    addListener((ChannelFutureListener) future -> System.out.println("bind success in port: " + port));//服务端启动的入口
             f.channel().closeFuture().sync();
 
         }catch (Exception e){
@@ -51,5 +61,11 @@ public class NettyServer {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }
+    }
+
+    //服务启动
+    public static void main(String[] args) {
+        NettyServer nettyServer=new NettyServer(8888);
+        nettyServer.start();
     }
 }

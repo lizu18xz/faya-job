@@ -11,6 +11,7 @@ faya-job:
      server: 127.0.0.1
      port: 8888
      weight: 1
+     name: datax
 
 
 

@@ -1,11 +1,12 @@
 package com.fayayo.job.core.transport.bean;
 
-import com.fayayo.job.common.exception.CommonException;
+import com.fayayo.job.core.transport.exception.NettyServiceException;
 import com.fayayo.job.core.transport.spi.FutureListener;
 import com.fayayo.job.core.transport.spi.Request;
 import com.fayayo.job.core.transport.spi.Response;
 import com.fayayo.job.core.transport.spi.ResponseFuture;
 import lombok.extern.slf4j.Slf4j;
+
 import java.util.ArrayList;
 import java.util.List;
 @Slf4j
@@ -51,17 +52,17 @@ public class DefaultResponseFuture implements ResponseFuture {
     public Object getValue() {
         synchronized (lock) {
             if (!isDoing()) {
-                return result;//如果不是在运行就报错
+                return getValueOrThrowable();//如果不是在运行就报错
             }
             if (timeout <= 0) {//超时时间
                 try {
                     lock.wait();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    cancel(new CommonException(999999,this.getClass().getName() + " getValue InterruptedException : "
+                    cancel(new NettyServiceException(this.getClass().getName() + " getValue InterruptedException : "
                             + request + " cost=" + (System.currentTimeMillis() - createTime)));
                 }
-                return result;
+                return getValueOrThrowable();//如果不是在运行就报错
             } else {
                 long waitTime = timeout - (System.currentTimeMillis() - createTime);
 
@@ -87,7 +88,7 @@ public class DefaultResponseFuture implements ResponseFuture {
                     timeoutSoCancel();
                 }
             }
-            return result;
+            return getValueOrThrowable();//如果不是在运行就报错
         }
     }
 
@@ -99,7 +100,7 @@ public class DefaultResponseFuture implements ResponseFuture {
     @Override
     public boolean cancel() {
         Exception e =
-                new CommonException(999999,this.getClass().getName() + " task cancel:" + request.toString() + " cost=" + (System.currentTimeMillis() - createTime));
+                new NettyServiceException(this.getClass().getName() + " task cancel:" + request.toString() + " cost=" + (System.currentTimeMillis() - createTime));
         return cancel(e);
     }
 
@@ -182,7 +183,7 @@ public class DefaultResponseFuture implements ResponseFuture {
 
             state = FutureState.CANCELLED;
             exception =
-                    new CommonException(999999,this.getClass().getName() + " request timeout: serverPort="  + request + " cost=" + (System.currentTimeMillis() - createTime));
+                    new NettyServiceException(this.getClass().getName() + " request timeout: serverPort="  + request + " cost=" + (System.currentTimeMillis() - createTime));
             lock.notifyAll();
         }
 
@@ -220,6 +221,16 @@ public class DefaultResponseFuture implements ResponseFuture {
         notifyListeners();//运行完毕
         return true;
     }
+
+    private Object getValueOrThrowable() {
+        if (exception != null) {
+            throw (exception instanceof RuntimeException) ? (RuntimeException) exception : new NettyServiceException(
+                    exception.getMessage());
+        }
+
+        return result;
+    }
+
 
     public long getRequestId() {
         return this.request.getRequestId();

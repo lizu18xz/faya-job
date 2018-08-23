@@ -7,7 +7,7 @@ package com.fayayo.job.core.transport;
  */
 public class Params {
 
-    public static final int REQUESTTIMEOUT=1000;
+    public static final int REQUESTTIMEOUT=3000;//请求超时参数，超过这个时间不返回会抛出异常
 
     public static final int CONNECTTIMEOUT=1000;
 

@@ -19,14 +19,14 @@ public class DefaultRequest implements Serializable, Request {
 
     private static final long serialVersionUID = 1168814620391610215L;
 
-    private String interfaceName;//
-    private String methodName;//
-    private String paramtersDesc;//
-    private Object[] arguments;//
+    private String interfaceName;//接口名称
+    private String methodName;//方法名称
+    private String paramtersDesc;//参数描述
+    private Object[] arguments;//参数
     private Map<String, String> attachments;
     private int retries = 0;
 
-    private long requestId;//
+    private long requestId;//请求id
 
     public void setAttachment(String key, String value) {
         if (this.attachments == null) {
