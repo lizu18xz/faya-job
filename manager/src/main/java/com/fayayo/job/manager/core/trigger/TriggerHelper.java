@@ -6,12 +6,14 @@ import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.common.params.JobInfoParam;
 import com.fayayo.job.core.spi.ExecutorSpi;
 import com.fayayo.job.core.transport.spi.Response;
+import com.fayayo.job.entity.JobGroup;
 import com.fayayo.job.entity.JobInfo;
 import com.fayayo.job.manager.config.SpringHelper;
 import com.fayayo.job.manager.core.cluster.support.Cluster;
 import com.fayayo.job.manager.core.cluster.support.ClusterSupport;
 import com.fayayo.job.manager.core.proxy.ProxyFactory;
 import com.fayayo.job.manager.core.proxy.spi.JdkProxyFactory;
+import com.fayayo.job.manager.service.JobGroupService;
 import com.fayayo.job.manager.service.JobInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -40,6 +42,9 @@ public class TriggerHelper {
 
         JobInfoParam jobInfoParam=new JobInfoParam();
         BeanUtils.copyProperties(jobInfo,jobInfoParam);
+        JobGroupService jobGroupService=SpringHelper.popBean(JobGroupService.class);
+        JobGroup jobGroup=jobGroupService.findOne(jobInfoParam.getJobGroup());
+        jobInfoParam.setJobGroupName(jobGroup.getName());
 
         //build cluster  配置机器的ha和选择服务的策略
         ClusterSupport clusterSupport=new ClusterSupport();

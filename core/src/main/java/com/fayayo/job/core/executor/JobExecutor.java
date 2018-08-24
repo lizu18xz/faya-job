@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import java.util.concurrent.CountDownLatch;
+
 /**
  * @author dalizu on 2018/8/22.
  * @version v1.0
@@ -49,8 +51,15 @@ public class JobExecutor implements ApplicationContextAware {
         this.applicationContext = applicationContext;
         log.info("执行器准备......:{}", server);
         //然后启动这个服务端，准备接收请求
+        CountDownLatch countDownLatch=new CountDownLatch(1);//阻塞线程
         NettyServer nettyServer = new NettyServer(port);
-        nettyServer.start();
+        nettyServer.start(countDownLatch);
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        log.info("服务端启动完毕,开始注册到服务中心");
         //服务端启动成功后，注册此执行器的这个服务到zk
         ZkServiceRegistry zkServiceRegistry = new ZkServiceRegistry(zkCuratorClient, zkProperties);
         String serviceAddress = new StringBuilder().

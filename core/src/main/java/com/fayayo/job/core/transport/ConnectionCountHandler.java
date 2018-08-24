@@ -22,7 +22,10 @@ public class ConnectionCountHandler extends ChannelInboundHandlerAdapter {
     }
 
      /**
-       *@描述 获取当前服务的连接数，可以限制每个服务最大的连接数
+
+       *@描述 服务发现
+
+       *@参数  服务名称
      */
     @Override
     public void channelActive(ChannelHandlerContext ctx) {

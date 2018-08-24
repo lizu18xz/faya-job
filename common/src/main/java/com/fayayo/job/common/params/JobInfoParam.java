@@ -15,7 +15,7 @@ import java.util.Date;
 public class JobInfoParam {
     private Integer id;
 
-    private Integer jobGroup;
+    private Integer jobGroup;//执行器id
 
     private String cron;
 
@@ -26,6 +26,8 @@ public class JobInfoParam {
     private Integer jobLoadBalance;
 
     private Integer jobHa;
+
+    private String jobGroupName;//执行器名称
 
     private Date startAt;
 

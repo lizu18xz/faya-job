@@ -20,7 +20,7 @@ import javax.validation.Valid;
 /**
  * @author dalizu on 2018/8/23.
  * @version v1.0
- * @desc
+ * @desc group api
  */
 @Slf4j
 @RestController

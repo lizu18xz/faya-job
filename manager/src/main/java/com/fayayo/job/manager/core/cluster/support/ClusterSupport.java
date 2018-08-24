@@ -46,17 +46,15 @@ public class ClusterSupport {
     /**
      * @描述 获取负载策略
      */
-    public LoadBalance getLoadBalance(JobInfoParam jobInfo) {
+    public LoadBalance getLoadBalance(JobInfoParam jobInfoParam) {
 
         //从zk中获取 服务ip地址列表
         ZKCuratorClient zkCuratorClient = SpringHelper.popBean(ZKCuratorClient.class);
         ZkProperties zkProperties = SpringHelper.popBean(ZkProperties.class);
 
         ServiceDiscovery serviceDiscovery = new ZkServiceDiscovery(zkCuratorClient, zkProperties);
-        //TODO 根据groupId获取group的名称  注册是根据名称进行的
-        Integer groupId=jobInfo.getJobGroup();
 
-        List<String> list = serviceDiscovery.discover(String.valueOf(jobInfo.getJobGroup()));//根据所属执行器查询ip地址
+        List<String> list = serviceDiscovery.discover(jobInfoParam.getJobGroupName());//根据所属执行器查询ip地址
         if (CollectionUtils.isEmpty(list)) {
             throw new CommonException(ResultEnum.JOB_NOT_FIND_ADDRESS);
         }
@@ -64,11 +62,11 @@ public class ClusterSupport {
         List<String> addressList = list.stream().map(e -> {
             return zkCuratorClient.getData(e);
         }).collect(Collectors.toList());
-        log.info("{}获取服务地址列表,jobid:{},groupId:{},addressList:{}",Constants.LOG_PREFIX,jobInfo.getId(), jobInfo.getJobGroup(), StringUtils.join(addressList, ","));
+        log.info("{}获取服务地址列表,jobid:{},执行器名称:{},addressList:{}",Constants.LOG_PREFIX,jobInfoParam.getId(), jobInfoParam.getJobGroupName(), StringUtils.join(addressList, ","));
 
         //获取负载均衡的策略  +  Ha策略  然后对选择的机器发送请求任务
         JobRouteExchange jobRouteExchange = new JobRouteExchange(addressList);
-        LoadBalance loadBalance = jobRouteExchange.getLoadBalance(jobInfo);
+        LoadBalance loadBalance = jobRouteExchange.getLoadBalance(jobInfoParam);
         log.info("{}服务执行负载策略:{}", Constants.LOG_PREFIX,loadBalance.getClass().getName());
         return loadBalance;
     }
