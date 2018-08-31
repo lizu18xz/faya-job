@@ -30,26 +30,23 @@ jar-executor  可执行jar执行器
 
 ### netty服务端客户端
 - 使用Netty实现RPC的通信
+- 负载均衡
+- ha的策略
 
 ### 业务表设计
 - 任务流信息
 - 任务详细信息
 
-### 新增任务大体流程的实现
-- 根据任务id获取详细信息
-- 判断任务类型
-- 发送rpc请求到合适的机器
-- 记录运行日志
+### 整合新的执行器
+- 可以参考默认的datax-executor 基于springboot
+````
+参数讲解:
+xxx-executor:
+     server: 127.0.0.1  服务地址
+     port: 8888         服务端口
+     weight: 1          服务的权重（负载均衡策略)
+     name: datax        服务名称  自动注册执行器的时候使用
+     mainClass: com.fayayo.job.datax.executor.DataxEngine  服务运行类,RPC通信的时候使用
+````
 
-
-
-
-
-
-
-
-4-  表设计
-4-  业务开发
-6-  默认提供执行器是进行数据交换 或者 运行可执行jar的 
-7-  可以扩展执行器，会新建监听的端口
 

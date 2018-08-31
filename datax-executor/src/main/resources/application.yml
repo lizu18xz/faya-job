@@ -12,6 +12,7 @@ faya-job:
      port: 8888
      weight: 1
      name: datax
+     mainClass: com.fayayo.job.datax.executor.DataxEngine
 
 
 

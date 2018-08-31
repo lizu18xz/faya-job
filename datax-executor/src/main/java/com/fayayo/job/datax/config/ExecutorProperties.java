@@ -23,4 +23,6 @@ public class ExecutorProperties {
     private Integer weight;//权重  轮训策略时候使用
 
     private String name;//应用名称
+
+    private String mainClass;//运行引擎
 }

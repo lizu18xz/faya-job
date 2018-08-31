@@ -22,6 +22,9 @@ public class DefaultRequest implements Serializable, Request {
     private String interfaceName;//接口名称
     private String methodName;//方法名称
     private String paramtersDesc;//参数描述
+
+    private Class<?>[] paramtersTypes;
+
     private Object[] arguments;//参数
     private Map<String, String> attachments;
     private int retries = 0;

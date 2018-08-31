@@ -1,6 +1,8 @@
 package com.fayayo.job.core.transport;
 
 import com.fayayo.job.common.constants.Constants;
+import com.fayayo.job.core.spi.ExecutorSpi;
+import com.fayayo.job.core.spi.impl.ExecutorSpiImpl;
 import com.fayayo.job.core.transport.bean.*;
 import com.fayayo.job.core.transport.codec.RpcDecoder;
 import com.fayayo.job.core.transport.codec.RpcEncoder;
@@ -11,6 +13,8 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -21,10 +25,14 @@ import java.util.concurrent.CountDownLatch;
 @Slf4j
 public class NettyServer {
 
+    //保存调度任务接口和实现类的映射关系
+    private static Map<String, Object> serviceMap = new HashMap<String, Object>();
+
     private Integer port;
 
     public NettyServer(Integer port) {
         this.port = port;
+        serviceMap.put(ExecutorSpi.class.getName(),new ExecutorSpiImpl());//保存调度任务接口和实现类的映射关系
     }
 
     private Thread thread;
@@ -53,7 +61,7 @@ public class NettyServer {
                             //inBound (处理读)  decoder  -->send
                             //ch.pipeline().addLast(connectionCountHandler);//统计连接数
                             ch.pipeline().addLast(new RpcDecoder(DefaultRequest.class));
-                            ch.pipeline().addLast(new NettyServerHandler());
+                            ch.pipeline().addLast(new NettyServerHandler(serviceMap));
                         }
                     });
                     //同步

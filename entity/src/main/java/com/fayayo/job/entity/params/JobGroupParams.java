@@ -10,7 +10,7 @@ import java.util.Date;
 /**
  * @author dalizu on 2018/8/23.
  * @version v1.0
- * @desc 任务执行器
+ * @desc 任务执行器参数
  */
 @Getter
 @Setter

@@ -23,7 +23,7 @@ public interface ServiceDiscovery {
      *@创建时间  2018/8/4
 
      */
-    List<String> discover(String groupId);
+    List<String> discover(String executorName);
 
     String getData(String path);
 

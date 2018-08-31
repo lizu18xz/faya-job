@@ -39,14 +39,14 @@ public class ZkServiceDiscovery implements ServiceDiscovery {
 
      */
     @Override
-    public List<String> discover(String groupId) {
+    public List<String> discover(String executorName) {
 
         //获取service节点
-        String serviceNode=zkProperties.getRegisterPath()+"/"+groupId;
+        String serviceNode=zkProperties.getRegisterPath()+"/"+executorName;
 
         List<String> list=zkCuratorClient.getChildNode(serviceNode);
         if(CollectionUtils.isEmpty(list)){
-            log.info("{}找不到对应执行器:{} 的注册地址,请先确定服务是否部署",Constants.LOG_PREFIX,groupId);
+            log.info("{}找不到对应执行器:{} 的注册地址,请先确定服务是否部署",Constants.LOG_PREFIX,executorName);
             return null;
         }
 

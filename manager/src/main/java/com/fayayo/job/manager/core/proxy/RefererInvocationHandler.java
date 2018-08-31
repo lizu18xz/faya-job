@@ -4,6 +4,7 @@ import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.common.util.ReflectUtil;
 import com.fayayo.job.core.transport.bean.DefaultRequest;
 import com.fayayo.job.core.transport.spi.Request;
+import com.fayayo.job.core.transport.spi.Response;
 import com.fayayo.job.core.transport.util.RequestIdGenerator;
 import com.fayayo.job.manager.core.cluster.support.Cluster;
 import lombok.extern.slf4j.Slf4j;
@@ -38,8 +39,10 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
         String methodName = method.getName();
         request.setMethodName(methodName);
         request.setParamtersDesc(ReflectUtil.getMethodParamDesc(method));
+        request.setParamtersTypes(method.getParameterTypes());
         request.setInterfaceName(method.getDeclaringClass().getName());
-        return cluster.call(request);
+        Response response=cluster.call(request);
+        return response.getValue();
     }
 
     /**

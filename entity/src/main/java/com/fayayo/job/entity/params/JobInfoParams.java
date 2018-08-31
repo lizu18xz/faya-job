@@ -11,7 +11,7 @@ import java.util.Date;
 /**
  * @author dalizu on 2018/8/8.
  * @version v1.0
- * @desc
+ * @desc 任务参数
  */
 @Getter
 @Setter

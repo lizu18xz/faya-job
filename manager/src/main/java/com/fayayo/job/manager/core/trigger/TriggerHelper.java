@@ -4,6 +4,7 @@ import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.common.params.JobInfoParam;
+import com.fayayo.job.core.executor.bean.Result;
 import com.fayayo.job.core.spi.ExecutorSpi;
 import com.fayayo.job.core.transport.spi.Response;
 import com.fayayo.job.entity.JobGroup;
@@ -52,10 +53,10 @@ public class TriggerHelper {
 
         //获取代理类
         ExecutorSpi executorSpi=getExecutorSpi(cluster);
-        Response response=executorSpi.run(jobInfoParam);
+        Result<?> result=executorSpi.run(jobInfoParam);
 
-        log.info("{}job success:{}", Constants.LOG_PREFIX,response.getValue());
-        //获取执行结果
+         //获取任务的执行结果
+        log.info("{}job success:{}", Constants.LOG_PREFIX,result);
 
     }
 

@@ -133,7 +133,7 @@ public class ZKCuratorClient implements Closable {
                         .withMode(CreateMode.PERSISTENT)        // 节点类型：持久节点
                         .withACL(ZooDefs.Ids.OPEN_ACL_UNSAFE)            // acl：匿名权限
                         .forPath(path);
-                log.info("create createPersistentNode:{}", path);
+                log.info("{}create createPersistentNode:{}",  Constants.LOG_PREFIX,path);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -154,7 +154,7 @@ public class ZKCuratorClient implements Closable {
                         .withMode(CreateMode.EPHEMERAL_SEQUENTIAL)        // 临时顺序节点
                         .withACL(ZooDefs.Ids.OPEN_ACL_UNSAFE)            // acl：匿名权限
                         .forPath(path, address.getBytes());
-                log.info("create createePhemeralEphemeralNode:{}", path);
+                log.info("{}create createePhemeralEphemeralNode:{}", Constants.LOG_PREFIX,path);
 
             }
         } catch (Exception e) {

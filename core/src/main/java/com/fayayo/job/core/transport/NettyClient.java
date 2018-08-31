@@ -131,15 +131,12 @@ public class NettyClient {
             }
             throw new CommonException(ResultEnum.NETTY_SEND_ERROR);
         }finally {
-
         }
-
     }
 
     public void close(){
         eventLoopGroup.shutdownGracefully();
     }
-
 
     public void registerCallback(long requestId, ResponseFuture responseFuture) {
         if (this.callbackMap.size() >= Params.NETTY_CLIENT_MAX_REQUEST) {
@@ -153,6 +150,7 @@ public class NettyClient {
     public ResponseFuture removeCallback(long requestId) {
         return callbackMap.remove(requestId);
     }
+
 
     //模拟调用
     public static void main(String[] args) throws Exception {
@@ -178,7 +176,6 @@ public class NettyClient {
                         System.out.println("result:"+response.getValue());//获取执行结果   会阻塞  知道服务端返回后调用onSuccess回调
                     }
                 }).start();
-
                 //eventLoopGroup.shutdownGracefully();
             }
             //client.close();
@@ -186,7 +183,6 @@ public class NettyClient {
             e.printStackTrace();
             //client.close();
         }
-
     }
 
 }

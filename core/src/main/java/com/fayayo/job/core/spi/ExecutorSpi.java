@@ -1,7 +1,7 @@
 package com.fayayo.job.core.spi;
 
 import com.fayayo.job.common.params.JobInfoParam;
-import com.fayayo.job.core.transport.spi.Response;
+import com.fayayo.job.core.executor.bean.Result;
 
 /**
  * @author dalizu on 2018/8/18.
@@ -11,7 +11,7 @@ import com.fayayo.job.core.transport.spi.Response;
 public interface ExecutorSpi {
 
 
-    Response run(JobInfoParam jobInfo);
+    Result<?> run(JobInfoParam jobInfo);
 
 
 

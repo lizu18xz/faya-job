@@ -9,7 +9,7 @@ use faya_job_manager;
 drop table if exists faya_job_group;
 create table faya_job_group(
   id int not null auto_increment,
-  name int not null comment '执行器名称',
+  name varchar(64) not null comment '执行器名称',
   group_desc varchar(256) not null comment '执行器描述',
   create_time timestamp not null default current_timestamp comment '创建时间',
   update_time timestamp not null default current_timestamp on update current_timestamp comment '修改时间',

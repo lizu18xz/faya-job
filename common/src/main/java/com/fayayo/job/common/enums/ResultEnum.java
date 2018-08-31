@@ -31,15 +31,15 @@ public enum ResultEnum {
     JOB_REPEAT_ERROR(20002,"不能重复添加相同的调度任务!!!"),
     JOB_NOT_EXIST(20003,"任务不存在了!!!"),
     JOB_NOT_FIND_ADDRESS(20004,"任务获取不到执行地址!!!"),
-
+    JOB_HANDLER_ERROR(20005,"任务执行器的引擎配置错误!!!!!!"),
 
     //ha
     HA_NOT_EXIST(30001,"任务ha策略配置不存在，请检查!!!"),
 
 
     //transport
-    NETTY_SEND_ERROR(40001,"NettyChannel send request to server Error")
-
+    NETTY_SEND_ERROR(40001,"NettyChannel send request to server Error"),
+    EXECUTOR_SERVICE_NOT_FOUND(40002,"调度实现类没有注册，请联系管理员!!!!")
 
     ;
 

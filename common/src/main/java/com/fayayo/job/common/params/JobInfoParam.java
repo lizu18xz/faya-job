@@ -2,6 +2,7 @@ package com.fayayo.job.common.params;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.util.Date;
 
@@ -35,4 +36,9 @@ public class JobInfoParam {
     private Date createTime;
 
     private Date updateTime;
+
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this);
+    }
 }

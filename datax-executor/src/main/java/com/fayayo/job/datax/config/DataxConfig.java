@@ -11,17 +11,18 @@ import org.springframework.context.annotation.Configuration;
  * @desc dataxExecutor  初始化类
  */
 @Configuration
-public class dataxConfig {
+public class DataxConfig {
 
     @Autowired
-    private ExecutorProperties executorProperties;
+    private ExecutorProperties properties;
 
 
     @Bean
     public JobExecutor jobExecutor(){
 
-        return new JobExecutor(executorProperties.getServer(),
-                executorProperties.getPort(),executorProperties.getWeight(),executorProperties.getName());
+        return new JobExecutor(properties.getServer(),
+                properties.getPort(),properties.getWeight(),properties.getName(),
+                properties.getMainClass());
 
     }
 
