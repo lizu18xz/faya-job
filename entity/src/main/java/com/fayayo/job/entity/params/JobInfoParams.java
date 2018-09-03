@@ -28,8 +28,11 @@ public class JobInfoParams {
     @NotNull(message = "任务的描述不能为空")
     private String jobDesc;
 
-    @NotNull(message = "执行类型不能为空")
+    @NotNull(message = "任务类型不能为空")
     private String jobType;
+
+    @NotNull(message = "执行类型不能为空")
+    private String executorType;//执行器类型
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startAt;

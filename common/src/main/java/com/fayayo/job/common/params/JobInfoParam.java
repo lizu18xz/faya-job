@@ -24,6 +24,8 @@ public class JobInfoParam {
 
     private String jobType;
 
+    private String executorType;
+
     private Integer jobLoadBalance;
 
     private Integer jobHa;

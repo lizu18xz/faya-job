@@ -10,8 +10,9 @@ import lombok.Getter;
 @Getter
 public enum JobTypeEnums {
 
-    DATAX("DATAX","数据交换作业"),
-    SPARK("SPARK","SPARK任务");
+    BEAN("BEAN","基于注解的任务")
+    ;
+    //SPARK("SPARK","SPARK任务");
 
     private String name;
 

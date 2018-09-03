@@ -23,6 +23,8 @@ public class JobInfo {
 
     private String jobDesc;
 
+    private String executorType;
+
     private String jobType;
 
     private Integer jobLoadBalance;
