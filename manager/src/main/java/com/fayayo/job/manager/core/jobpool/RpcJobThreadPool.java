@@ -19,7 +19,7 @@ public class RpcJobThreadPool {
     private int maxTimeRecycle = 60;
 
     public RpcJobThreadPool() {
-        log.info("{}初始化RpcJobThreadPool......",Constants.LOG_PREFIX);
+        //log.info("{}初始化RpcJobThreadPool......",Constants.LOG_PREFIX);
         //无界 也可以指定大小的队列
         final LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>(maxThread);
         threadPoolExecutor = new ThreadPoolExecutor(coreThread, maxThread, maxTimeRecycle, TimeUnit.SECONDS,

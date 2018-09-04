@@ -15,7 +15,6 @@ public enum JobLoadBalanceEnums implements CodeEnum{
     RANDOM(2,"随机"),//随机
     ROUNDROBIN(3,"轮训"),//轮训
     WEIGHT(4,"权重"),//权重
-
     ;
 
     JobLoadBalanceEnums(Integer code, String desc) {
@@ -26,8 +25,5 @@ public enum JobLoadBalanceEnums implements CodeEnum{
     private Integer code;
 
     private String desc;
-
-
-
 
 }

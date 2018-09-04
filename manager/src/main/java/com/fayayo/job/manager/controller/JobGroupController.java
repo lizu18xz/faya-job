@@ -10,9 +10,14 @@ import com.fayayo.job.entity.params.JobGroupParams;
 import com.fayayo.job.manager.service.JobGroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -44,6 +49,27 @@ public class JobGroupController {
         JobGroup jobGroup=jobGroupService.addJobGroup(jobGroupParams);
         return ResultVOUtil.success();
     }
+
+     /**
+       *@描述 执行器列表展示
+       *@返回值  List
+     */
+     @PostMapping("/list")
+     public ResultVO<Page<JobGroup>>list(@RequestParam(value = "page",defaultValue = "1")Integer page,
+                                   @RequestParam(value = "size",defaultValue = "10")Integer size){
+         log.info("查询执行器,pageNum={},pageSize={}",page,size);
+         Sort sort=new Sort(Sort.Direction.DESC,"createTime");
+         Pageable pageable = PageRequest.of((page-1),size,sort);
+         Page<JobGroup>jobGroupPage=jobGroupService.query(pageable);
+         log.info("查询执行器,结果={}", jobGroupPage);
+         return ResultVOUtil.success(jobGroupPage);
+     }
+
+
+
+
+
+
 
 
 

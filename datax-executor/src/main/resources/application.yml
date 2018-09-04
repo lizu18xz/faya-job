@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8083
   servlet:
     context-path: /datax-executor
 
@@ -9,7 +9,7 @@ faya-job:
   registerPath: /job-register
   datax-executor:
      server: 127.0.0.1
-     port: 8888
+     port: 8070
      weight: 1
      name: datax
      mainClass: com.fayayo.job.datax.executor.DataxEngine

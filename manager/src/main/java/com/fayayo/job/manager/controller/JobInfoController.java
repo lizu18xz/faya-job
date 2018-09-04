@@ -5,11 +5,16 @@ import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.common.result.ResultVO;
 import com.fayayo.job.common.result.ResultVOUtil;
+import com.fayayo.job.entity.JobGroup;
 import com.fayayo.job.entity.JobInfo;
 import com.fayayo.job.entity.params.JobInfoParams;
 import com.fayayo.job.manager.service.JobInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +42,27 @@ public class JobInfoController {
         JobInfo jobInfo=jobInfoService.addJob(jobInfoParams);
         return ResultVOUtil.success();
     }
+
+    /**
+     *@描述 分页条件查询
+     *@返回值  List
+     */
+    @PostMapping("/list")
+    public ResultVO<Page<JobInfo>> list(@RequestParam(value = "page",defaultValue = "1")Integer page,
+                                        @RequestParam(value = "size",defaultValue = "10")Integer size,
+                                        @RequestParam(value = "executorType",required = false)String executorType,
+                                        @RequestParam(value = "status",required = false)Integer status){
+
+        log.info("查询执行器,pageNum={},pageSize={}",page,size);
+        Sort sort=new Sort(Sort.Direction.DESC,"createTime");
+        Pageable pageable = PageRequest.of((page-1),size,sort);
+        Page<JobInfo> jobInfoPage=jobInfoService.query(pageable,executorType,status);
+        log.info("查询执行器,结果={}", jobInfoPage);
+        return ResultVOUtil.success(jobInfoPage);
+
+    }
+
+
 
 
 }

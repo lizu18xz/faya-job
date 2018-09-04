@@ -66,16 +66,20 @@ xxx-executor:
 
 
 ### 前端页面
+- 执行器列表
+- 执行器下面具体任务列表
+
+### 接口测试(暂时)
+````
+新增任务POST:localhost:8081/manager/job/add?jobGroup=1&cron=*/10 * * * * ? &jobDesc=mysqlToMysql数据交换&jobType=BEAN&jobLoadBalance=3&jobHa=2&executorType=DATAX
+````
 
 
 
 
 
 
-
-
-
-
+````
 
 
 

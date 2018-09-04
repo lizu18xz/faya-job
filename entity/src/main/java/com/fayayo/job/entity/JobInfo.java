@@ -31,6 +31,8 @@ public class JobInfo {
 
     private Integer jobHa;
 
+    private Integer jobStatus;
+
     private Date startAt;
 
     //@JsonFormat(pattern = "YYYY-MM-DD HH:mm:ss")

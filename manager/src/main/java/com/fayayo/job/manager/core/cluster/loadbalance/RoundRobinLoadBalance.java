@@ -19,7 +19,6 @@ public class RoundRobinLoadBalance extends AbstractLoadBalance {
 
 
     public RoundRobinLoadBalance() {
-        System.out.println("init  RoundRobinLoadBalance");
     }
 
     private AtomicInteger idx = new AtomicInteger(0);

@@ -16,6 +16,8 @@ public class RpcJobBean extends QuartzJobBean {
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 
+        //TODO 修改任务运行状态
+
         //获取任务的jobKey和groupId
         String jobId=jobExecutionContext.getJobDetail().getKey().getName();
         log.info("{}start to execute job key：{}",Constants.LOG_PREFIX,jobId);

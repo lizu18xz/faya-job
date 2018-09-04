@@ -8,6 +8,8 @@ import com.fayayo.job.manager.service.JobGroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -41,6 +43,14 @@ public class JobGroupServiceImpl implements JobGroupService{
         log.debug("{}查询单个任务执行器信息, 结果:{}", Constants.LOG_PREFIX, jobGroup);
 
         return jobGroup;
+    }
+
+    @Override
+    public Page<JobGroup> query(Pageable pageable) {
+
+        Page<JobGroup> page=jobGroupRepository.findAll(pageable);
+
+        return page;
     }
 
 
