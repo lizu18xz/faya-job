@@ -29,6 +29,9 @@ public class Result <T>{
         return new Result(0,data);
     }
 
+    public static Result error(String msg){
 
+        return new Result(-1,msg);
+    }
 
 }

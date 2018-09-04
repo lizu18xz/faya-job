@@ -30,7 +30,7 @@ public class ExecutorSpiImpl implements ExecutorSpi{
             //获取具体执行的服务
             JobExecutorHandler handler=JobExecutor.getHandler();
 
-            return handler.run();
+            return handler.run(jobInfo);
 
         }else {
             log.info("{}暂未开放其他类型处理器!!!!!!",Constants.LOG_PREFIX);
