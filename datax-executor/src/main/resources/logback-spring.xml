@@ -24,7 +24,8 @@
         <!-- 滚动策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 路径-->
-            <fileNamePattern>D:/app/workspace/logs/faya_job/datax-executor/info.%d.log</fileNamePattern>
+            <!--<fileNamePattern>D:/app/workspace/logs/faya_job/datax-executor/info.%d.log</fileNamePattern>-->
+            <fileNamePattern>/home/faya/app/faya_log/datax-executor/info.%d.log</fileNamePattern>
         </rollingPolicy>
     </appender>
 
@@ -42,7 +43,8 @@
         <!-- 滚动策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 路径-->
-            <fileNamePattern>D:/app/workspace/logs/faya_job/datax-executor/error.%d.log</fileNamePattern>
+            <!--<fileNamePattern>D:/app/workspace/logs/faya_job/datax-executor/error.%d.log</fileNamePattern>-->
+            <fileNamePattern>/home/faya/app/faya_log/datax-executor/error.%d.log</fileNamePattern>
         </rollingPolicy>
     </appender>
 

@@ -53,7 +53,7 @@ public class TriggerHelper {
 
         //获取代理类
         ExecutorSpi executorSpi=getExecutorSpi(cluster);
-        Result<?> result=executorSpi.run(jobInfoParam);
+        Result<?> result=executorSpi.run(jobInfoParam);//ExecutorSpiImpl.run()
 
          //获取任务的执行结果
         log.info("{}job success:{}", Constants.LOG_PREFIX,result);

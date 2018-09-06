@@ -20,10 +20,12 @@ import java.util.List;
  */
 @Slf4j
 @FayaService(DataxEngine.class)
-public class DataxEngine implements JobExecutorHandler {
+public class DataxEngine extends JobExecutorHandler {
 
     @Value("${faya-job.datax.config}")
     private String configHome;
+
+    private static final String BIN="bin";
 
     @Override
     public Result<?> run(JobInfoParam jobInfoParam) {
@@ -34,8 +36,8 @@ public class DataxEngine implements JobExecutorHandler {
             Integer id=jobInfoParam.getId();//任务唯一的id
             String json=id+".json";
             List<String>cmdList=new ArrayList<String>();
-            cmdList.add("python ");
-            cmdList.add(dataxHome+File.separator+"datax.py ");
+            cmdList.add("python");
+            cmdList.add(dataxHome+File.separator+BIN+File.separator+"datax.py");
             cmdList.add(configHome+File.separator+json);
             log.info("{}待执行命令:{}", Constants.LOG_PREFIX, StringUtils.join(cmdList," "));
             ShellCall.runCommand(cmdList);

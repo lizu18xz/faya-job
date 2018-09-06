@@ -1,10 +1,14 @@
 package com.fayayo.job.common.util;
 
 import com.fayayo.job.common.constants.Constants;
+import com.fayayo.job.common.enums.ResultEnum;
+import com.fayayo.job.common.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author dalizu on 2018/9/4.
@@ -77,6 +81,7 @@ public class ShellCall {
         } catch (Exception e) {
             e.printStackTrace();
             log.error("执行脚本命令失败,{}",e);
+            throw new CommonException(ResultEnum.JOB_RUN_ERROR);
         } finally {
             closeAll(out, errIn, in, inputStreamReader, bufferedReader);
             if (start != null) {
@@ -118,4 +123,11 @@ public class ShellCall {
                 e.printStackTrace();
             }
     }
+
+    public static void main(String[] args) {
+        List<String>cmdList=new ArrayList<String>();
+        cmdList.add("python ");
+        ShellCall.runCommand(cmdList);
+    }
+
 }

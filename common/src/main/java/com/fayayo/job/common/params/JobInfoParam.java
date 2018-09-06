@@ -32,6 +32,8 @@ public class JobInfoParam {
 
     private String jobGroupName;//执行器名称
 
+    private Integer jobStatus;
+
     private Date startAt;
 
     //@JsonFormat(pattern = "YYYY-MM-DD HH:mm:ss")

@@ -1,4 +1,4 @@
-package com.fayayo.job.entity.enums;
+package com.fayayo.job.common.enums;
 
 import lombok.Getter;
 
@@ -8,7 +8,7 @@ import lombok.Getter;
  * @desc 任务状态
  */
 @Getter
-public enum  JobStatusEnums {
+public enum JobStatusEnums {
 
     WAIT(0,"待分配"),
     WAIT_SCHEDULER(1,"待调度"),

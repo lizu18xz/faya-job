@@ -6,6 +6,7 @@ import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.core.annotation.FayaService;
 import com.fayayo.job.core.executor.handler.JobExecutorHandler;
 import com.fayayo.job.core.spi.impl.ZkServiceRegistry;
+import com.fayayo.job.core.thread.CallbackThread;
 import com.fayayo.job.core.transport.NettyServer;
 import com.fayayo.job.core.zookeeper.ZKCuratorClient;
 import com.fayayo.job.core.zookeeper.ZkProperties;
@@ -68,6 +69,10 @@ public class JobExecutor implements ApplicationContextAware {
         initRpcService();//初始化RPC服务
         initServer();//启动服务端
         initRegister();//注册服务
+
+        //启动结果处理线程
+        CallbackThread.getInstance().start();
+
     }
 
     /**

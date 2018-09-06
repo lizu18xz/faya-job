@@ -1,6 +1,6 @@
 package com.fayayo.job.entity.params;
 
-import com.fayayo.job.entity.enums.JobStatusEnums;
+import com.fayayo.job.common.enums.JobStatusEnums;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;

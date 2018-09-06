@@ -12,8 +12,7 @@
     <name>manager</name>
 
     <!-- war 部署到tomcat -->
-    <packaging>war</packaging>
-
+    <!--<packaging>war</packaging>-->
 
     <dependencies>
 
@@ -82,16 +81,24 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.fayayo.job.manager.ManagerApp</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
-
-            <plugin>
+           <!-- <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.6</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
-            </plugin>
-
+            </plugin>-->
         </plugins>
     </build>
 
