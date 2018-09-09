@@ -4,15 +4,16 @@ import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.common.params.JobInfoParam;
+import com.fayayo.job.common.util.EnumUtil;
+import com.fayayo.job.core.extension.ExtensionLoader;
 import com.fayayo.job.core.spi.ServiceDiscovery;
 import com.fayayo.job.core.spi.impl.ZkServiceDiscovery;
 import com.fayayo.job.core.zookeeper.ZKCuratorClient;
 import com.fayayo.job.core.zookeeper.ZkProperties;
-import com.fayayo.job.entity.JobInfo;
 import com.fayayo.job.manager.config.SpringHelper;
+import com.fayayo.job.manager.core.cluster.HaStrategy;
 import com.fayayo.job.manager.core.cluster.LoadBalance;
-import com.fayayo.job.manager.core.cluster.ha.HaStrategy;
-import com.fayayo.job.manager.core.cluster.ha.HaStrategyFactory;
+import com.fayayo.job.manager.core.cluster.ha.HaStrategyEnums;
 import com.fayayo.job.manager.core.route.JobRouteExchange;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -34,8 +35,10 @@ public class ClusterSupport {
      */
     public Cluster buildClusterSupport(JobInfoParam jobInfo) {
         //获取ha的实现
-        Integer ha = jobInfo.getJobHa();
-        HaStrategy haStrategy = HaStrategyFactory.createHaStrategy(ha);
+        Integer haCode = jobInfo.getJobHa();
+        String haStrategyName= EnumUtil.getByCode(haCode, HaStrategyEnums.class).getDesc()==null
+                ?"failover":EnumUtil.getByCode(haCode, HaStrategyEnums.class).getDesc();//默认值
+        HaStrategy haStrategy = ExtensionLoader.getExtensionLoader(HaStrategy.class).getExtension(haStrategyName);
         //获取loadbalance的实现
         LoadBalance loadBalance = getLoadBalance(jobInfo);
 

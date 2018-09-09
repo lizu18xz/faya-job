@@ -11,10 +11,10 @@ import lombok.Getter;
 @Getter
 public enum JobLoadBalanceEnums implements CodeEnum{
 
-    HASH(1,"hash"),//hash
-    RANDOM(2,"随机"),//随机
-    ROUNDROBIN(3,"轮训"),//轮训
-    WEIGHT(4,"权重"),//权重
+    HASH(1,"consistent"),//hash
+    RANDOM(2,"random"),//随机
+    ROUNDROBIN(3,"roundrobin"),//轮训
+    WEIGHT(4,"configurableWeight"),//权重
     ;
 
     JobLoadBalanceEnums(Integer code, String desc) {

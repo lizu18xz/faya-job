@@ -2,6 +2,8 @@ package com.fayayo.job.manager.core.route;
 
 import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.common.params.JobInfoParam;
+import com.fayayo.job.common.util.EnumUtil;
+import com.fayayo.job.core.extension.ExtensionLoader;
 import com.fayayo.job.core.transport.bean.DefaultRequest;
 import com.fayayo.job.entity.JobInfo;
 import com.fayayo.job.manager.core.cluster.Endpoint;
@@ -11,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -21,6 +25,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class JobRouteExchange {
 
+    /**
+     *@描述  存储策略  每个任务对应自己的策略
+     */
+    private static final Map<Integer,LoadBalance> jobMap=new ConcurrentHashMap<Integer,LoadBalance>();
 
     private List<Endpoint>endpoints;
 
@@ -47,14 +55,24 @@ public class JobRouteExchange {
      */
     public LoadBalance getLoadBalance(JobInfoParam jobInfo){
         LoadBalance loadBalance=null;
-        loadBalance=JobLoadBalanceFactory.getLoadBalance(jobInfo);
+        Integer jobId=jobInfo.getId();//获取jobId
+        //判断此job是否已经存在轮训策略
+        loadBalance=jobMap.get(jobId);
+        if(loadBalance!=null){
+            loadBalance.onRefresh(endpoints);
+            return loadBalance;
+        }
+        //不存在在获取获取类型
+        Integer loadBalanceCode=jobInfo.getJobLoadBalance();
+        String loadBalanceDesc= EnumUtil.getByCode(loadBalanceCode,JobLoadBalanceEnums.class).getDesc();
+        loadBalance= ExtensionLoader.getExtensionLoader(LoadBalance.class).getExtension(loadBalanceDesc);
+        jobMap.put(jobInfo.getId(),loadBalance);
         loadBalance.onRefresh(endpoints);
         return loadBalance;
     }
 
 
     public static void main(String[] args) throws InterruptedException {
-
         new Thread(new Runnable() {
             @Override
             public void run() {

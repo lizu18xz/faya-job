@@ -30,8 +30,8 @@ jar-executor  可执行jar执行器
 
 ### netty服务端客户端
 - 使用Netty实现RPC的通信
-- 负载均衡
-- ha的策略
+- 负载均衡 部分代码来源于Motan
+- ha的策略 部分代码来源于Motan
 
 ### 业务表设计
 - 任务流信息

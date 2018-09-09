@@ -5,6 +5,24 @@
 CREATE database if NOT EXISTS faya_job_manager default character set utf8mb4 collate utf8mb4_unicode_ci;
 use faya_job_manager;
 
+-- 用户表
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) NOT NULL,
+  `telephone` varchar(30) DEFAULT NULL,
+  `mail` varchar(50) DEFAULT NULL,
+  `password` varchar(32) DEFAULT NULL,
+  `operator` varchar(50) NOT NULL,
+  `operate_ip` varchar(20) NOT NULL,
+   create_time timestamp not null default current_timestamp comment '创建时间',
+   update_time timestamp not null default current_timestamp on update current_timestamp comment '修改时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_username` (`username`) USING BTREE,
+  UNIQUE KEY `idx_mail` (`mail`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
 -- 任务组
 drop table if exists faya_job_group;
 create table faya_job_group(
@@ -37,3 +55,7 @@ create table faya_job_info(
 
 -- 任务执行记录表 job_log
 
+
+
+-- 初始化数据
+INSERT INTO `faya_job_manager`.`user` (`id`, `username`, `telephone`, `mail`, `password`, `operator`, `operate_ip`, `create_time`, `update_time`) VALUES ('1', 'admin', '15951610000', '535733495@qq.com', '123456', 'admin', '10.10.10.110', '2018-09-07 11:11:56', '2018-09-07 11:11:56');

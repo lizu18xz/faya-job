@@ -11,8 +11,8 @@ import lombok.Getter;
 @Getter
 public enum  HaStrategyEnums implements CodeEnum{
 
-    FAIL_FAST(1,"快速失败"),//快速失败
-    FAIL_OVER(2,"失败重试"),//失败重试
+    FAIL_FAST(1,"failfast"),//快速失败
+    FAIL_OVER(2,"failover"),//失败重试
     ;
 
     HaStrategyEnums(Integer code, String desc) {

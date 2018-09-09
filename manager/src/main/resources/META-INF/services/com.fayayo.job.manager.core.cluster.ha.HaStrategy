@@ -1,0 +1,2 @@
+com.fayayo.job.manager.core.cluster.ha.FailfastHaStrategy
+com.fayayo.job.manager.core.cluster.ha.FailoverHaStrategy

@@ -1,6 +1,7 @@
 
 package com.fayayo.job.manager.core.cluster.loadbalance;
 
+import com.fayayo.job.core.extension.SpiMeta;
 import com.fayayo.job.core.transport.bean.DefaultRequest;
 import com.fayayo.job.core.transport.spi.Request;
 import com.fayayo.job.manager.core.cluster.Endpoint;
@@ -15,6 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @version v1.0
  * @desc 负载均衡算法 随机
  */
+@SpiMeta(name = "random")
 public class RandomLoadBalance extends AbstractLoadBalance {
 
     @Override

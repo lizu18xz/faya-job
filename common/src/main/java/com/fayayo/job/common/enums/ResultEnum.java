@@ -40,7 +40,12 @@ public enum ResultEnum {
 
     //transport
     NETTY_SEND_ERROR(40001,"NettyChannel send request to server Error"),
-    EXECUTOR_SERVICE_NOT_FOUND(40002,"调度实现类没有注册，请联系管理员!!!!")
+    EXECUTOR_SERVICE_NOT_FOUND(40002,"调度实现类没有注册，请联系管理员!!!!"),
+
+
+    //业务
+    LOGIN_ERROR(50001,"登陆失败，请检查用户名密码")
+
 
     ;
 

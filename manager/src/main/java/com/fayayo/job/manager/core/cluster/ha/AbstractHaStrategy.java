@@ -5,6 +5,7 @@ import com.fayayo.job.core.transport.NettyClient;
 import com.fayayo.job.core.transport.spi.Request;
 import com.fayayo.job.core.transport.spi.Response;
 import com.fayayo.job.manager.core.cluster.Endpoint;
+import com.fayayo.job.manager.core.cluster.HaStrategy;
 import com.fayayo.job.manager.core.cluster.LoadBalance;
 import lombok.extern.slf4j.Slf4j;
 
