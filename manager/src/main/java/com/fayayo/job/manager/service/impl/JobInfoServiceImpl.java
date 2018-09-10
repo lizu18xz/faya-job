@@ -59,6 +59,26 @@ public class JobInfoServiceImpl implements JobInfoService {
         return jobInfo;
     }
 
+
+    public void pauseJob(String jobId,String groupId){
+
+        jobSchedulerCore.pauseJob(jobId,groupId);
+    }
+
+    public void resumeJob(String jobId,String groupId){
+
+        jobSchedulerCore.resumeJob(jobId,groupId);
+    }
+
+
+    public void deleteJob(String jobId,String groupId){
+
+        jobSchedulerCore.removeJob(jobId,groupId);
+
+        //删除数据库
+        jobInfoRepository.deleteById(Integer.parseInt(jobId));
+    }
+
     @Override
     public Page<JobInfo> query(Pageable pageable,String executorType,Integer status) {
 

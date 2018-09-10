@@ -56,7 +56,7 @@ xxx-executor:
 会根据执行器的名称注册到注册中心ZK
 ````
 
-- 配置任务详细信息
+- 配置任务详细信息(暂时支持页面配置json文件，保存)
 ````
 选择执行器，然后配置任务的运行参数
 
@@ -74,10 +74,49 @@ xxx-executor:
 新增任务POST:localhost:8081/manager/job/add?jobGroup=1&cron=*/10 * * * * ? &jobDesc=mysqlToMysql数据交换&jobType=BEAN&jobLoadBalance=3&jobHa=2&executorType=DATAX
 ````
 
+### DATAX特殊参数配置信息
+````
+core.json
+1-core.container.taskGroup.channel
+   1.1将拆分成的Task重新组合后 组装成的TaskGroup(任务组),默认启动的线程数量去执行这些Task
+   1.2和job配置中的channel配合使用，可以提高taskGroup的并发个数(前提是没有配置byte和record)
+每一个Task都由TaskGroup负责启动，Task启动后，会固定启动Reader—>Channel—>Writer的线程来完成任务同步工作。
+2-core.transport.channel.speed.byte
+   2.1首先作为单个channel的byte大小限速参数
+   2.2和job中配置的job.setting.speed.byte配合使用，可以提高taskGroup的并发个数
+3-core.transport.channel.speed.record
+   3.1首先作为单个channel的record数量限速参数
+   3.2和job中配置的job.setting.speed.record配合使用，可以提高taskGroup的并发个数
+job.json
+1-job.setting.speed.channel
+  1.1job.setting.speed.channel/core.container.taskGroup.channel  获取taskGroup并发的个数
+2-job.setting.speed.byte
+  1.1job.setting.speed.byte/core.transport.channel.speed.byte)/core.container.taskGroup.channel 获取taskGroup并发的个数
+3-job.setting.speed.record
+  1.1job.setting.speed.record/core.transport.channel.speed.record)/core.container.taskGroup.channel 获取taskGroup并发的个数
+  
+实例:
+全局限速:
+job.setting.speed.byte  1000  可以理解为整个任务所有任务的速度总和
+core.transport.channel.speed.byte 100 单个channel限速
+core.container.taskGroup.channel 5
+
+此时如果切分后task的个数大于通过byte计算出的needChannelNumber，
+可以获取到taskGroup的个数为10/5=2
+每个taskGroup提交到固定大小为2的线程池执行任务,并且执行任务的并发数是5
+
+
+  
+````
+
+
+
+
 
 
 
 ### 后续规划
+- 页面可配(数据源配置，任务详细信息配置)
 - 任务流组件，任务前后依赖，依次执行
 
 

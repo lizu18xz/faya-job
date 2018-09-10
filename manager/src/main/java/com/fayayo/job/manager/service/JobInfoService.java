@@ -18,6 +18,12 @@ public interface JobInfoService {
 
      JobInfo addJob(JobInfoParams jobInfoParams);
 
+     void pauseJob(String jobId,String groupId);
+
+     void resumeJob(String jobId,String groupId);
+
+     void deleteJob(String jobId,String groupId);
+
      /**
       *@描述 获取jobInfo
       */

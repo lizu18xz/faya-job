@@ -206,7 +206,7 @@ public class ZKCuratorClient implements Closable {
      * @描述 关闭zk连接
      */
     @Override
-    public void close() {
+    public void closeResource() {
         if (client != null) {
             log.info("断开与zk的连接......");
             client.close();

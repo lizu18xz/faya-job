@@ -41,7 +41,6 @@ public class ClusterSupport {
         HaStrategy haStrategy = ExtensionLoader.getExtensionLoader(HaStrategy.class).getExtension(haStrategyName);
         //获取loadbalance的实现
         LoadBalance loadBalance = getLoadBalance(jobInfo);
-
         Cluster cluster = new ClusterSpi(haStrategy, loadBalance);
         return cluster;
     }

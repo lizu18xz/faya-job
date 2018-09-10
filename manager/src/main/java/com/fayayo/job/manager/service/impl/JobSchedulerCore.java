@@ -78,13 +78,51 @@ public class JobSchedulerCore {
         }
     }
 
-
     /**
       *@描述 校验是否存在相同的任务
     */
    public boolean checkExists(String jobName, String jobGroup) throws SchedulerException{
         TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
         return scheduler.checkExists(triggerKey);
+    }
+
+    /**
+
+     *@描述 从quartz中暂停某个任务
+
+     *@创建人  dalizu
+
+     *@创建时间  2018/8/9
+
+     */
+    public void pauseJob(String jobName, String jobGroup){
+        try {
+            scheduler.pauseJob(JobKey.jobKey(jobName, jobGroup));
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+            log.error("暂停任务异常:{}",e);
+            throw new CommonException(ResultEnum.PAUSE_SCHEDULE_ERROR);
+        }
+    }
+
+    /**
+
+     *@描述 从quartz中恢复暂停的任务
+
+     *@创建人  dalizu
+
+     *@创建时间  2018/8/9
+
+     */
+    public void resumeJob(String jobName, String jobGroup){
+
+        try {
+            scheduler.resumeJob(JobKey.jobKey(jobName, jobGroup));
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+            log.error("恢复暂停任务异常:{}",e);
+            throw new CommonException(ResultEnum.RESUME_SCHEDULE_ERROR);
+        }
     }
 
 
@@ -97,10 +135,46 @@ public class JobSchedulerCore {
      *@创建时间  2018/8/9
 
      */
-    public void removeJob(){
-
+    public void removeJob(String jobName, String jobGroup){
+        try {
+            scheduler.pauseTrigger(TriggerKey.triggerKey(jobName, jobGroup));
+            scheduler.unscheduleJob(TriggerKey.triggerKey(jobName, jobGroup));
+            scheduler.deleteJob(JobKey.jobKey(jobName, jobGroup));
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+            log.error("删除调度任务异常:{}",e);
+            throw new CommonException(ResultEnum.REMOVE_SCHEDULE_ERROR);
+        }
     }
 
+    /**
+
+     *@描述 从quartz修改某个已经存在的任务
+
+     *@创建人  dalizu
+
+     *@创建时间  2018/8/9
+
+     */
+    public void rescheduleJob(String jobName, String jobGroup,String cron){
+
+        try {
+
+            TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
+            // 表达式调度构建器
+            CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(cron);
+            CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
+
+            trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
+
+            scheduler.rescheduleJob(triggerKey,trigger);
+
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+            log.error("修改调度任务异常:{}",e);
+        }
+
+    }
 
 
 

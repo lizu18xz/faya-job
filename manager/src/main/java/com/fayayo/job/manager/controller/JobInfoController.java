@@ -44,6 +44,33 @@ public class JobInfoController {
     }
 
     /**
+     *@描述 暂停服务
+     */
+    public ResultVO pause(@RequestParam("jobId")String jobId,
+                          @RequestParam("jobGroup")String jobGroup){
+        jobInfoService.pauseJob(jobId,jobGroup);
+        return ResultVOUtil.success();
+    }
+
+    /**
+     *@描述 唤醒服务
+     */
+    public ResultVO resume(@RequestParam("jobId")String jobId,
+                           @RequestParam("jobGroup")String jobGroup){
+        jobInfoService.resumeJob(jobId,jobGroup);
+        return ResultVOUtil.success();
+    }
+
+    /**
+     *@描述 删除服务
+     */
+    public ResultVO delete(@RequestParam("jobId")String jobId,
+                           @RequestParam("jobGroup")String jobGroup){
+        jobInfoService.deleteJob(jobId,jobGroup);
+        return ResultVOUtil.success();
+    }
+
+    /**
      *@描述 分页条件查询
      *@返回值  List
      */

@@ -50,7 +50,7 @@ public class ShutDownHook extends Thread {
         log.info("Start to close global resource due to priority");
         for (closableObject resource : resourceList) {
             try {
-                resource.closable.close();
+                resource.closable.closeResource();
             } catch (Exception e) {
                 log.error("Failed to close " + resource.closable.getClass(), e);
             }

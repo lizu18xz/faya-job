@@ -5,5 +5,5 @@ package com.fayayo.job.core.closable;
  * @version v1.0
  */
 public interface Closable<T> {
-    void close();
+    void closeResource();
 }
