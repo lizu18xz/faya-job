@@ -27,7 +27,6 @@ public class JobInfoController {
     @Autowired
     private JobInfoService jobInfoService;
 
-
     /**
     *@描述 新增任务
     */
@@ -44,8 +43,9 @@ public class JobInfoController {
     }
 
     /**
-     *@描述 暂停服务
+     *@描述 暂停任务
      */
+    @PostMapping("/pause")
     public ResultVO pause(@RequestParam("jobId")String jobId,
                           @RequestParam("jobGroup")String jobGroup){
         jobInfoService.pauseJob(jobId,jobGroup);
@@ -53,8 +53,9 @@ public class JobInfoController {
     }
 
     /**
-     *@描述 唤醒服务
+     *@描述 唤醒任务
      */
+    @PostMapping("/resume")
     public ResultVO resume(@RequestParam("jobId")String jobId,
                            @RequestParam("jobGroup")String jobGroup){
         jobInfoService.resumeJob(jobId,jobGroup);
@@ -62,8 +63,9 @@ public class JobInfoController {
     }
 
     /**
-     *@描述 删除服务
+     *@描述 删除任务
      */
+    @PostMapping("/delete")
     public ResultVO delete(@RequestParam("jobId")String jobId,
                            @RequestParam("jobGroup")String jobGroup){
         jobInfoService.deleteJob(jobId,jobGroup);
@@ -88,8 +90,6 @@ public class JobInfoController {
         return ResultVOUtil.success(jobInfoPage);
 
     }
-
-
 
 
 }

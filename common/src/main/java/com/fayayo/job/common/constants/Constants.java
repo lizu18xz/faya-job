@@ -15,4 +15,7 @@ public class Constants {
      * */
     public static final String LOG_PREFIX="RPC_SCHEDULER_JOB========>";
 
+    public static final String FILE_EXTENSION=".json";
+
+
 }

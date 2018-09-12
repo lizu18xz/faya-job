@@ -15,5 +15,11 @@ faya-job:
   zookeeperServer: 192.168.88.130:2181
   #zookeeperServer: 192.168.76.139:2181
   registerPath: /job-register
-
+  upload:
+    tempPath: /upload
+  ftpServer:
+    ip:
+    port:
+    password:
+    serverPath:
 

@@ -25,6 +25,8 @@
     <springBoot.version>2.0.2.RELEASE</springBoot.version>
     <commons-lang3.version>3.5</commons-lang3.version>
     <commons-codec>1.11</commons-codec>
+    <commons-net>3.6</commons-net>
+    <commons-io>2.4</commons-io>
     <lombok.version>1.16.8</lombok.version>
     <guava.version>20.0</guava.version>
     <mysql.version>5.1.46</mysql.version>
@@ -98,6 +100,19 @@
         <artifactId>commons-lang3</artifactId>
         <version>${commons-lang3.version}</version>
       </dependency>
+
+      <dependency>
+        <groupId>commons-net</groupId>
+        <artifactId>commons-net</artifactId>
+        <version>${commons-net}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>${commons-io}</version>
+      </dependency>
+
 
       <dependency>
         <groupId>com.google.guava</groupId>
