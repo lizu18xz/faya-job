@@ -10,7 +10,8 @@ public enum ResultEnum {
     PARAM_ERROR(1, "参数不正确"),
     NEED_LOGIN(10, "用户没有登录"),
     LOGIN_FAIL(24,"登录失败"),
-
+    FTP_LOGIN_FAIL(25,"FTP登陆失败，请检查配置"),
+    FTP_DOWN_FAIL(26,"FTP下载文件失败，请检查配置"),
     /**
      * 无权限访问
      * */

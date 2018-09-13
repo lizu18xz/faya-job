@@ -31,6 +31,9 @@ public class DataxEngine extends JobExecutorHandler {
     public Result<?> run(JobInfoParam jobInfoParam) {
         try {
             log.info("datax task start....获取配置文件,调用shell脚本,启动datax");
+
+            //下载配置文件到
+
             //获取datax的环境变量
             String dataxHome=System.getenv("DATAX_HOME");
             Integer id=jobInfoParam.getId();//任务唯一的id

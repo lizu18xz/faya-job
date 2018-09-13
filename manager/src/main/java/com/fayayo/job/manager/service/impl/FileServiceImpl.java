@@ -2,12 +2,13 @@ package com.fayayo.job.manager.service.impl;
 
 import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.common.util.FtpUtil;
+import com.fayayo.job.manager.config.FtpProperties;
 import com.fayayo.job.manager.service.FileService;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.util.UUID;
@@ -20,6 +21,8 @@ import java.util.UUID;
 @Slf4j
 @Service
 public class FileServiceImpl implements FileService {
+     @Autowired
+      private FtpProperties ftpProperties;
 
      /**
        *@描述 上传文件功能
@@ -38,9 +41,11 @@ public class FileServiceImpl implements FileService {
                //保存到临时文件
                IOUtils.copy(in,new FileOutputStream(targetFile));//保存到临时文件
                //上传文件到FTP
-               FtpUtil.uploadFile(Lists.newArrayList(targetFile));
+               FtpUtil ftpUtil=new FtpUtil(ftpProperties.getIp(),ftpProperties.getUsername(),ftpProperties.getPassword());
+               ftpUtil.uploadFile(ftpProperties.getServerPath(),Lists.newArrayList(targetFile));
                //上传完成后删除upload下面的文件
                targetFile.delete();
+               log.info("始上传到临时JSON文件结束......");
           } catch (IOException e) {
                e.printStackTrace();
                log.error("上传文件异常",e);

@@ -1,26 +1,17 @@
 package com.fayayo.job.common.util;
-import com.google.common.collect.Lists;
+import com.fayayo.job.common.enums.ResultEnum;
+import com.fayayo.job.common.exception.CommonException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.net.ftp.FTPClient;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 @Slf4j
 @Data
 public class FtpUtil {
-
-   /* private  static String ftpIP=PropertiesUtil.getProperty("ftp.server.ip");
-    private  static String ftpUser=PropertiesUtil.getProperty("ftp.user");
-    private  static String ftpPassword=PropertiesUtil.getProperty("ftp.pass");*/
-    private  static String ftpIP="192.168.88.128";
-    private  static String ftpUser="root";
-    private  static String ftpPassword="root123";
-
-    private static String ftpPath="";//上传路径
 
     private String ip;
     private Integer port;
@@ -28,22 +19,14 @@ public class FtpUtil {
     private String pwd;
     private FTPClient ftpClient;
 
-    public FtpUtil(String ip, Integer port, String user, String pwd) {
+    public FtpUtil(String ip, String user, String pwd) {
         this.ip = ip;
-        this.port = port;
         this.user = user;
         this.pwd = pwd;
+        this.port=21;
     }
 
-    public static boolean uploadFile(List<File> fileList) throws IOException {
-        FtpUtil ftpUtil=new FtpUtil(ftpIP,21,ftpUser,ftpPassword);
-        log.info("开始连接ftp,ftpIP:{},ftpUser:{},ftpPassword:{}",ftpIP,ftpUser,ftpPassword);
-        boolean result=ftpUtil.uploadFile(ftpPath,fileList);
-        log.info("结束上传");
-        return result;
-    }
-
-    private boolean uploadFile(String remotePath,List<File>fileList) throws IOException {
+    public boolean uploadFile(String remotePath,List<File>fileList) throws IOException {
         log.info("上传路径:"+remotePath);
         boolean uploaded=true;
         FileInputStream fis=null;
@@ -84,12 +67,12 @@ public class FtpUtil {
             }
         }else {
             log.error("ftp连接失败");
+            throw new CommonException(ResultEnum.FTP_LOGIN_FAIL);
         }
         return uploaded;
     }
 
     private boolean connectServer(String ip, Integer port, String user, String pwd){
-
         boolean isSuccess=false;
         ftpClient=new FTPClient();
         try {
@@ -158,15 +141,36 @@ public class FtpUtil {
          }
      }
 
+      /**
+        *@描述 下载ftp文件到指定目录 远程地址 文件名称 目标路径
+      */
+    public void downLoadFtpFile(String ftpPath,String filename,String distPath){
+        //获取连接
+        if(connectServer(this.getIp(),this.getPort(),this.getUser(),this.getPwd())){
 
-    //测试
-    public static void main(String []args){
-        FtpUtil f=new FtpUtil(ftpIP,21,ftpUser,ftpPassword);
-        File targetFile=new File("D:\\Test","2018-06-29-110.txt");
-        try {
-            f.uploadFile("/root/ftpdata", Lists.newArrayList(targetFile));
-        } catch (IOException e) {
-            e.printStackTrace();
+            ftpClient.setControlEncoding("UTF-8"); // 中文支持
+            try {
+                ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
+                ftpClient.enterLocalPassiveMode();
+                ftpClient.changeWorkingDirectory(ftpPath);
+                //InputStream in=ftpClient.retrieveFileStream(new String(filename.getBytes("utf-8"),"iso-8859-1"));
+                InputStream in=ftpClient.retrieveFileStream(filename);
+                FileOutputStream outputStream=new FileOutputStream(new File(distPath));
+                IOUtils.copy(in,outputStream);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new CommonException(ResultEnum.FTP_DOWN_FAIL);
+            }finally {
+                try {
+                    ftpClient.disconnect();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }else {
+            log.error("ftp连接失败");
+            throw new CommonException(ResultEnum.FTP_LOGIN_FAIL);
         }
     }
 
