@@ -1,4 +1,4 @@
-package com.fayayo.job.core.spi.impl;
+package com.fayayo.job.core.service.impl;
 
 import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.common.enums.JobStatusEnums;
@@ -7,7 +7,7 @@ import com.fayayo.job.common.params.JobInfoParam;
 import com.fayayo.job.core.executor.JobExecutor;
 import com.fayayo.job.core.executor.bean.Result;
 import com.fayayo.job.core.executor.handler.JobExecutorHandler;
-import com.fayayo.job.core.spi.ExecutorSpi;
+import com.fayayo.job.core.service.ExecutorRun;
 import com.fayayo.job.core.thread.CallBackParam;
 import com.fayayo.job.core.thread.CallbackThread;
 import com.fayayo.job.core.thread.FutureThread;
@@ -22,7 +22,7 @@ import java.util.concurrent.Future;
  * @desc 具体执行任务的类
  */
 @Slf4j
-public class ExecutorSpiImpl implements ExecutorSpi{
+public class ExecutorRunImpl implements ExecutorRun {
 
     private static FutureThread futureThread=new FutureThread();
 

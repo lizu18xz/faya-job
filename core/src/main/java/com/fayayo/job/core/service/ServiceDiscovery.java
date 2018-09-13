@@ -1,4 +1,4 @@
-package com.fayayo.job.core.spi;
+package com.fayayo.job.core.service;
 
 import java.util.List;
 

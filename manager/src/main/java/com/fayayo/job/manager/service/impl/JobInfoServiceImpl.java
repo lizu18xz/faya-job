@@ -1,20 +1,28 @@
 package com.fayayo.job.manager.service.impl;
 
 import com.fayayo.job.common.constants.Constants;
+import com.fayayo.job.common.enums.JobExecutorTypeEnums;
+import com.fayayo.job.common.enums.JobTypeEnums;
+import com.fayayo.job.common.enums.ResultEnum;
+import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.entity.JobInfo;
 import com.fayayo.job.entity.params.JobInfoParams;
 import com.fayayo.job.manager.repository.JobInfoRepository;
+import com.fayayo.job.manager.service.FileService;
 import com.fayayo.job.manager.service.JobInfoService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,10 +42,34 @@ public class JobInfoServiceImpl implements JobInfoService {
     @Autowired
     private JobSchedulerCore jobSchedulerCore;
 
+    @Autowired
+    private FileService fileService;
+
+    @Value("${faya-job.upload.tempPath}")
+    private String path;
+
     @Override
     public JobInfo addJob(JobInfoParams jobInfoParams) {
 
         //TODO 校验任务信息  获取任务配置相关的信息  比如依赖任务等
+
+        String jobExecutorType=jobInfoParams.getExecutorType();
+        if(jobExecutorType.equals(JobExecutorTypeEnums.DATAX.getName())){
+
+            String jobConfig=jobInfoParams.getJobConfig();
+            if(StringUtils.isNotBlank(jobConfig)){
+                //上传配置文件
+                InputStream inputStream= IOUtils.toInputStream(jobConfig);
+                String fileName=fileService.uploadFile(inputStream,path);
+                if(!StringUtils.isNotBlank(fileName)){
+                    throw new CommonException(ResultEnum.FTP_UPLOAD_FAIL);
+                }
+                log.info("{}上传配置文件成功,文件地址是:{}",Constants.LOG_PREFIX,fileName);
+            }else {
+                throw new CommonException(ResultEnum.JOB_CONFIG_NOT_EXIST);
+            }
+
+        }
 
         //保存任务信息到数据库
         JobInfo jobInfo=new JobInfo();

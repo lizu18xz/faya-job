@@ -1,7 +1,7 @@
 package com.fayayo.job.manager;
 
-import com.fayayo.job.core.spi.impl.ZkServiceDiscovery;
-import com.fayayo.job.core.spi.impl.ZkServiceRegistry;
+import com.fayayo.job.core.service.impl.ZkServiceDiscovery;
+import com.fayayo.job.core.service.impl.ZkServiceRegistry;
 import com.fayayo.job.core.zookeeper.ZKCuratorClient;
 import com.fayayo.job.core.zookeeper.ZkProperties;
 import org.junit.Test;

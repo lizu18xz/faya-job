@@ -2,12 +2,15 @@ package com.fayayo.job.datax.executor;
 
 import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.common.params.JobInfoParam;
+import com.fayayo.job.common.util.FtpUtil;
 import com.fayayo.job.common.util.ShellCall;
 import com.fayayo.job.core.annotation.FayaService;
 import com.fayayo.job.core.executor.bean.Result;
 import com.fayayo.job.core.executor.handler.JobExecutorHandler;
+import com.fayayo.job.datax.config.FtpProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import java.io.File;
 import java.util.ArrayList;
@@ -27,17 +30,25 @@ public class DataxEngine extends JobExecutorHandler {
 
     private static final String BIN="bin";
 
+    @Autowired
+    private FtpProperties ftpProperties;
+
+
     @Override
     public Result<?> run(JobInfoParam jobInfoParam) {
         try {
             log.info("datax task start....获取配置文件,调用shell脚本,启动datax");
 
-            //下载配置文件到
-
             //获取datax的环境变量
             String dataxHome=System.getenv("DATAX_HOME");
             Integer id=jobInfoParam.getId();//任务唯一的id
             String json=id+".json";
+
+            //下载配置文件到当前机器
+            FtpUtil ftpUtil=new FtpUtil(ftpProperties.getIp(),ftpProperties.getUsername(),ftpProperties.getPassword());
+            ftpUtil.downLoadFtpFile(ftpProperties.getServerPath(),"baf4fd11-c630-46a7-a997-013f55f74c60.json",configHome);
+
+            //命令组装调用
             List<String>cmdList=new ArrayList<String>();
             cmdList.add("python");
             cmdList.add(dataxHome+File.separator+BIN+File.separator+"datax.py");

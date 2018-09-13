@@ -1,7 +1,7 @@
-package com.fayayo.job.core.spi.impl;
+package com.fayayo.job.core.service.impl;
 
 import com.fayayo.job.common.constants.Constants;
-import com.fayayo.job.core.spi.ServiceDiscovery;
+import com.fayayo.job.core.service.ServiceDiscovery;
 import com.fayayo.job.core.zookeeper.ZKCuratorClient;
 import com.fayayo.job.core.zookeeper.ZkProperties;
 import lombok.extern.slf4j.Slf4j;

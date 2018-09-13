@@ -12,6 +12,7 @@ public enum ResultEnum {
     LOGIN_FAIL(24,"登录失败"),
     FTP_LOGIN_FAIL(25,"FTP登陆失败，请检查配置"),
     FTP_DOWN_FAIL(26,"FTP下载文件失败，请检查配置"),
+    FTP_UPLOAD_FAIL(27,"FTP上传文件失败，请检查配置"),
     /**
      * 无权限访问
      * */
@@ -37,6 +38,9 @@ public enum ResultEnum {
     PAUSE_SCHEDULE_ERROR(20007,"暂停调度任务失败!!!"),
     RESUME_SCHEDULE_ERROR(20008,"唤醒调度任务失败!!!"),
     REMOVE_SCHEDULE_ERROR(20009,"删除调度任务失败!!!"),
+    JOB_CONFIG_NOT_EXIST(20010,"DATAX任务配置内容为空,请配置!!!"),
+
+
 
     //ha
     HA_NOT_EXIST(30001,"任务ha策略配置不存在，请检查!!!"),

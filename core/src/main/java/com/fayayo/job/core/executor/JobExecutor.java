@@ -5,7 +5,7 @@ import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.core.annotation.FayaService;
 import com.fayayo.job.core.executor.handler.JobExecutorHandler;
-import com.fayayo.job.core.spi.impl.ZkServiceRegistry;
+import com.fayayo.job.core.service.impl.ZkServiceRegistry;
 import com.fayayo.job.core.thread.CallbackThread;
 import com.fayayo.job.core.transport.NettyServer;
 import com.fayayo.job.core.zookeeper.ZKCuratorClient;

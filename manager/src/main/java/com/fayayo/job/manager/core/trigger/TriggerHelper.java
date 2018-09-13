@@ -5,8 +5,7 @@ import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.common.params.JobInfoParam;
 import com.fayayo.job.core.executor.bean.Result;
-import com.fayayo.job.core.spi.ExecutorSpi;
-import com.fayayo.job.core.transport.spi.Response;
+import com.fayayo.job.core.service.ExecutorRun;
 import com.fayayo.job.entity.JobGroup;
 import com.fayayo.job.entity.JobInfo;
 import com.fayayo.job.manager.config.SpringHelper;
@@ -52,8 +51,8 @@ public class TriggerHelper {
         Cluster cluster=clusterSupport.buildClusterSupport(jobInfoParam);
 
         //获取代理类
-        ExecutorSpi executorSpi=getExecutorSpi(cluster);
-        Result<?> result=executorSpi.run(jobInfoParam);//ExecutorSpiImpl.run()
+        ExecutorRun executorSpi=getExecutorSpi(cluster);
+        Result<?> result=executorSpi.run(jobInfoParam);//ExecutorRunImpl.run()
 
          //获取任务的执行结果
         log.info("{}job success:{}", Constants.LOG_PREFIX,result);
@@ -63,9 +62,9 @@ public class TriggerHelper {
     /**
      * @描述 获取代理类
      */
-    public static ExecutorSpi getExecutorSpi(Cluster cluster) {
+    public static ExecutorRun getExecutorSpi(Cluster cluster) {
         ProxyFactory proxyFactory = new JdkProxyFactory();
-        return proxyFactory.getProxy(ExecutorSpi.class, cluster);
+        return proxyFactory.getProxy(ExecutorRun.class, cluster);
     }
 
 

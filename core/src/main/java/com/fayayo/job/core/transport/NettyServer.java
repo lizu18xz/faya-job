@@ -1,8 +1,8 @@
 package com.fayayo.job.core.transport;
 
 import com.fayayo.job.common.constants.Constants;
-import com.fayayo.job.core.spi.ExecutorSpi;
-import com.fayayo.job.core.spi.impl.ExecutorSpiImpl;
+import com.fayayo.job.core.service.ExecutorRun;
+import com.fayayo.job.core.service.impl.ExecutorRunImpl;
 import com.fayayo.job.core.transport.bean.*;
 import com.fayayo.job.core.transport.codec.RpcDecoder;
 import com.fayayo.job.core.transport.codec.RpcEncoder;
@@ -32,7 +32,7 @@ public class NettyServer {
 
     public NettyServer(Integer port) {
         this.port = port;
-        serviceMap.put(ExecutorSpi.class.getName(),new ExecutorSpiImpl());//保存调度任务接口和实现类的映射关系
+        serviceMap.put(ExecutorRun.class.getName(),new ExecutorRunImpl());//保存调度任务接口和实现类的映射关系
     }
 
     private Thread thread;

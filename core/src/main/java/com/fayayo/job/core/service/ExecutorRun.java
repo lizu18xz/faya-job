@@ -1,4 +1,4 @@
-package com.fayayo.job.core.spi;
+package com.fayayo.job.core.service;
 
 import com.fayayo.job.common.params.JobInfoParam;
 import com.fayayo.job.core.executor.bean.Result;
@@ -8,7 +8,7 @@ import com.fayayo.job.core.executor.bean.Result;
  * @version v1.0
  * @desc 执行具体方法的接口
  */
-public interface ExecutorSpi {
+public interface ExecutorRun {
 
 
     Result<?> run(JobInfoParam jobInfo);

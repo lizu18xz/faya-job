@@ -42,6 +42,8 @@ public class JobInfoParams {
 
     private Integer jobStatus= JobStatusEnums.WAIT_SCHEDULER.getCode();
 
+    private String jobConfig;//任务配置信息（DATAX任务才有)
+
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this);

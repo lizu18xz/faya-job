@@ -1,6 +1,6 @@
-package com.fayayo.job.core.spi.impl;
+package com.fayayo.job.core.service.impl;
 
-import com.fayayo.job.core.spi.ServiceRegistry;
+import com.fayayo.job.core.service.ServiceRegistry;
 import com.fayayo.job.core.zookeeper.ZKCuratorClient;
 import com.fayayo.job.core.zookeeper.ZkProperties;
 import lombok.extern.slf4j.Slf4j;

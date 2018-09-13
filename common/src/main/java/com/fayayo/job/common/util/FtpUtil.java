@@ -50,7 +50,6 @@ public class FtpUtil {
                 ftpClient.enterLocalPassiveMode();;
 
                 for (File fileItem:fileList){
-                    System.out.println("上传文件:"+fileItem.getName());
                     fis=new FileInputStream(fileItem);
                     ftpClient.storeFile(fileItem.getName(),fis);
                 }

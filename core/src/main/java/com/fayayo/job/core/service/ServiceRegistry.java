@@ -1,4 +1,4 @@
-package com.fayayo.job.core.spi;
+package com.fayayo.job.core.service;
 
 /**
  * @author dalizu on 2018/8/4.

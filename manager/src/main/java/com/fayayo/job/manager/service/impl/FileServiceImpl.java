@@ -21,12 +21,13 @@ import java.util.UUID;
 @Slf4j
 @Service
 public class FileServiceImpl implements FileService {
-     @Autowired
+
+      @Autowired
       private FtpProperties ftpProperties;
 
      /**
        *@描述 上传文件功能
-      * @Return 文件名称
+      * @Return 全路径文件名称
      */
      public String uploadFile(InputStream in,String path){
           String uploadFilename= UUID.randomUUID().toString()+ Constants.FILE_EXTENSION;
@@ -35,23 +36,23 @@ public class FileServiceImpl implements FileService {
                fileDir.setWritable(true);
                fileDir.mkdirs();
           }
-          log.info("开始上传到临时JSON文件,路径:{},新文件名:{}",path,uploadFilename);
+          log.info("{}开始上传到临时JSON文件,路径:{},新文件名:{}",Constants.LOG_PREFIX,path,uploadFilename);
           File targetFile=new File(path,uploadFilename);
           try {
                //保存到临时文件
                IOUtils.copy(in,new FileOutputStream(targetFile));//保存到临时文件
                //上传文件到FTP
                FtpUtil ftpUtil=new FtpUtil(ftpProperties.getIp(),ftpProperties.getUsername(),ftpProperties.getPassword());
-               ftpUtil.uploadFile(ftpProperties.getServerPath(),Lists.newArrayList(targetFile));
+               boolean result=ftpUtil.uploadFile(ftpProperties.getServerPath(),Lists.newArrayList(targetFile));
                //上传完成后删除upload下面的文件
                targetFile.delete();
-               log.info("始上传到临时JSON文件结束......");
+               log.info("{}上传到临时JSON文件结束......",Constants.LOG_PREFIX);
           } catch (IOException e) {
                e.printStackTrace();
                log.error("上传文件异常",e);
                return null;
           }
-          return targetFile.getName();
+          return ftpProperties.getServerPath()+File.separator+targetFile.getName();
      }
 
 }
