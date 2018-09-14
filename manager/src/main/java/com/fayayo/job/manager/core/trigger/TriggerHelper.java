@@ -1,11 +1,13 @@
 package com.fayayo.job.manager.core.trigger;
 
 import com.fayayo.job.common.constants.Constants;
+import com.fayayo.job.common.enums.JobExecutorTypeEnums;
 import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.common.params.JobInfoParam;
-import com.fayayo.job.core.executor.bean.Result;
+import com.fayayo.job.core.executor.result.Result;
 import com.fayayo.job.core.service.ExecutorRun;
+import com.fayayo.job.entity.JobConfig;
 import com.fayayo.job.entity.JobGroup;
 import com.fayayo.job.entity.JobInfo;
 import com.fayayo.job.manager.config.SpringHelper;
@@ -13,6 +15,7 @@ import com.fayayo.job.manager.core.cluster.support.Cluster;
 import com.fayayo.job.manager.core.cluster.support.ClusterSupport;
 import com.fayayo.job.manager.core.proxy.ProxyFactory;
 import com.fayayo.job.manager.core.proxy.spi.JdkProxyFactory;
+import com.fayayo.job.manager.service.JobConfigService;
 import com.fayayo.job.manager.service.JobGroupService;
 import com.fayayo.job.manager.service.JobInfoService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +24,7 @@ import org.springframework.beans.BeanUtils;
 /**
  * @author dalizu on 2018/8/10.
  * @version v1.0
- * @desc
+ * @desc 核心处理类  集群{负载 高可用} 发送请求
  */
 @Slf4j
 public class TriggerHelper {
@@ -31,7 +34,7 @@ public class TriggerHelper {
 
        *@参数  job的唯一标示
      */
-    public static void Trigger(Integer jobId){
+    public static void Trigger(String jobId){
 
         //获取job的详细信息  或者执行器信息
         JobInfoService jobInfoService=SpringHelper.popBean(JobInfoService.class);
@@ -52,6 +55,16 @@ public class TriggerHelper {
 
         //获取代理类
         ExecutorRun executorSpi=getExecutorSpi(cluster);
+
+        //判断任务类型 是否需要额外配置文件
+        String jobExecutorType=jobInfoParam.getExecutorType();
+        if(jobExecutorType.equals(JobExecutorTypeEnums.DATAX.getName())){
+            log.info("{}DATAX任务,对jobConfig进行传输");
+            JobConfigService jobConfigService=SpringHelper.popBean(JobConfigService.class);
+            JobConfig jobConfig=jobConfigService.findOne(jobId);
+            jobInfoParam.setJobConfig(jobConfig.getContent());
+        }
+
         Result<?> result=executorSpi.run(jobInfoParam);//ExecutorRunImpl.run()
 
          //获取任务的执行结果

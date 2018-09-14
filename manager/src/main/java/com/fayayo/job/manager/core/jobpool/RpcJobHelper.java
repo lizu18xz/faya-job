@@ -27,7 +27,7 @@ public class RpcJobHelper {
     /**
      *@描述 提交job信息到此处
      */
-    public void addJobInPool(Integer jobId){
+    public void addJobInPool(String jobId){
 
         rpcJobThreadPool.execute(new Runnable() {
             @Override

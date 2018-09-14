@@ -28,7 +28,7 @@ public class JobRouteExchange {
     /**
      *@描述  存储策略  每个任务对应自己的策略
      */
-    private static final Map<Integer,LoadBalance> jobMap=new ConcurrentHashMap<Integer,LoadBalance>();
+    private static final Map<String,LoadBalance> jobMap=new ConcurrentHashMap<String, LoadBalance>();
 
     private List<Endpoint>endpoints;
 
@@ -55,7 +55,7 @@ public class JobRouteExchange {
      */
     public LoadBalance getLoadBalance(JobInfoParam jobInfo){
         LoadBalance loadBalance=null;
-        Integer jobId=jobInfo.getId();//获取jobId
+        String jobId=jobInfo.getId();//获取jobId
         //判断此job是否已经存在轮训策略
         loadBalance=jobMap.get(jobId);
         if(loadBalance!=null){
@@ -85,7 +85,7 @@ public class JobRouteExchange {
                     JobRouteExchange jobRouteExchange=new JobRouteExchange(list);
                     JobInfoParam jobInfo=new JobInfoParam();
                     jobInfo.setJobLoadBalance(3);
-                    jobInfo.setId(1);
+                    jobInfo.setId("1");
                     LoadBalance loadBalance=jobRouteExchange.getLoadBalance(jobInfo);
                     System.out.println(loadBalance.select(new DefaultRequest()).toString());
                     try {
@@ -110,7 +110,7 @@ public class JobRouteExchange {
 
                     JobInfoParam jobInfo1=new JobInfoParam();
                     jobInfo1.setJobLoadBalance(3);
-                    jobInfo1.setId(2);
+                    jobInfo1.setId("1");
                     LoadBalance loadBalance1=jobRouteExchange1.getLoadBalance(jobInfo1);
                     System.out.println(loadBalance1.select(new DefaultRequest()).toString());
                     try {

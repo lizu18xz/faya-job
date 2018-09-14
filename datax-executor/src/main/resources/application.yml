@@ -5,20 +5,21 @@ server:
 
 faya-job:
   zookeeperServer: 192.168.88.130:2181
-  #zookeeperServer: 192.168.76.139:2181
   registerPath: /job-register
   datax-executor:
-     server: 192.168.88.130
+#    server: 192.168.88.130
+     server: localhost
      port: 8070
      weight: 1
      name: datax
      mainClass: com.fayayo.job.datax.executor.DataxEngine
   datax:
-     config: /home/faya/job_config
-  ftp-server:
-     ip: 192.168.88.129
-     username: root
-     password: root123
-     serverPath: /root/ftpdata/job_config
+      config: D:\\Test
+#     config: /home/faya/job_config
+#  ftp-server:
+#     ip: 192.168.88.129
+#     username: root
+#     password: root123
+#     serverPath: /root/ftpdata/job_config
 
 

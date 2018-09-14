@@ -86,7 +86,7 @@ public class JobExecutor implements ApplicationContextAware {
                 if (bean.getClass().isAnnotationPresent(FayaService.class)) {
                     FayaService fayaService = bean.getClass().getAnnotation(FayaService.class);
                     Class<?> clazz = fayaService.value();
-                    log.info("{}Registering service '{}' for RPC bean [{}].", Constants.LOG_PREFIX, clazz.getName(), bean);
+                    log.info("{}Registering service '{}' for RPC result [{}].", Constants.LOG_PREFIX, clazz.getName(), bean);
                     service.put(clazz.getName(), bean);//保存映射关系
                 }
             }

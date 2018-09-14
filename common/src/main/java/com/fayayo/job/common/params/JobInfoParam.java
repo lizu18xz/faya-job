@@ -14,7 +14,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class JobInfoParam {
-    private Integer id;
+    private String id;
 
     private Integer jobGroup;//执行器id
 
@@ -35,6 +35,8 @@ public class JobInfoParam {
     private Integer jobStatus;
 
     private Date startAt;
+
+    private String jobConfig;
 
     //@JsonFormat(pattern = "YYYY-MM-DD HH:mm:ss")
     private Date createTime;

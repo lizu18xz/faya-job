@@ -1,4 +1,4 @@
-package com.fayayo.job.core.executor.bean;
+package com.fayayo.job.core.executor.result;
 
 import lombok.Data;
 

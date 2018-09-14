@@ -1,7 +1,7 @@
 package com.fayayo.job.core.executor.handler;
 
 import com.fayayo.job.common.params.JobInfoParam;
-import com.fayayo.job.core.executor.bean.Result;
+import com.fayayo.job.core.executor.result.Result;
 import lombok.extern.slf4j.Slf4j;
 
 /**

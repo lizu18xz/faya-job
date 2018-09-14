@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @version v1.0
  * @desc 数据库操作类
  */
-public interface JobInfoRepository extends JpaRepository<JobInfo,Integer>,JpaSpecificationExecutor {
+public interface JobInfoRepository extends JpaRepository<JobInfo,String>,JpaSpecificationExecutor {
 
 
 

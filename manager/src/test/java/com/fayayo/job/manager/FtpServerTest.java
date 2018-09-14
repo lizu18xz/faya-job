@@ -73,7 +73,7 @@ public class FtpServerTest {
                 "  }\n" +
                 "}";
         InputStream inputStream= IOUtils.toInputStream(abc);
-        fileService.uploadFile(inputStream,path);
+        fileService.uploadFile(inputStream,path,"");
 
 
     }

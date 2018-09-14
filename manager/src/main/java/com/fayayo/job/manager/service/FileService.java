@@ -9,6 +9,6 @@ import java.io.InputStream;
  */
 public interface FileService {
 
-    String uploadFile(InputStream in, String path);
+    String uploadFile(InputStream in, String path,String configName);
 
 }

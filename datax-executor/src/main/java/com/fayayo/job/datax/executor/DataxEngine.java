@@ -5,14 +5,17 @@ import com.fayayo.job.common.params.JobInfoParam;
 import com.fayayo.job.common.util.FtpUtil;
 import com.fayayo.job.common.util.ShellCall;
 import com.fayayo.job.core.annotation.FayaService;
-import com.fayayo.job.core.executor.bean.Result;
+import com.fayayo.job.core.executor.result.Result;
 import com.fayayo.job.core.executor.handler.JobExecutorHandler;
 import com.fayayo.job.datax.config.FtpProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,20 +44,28 @@ public class DataxEngine extends JobExecutorHandler {
 
             //获取datax的环境变量
             String dataxHome=System.getenv("DATAX_HOME");
-            Integer id=jobInfoParam.getId();//任务唯一的id
-            String json=id+".json";
+            String jobId=jobInfoParam.getId();//任务唯一的id
+            String json_name=String.format(Constants.DATAX_JOB_NAME_PREFIX,jobId,Constants.FILE_EXTENSION);//配置文件名称
 
-            //下载配置文件到当前机器
+            /*//下载配置文件到当前机器
             FtpUtil ftpUtil=new FtpUtil(ftpProperties.getIp(),ftpProperties.getUsername(),ftpProperties.getPassword());
-            ftpUtil.downLoadFtpFile(ftpProperties.getServerPath(),"baf4fd11-c630-46a7-a997-013f55f74c60.json",configHome);
+            ftpUtil.downLoadFtpFile(ftpProperties.getServerPath(),"baf4fd11-c630-46a7-a997-013f55f74c60.json",configHome);*/
+
+            //获取配置文件信息到指定路径
+            String content=jobInfoParam.getJobConfig();
+            InputStream inputStream=IOUtils.toInputStream(content);
+            String path=configHome+File.separator+json_name;
+            FileOutputStream outputStream=new FileOutputStream(new File(path));
+            IOUtils.copy(inputStream,outputStream);
+            log.info("{}保存配置信息:{}", Constants.LOG_PREFIX, path);
 
             //命令组装调用
             List<String>cmdList=new ArrayList<String>();
             cmdList.add("python");
             cmdList.add(dataxHome+File.separator+BIN+File.separator+"datax.py");
-            cmdList.add(configHome+File.separator+json);
+            cmdList.add(path);
             log.info("{}待执行命令:{}", Constants.LOG_PREFIX, StringUtils.join(cmdList," "));
-            ShellCall.runCommand(cmdList);
+            //ShellCall.runCommand(cmdList);
         }catch (Exception e){
             log.info("datax任务执行失败,{}",e);
             return Result.error("任务执行失败，请联系管理员");

@@ -27,7 +27,7 @@ public interface JobInfoService {
      /**
       *@描述 获取jobInfo
       */
-     JobInfo findOne(Integer jobId);
+     JobInfo findOne(String jobId);
 
 
      Page<JobInfo>query(Pageable pageable,String executorType,Integer status);

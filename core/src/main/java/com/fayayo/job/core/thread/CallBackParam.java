@@ -14,11 +14,11 @@ import java.util.concurrent.Future;
 @Setter
 public class CallBackParam {
 
-    private Integer jobId;
+    private String jobId;
 
     private Future<?> future;
 
-    public CallBackParam(Integer jobId, Future<?> future) {
+    public CallBackParam(String jobId, Future<?> future) {
         this.jobId = jobId;
         this.future = future;
     }

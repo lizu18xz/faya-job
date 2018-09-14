@@ -29,15 +29,14 @@ public class FileServiceImpl implements FileService {
        *@描述 上传文件功能
       * @Return 全路径文件名称
      */
-     public String uploadFile(InputStream in,String path){
-          String uploadFilename= UUID.randomUUID().toString()+ Constants.FILE_EXTENSION;
+     public String uploadFile(InputStream in,String path,String configName){
           File fileDir=new File(path);
           if(!fileDir.exists()){
                fileDir.setWritable(true);
                fileDir.mkdirs();
           }
-          log.info("{}开始上传到临时JSON文件,路径:{},新文件名:{}",Constants.LOG_PREFIX,path,uploadFilename);
-          File targetFile=new File(path,uploadFilename);
+          log.info("{}开始上传到临时JSON文件,路径:{},新文件名:{}",Constants.LOG_PREFIX,path,configName);
+          File targetFile=new File(path,configName);
           try {
                //保存到临时文件
                IOUtils.copy(in,new FileOutputStream(targetFile));//保存到临时文件

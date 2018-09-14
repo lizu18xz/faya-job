@@ -5,7 +5,7 @@ import com.fayayo.job.common.enums.JobStatusEnums;
 import com.fayayo.job.common.enums.JobTypeEnums;
 import com.fayayo.job.common.params.JobInfoParam;
 import com.fayayo.job.core.executor.JobExecutor;
-import com.fayayo.job.core.executor.bean.Result;
+import com.fayayo.job.core.executor.result.Result;
 import com.fayayo.job.core.executor.handler.JobExecutorHandler;
 import com.fayayo.job.core.service.ExecutorRun;
 import com.fayayo.job.core.thread.CallBackParam;

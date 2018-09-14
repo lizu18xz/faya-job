@@ -1,7 +1,7 @@
 package com.fayayo.job.core.thread.task;
 
 import com.fayayo.job.common.params.JobInfoParam;
-import com.fayayo.job.core.executor.bean.Result;
+import com.fayayo.job.core.executor.result.Result;
 import com.fayayo.job.core.executor.handler.JobExecutorHandler;
 
 import java.util.concurrent.Callable;

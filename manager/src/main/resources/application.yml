@@ -17,9 +17,9 @@ faya-job:
   registerPath: /job-register
   upload:
     tempPath: /upload
-  ftp-server:
-    ip: 192.168.88.129
-    username: root
-    password: root123
-    serverPath: /root/ftpdata/job_config
+#  ftp-server:
+#    ip: 192.168.88.129
+#    username: root
+#    password: root123
+#    serverPath: /root/ftpdata/job_config
 

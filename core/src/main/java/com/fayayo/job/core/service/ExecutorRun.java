@@ -1,7 +1,7 @@
 package com.fayayo.job.core.service;
 
 import com.fayayo.job.common.params.JobInfoParam;
-import com.fayayo.job.core.executor.bean.Result;
+import com.fayayo.job.core.executor.result.Result;
 
 /**
  * @author dalizu on 2018/8/18.
