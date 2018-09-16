@@ -30,7 +30,7 @@ public class JobInfoController {
     /**
     *@描述 新增任务
     */
-    @PostMapping("/add")
+    @PostMapping("/save")
     public ResultVO addJob(@Valid JobInfoParams jobInfoParams, BindingResult bindingResult){
 
         if(bindingResult.hasErrors()){

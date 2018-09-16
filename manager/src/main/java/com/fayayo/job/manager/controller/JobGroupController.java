@@ -38,7 +38,7 @@ public class JobGroupController {
     /**
      *@描述 新增执行器
      */
-    @PostMapping("/add")
+    @PostMapping("/save")
     public ResultVO addJob(@Valid JobGroupParams jobGroupParams, BindingResult bindingResult){
 
         if(bindingResult.hasErrors()){
