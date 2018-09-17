@@ -62,17 +62,17 @@ xxx-executor:
 
 ````
 
-### 部署方式
-
-
-### 前端页面
-- 执行器列表
-- 执行器下面具体任务列表
-
-### 接口测试(暂时)
-````
-新增任务POST:localhost:8081/manager/job/add?jobGroup=1&cron=*/10 * * * * ? &jobDesc=mysqlToMysql数据交换&jobType=BEAN&jobLoadBalance=3&jobHa=2&executorType=DATAX
-````
+### 部署执行器方式
+- DATAX执行器
+  - 找到application.yml文件，检查配置文件或者修改为自己想要的地址和路径
+  - 使用maven命令打包 mvn clean package -DskipTests
+  - 部署jar包到服务器
+  - 创建application.yml中配置的datax.config文件夹
+  - 部署datax,设置datax环境变量DATAX_HOME
+    - mvn -U clean package assembly:assembly -Dmaven.test.skip=true
+    - export DATAX_HOME=/home/faya/datax/datax
+      export PATH=$DATAX_HOME/bin:$PATH
+      
 
 ### DATAX特殊参数配置信息
 ````
@@ -106,13 +106,18 @@ core.container.taskGroup.channel 5
 每个taskGroup提交到固定大小为2的线程池执行任务,并且执行任务的并发数是5
 
 
-  
 ````
 
+### 常用的cron表达式
+- 0 0/10 /1 * * ? 每十分钟
+- 0 0 /1 * * ?    每小时
+- 0 0 2 1/1 * ?   每日凌晨两点
 
 
-
-
+### 前端页面(React)
+- 执行器管理页面
+- 执行器下面具体任务管理页面
+- github地址:https://github.com/lizu18xz/admin-v1-fe.git
 
 
 ### 后续规划

@@ -65,7 +65,7 @@ public class DataxEngine extends JobExecutorHandler {
             cmdList.add(dataxHome+File.separator+BIN+File.separator+"datax.py");
             cmdList.add(path);
             log.info("{}待执行命令:{}", Constants.LOG_PREFIX, StringUtils.join(cmdList," "));
-            //ShellCall.runCommand(cmdList);
+            ShellCall.runCommand(cmdList);
         }catch (Exception e){
             log.info("datax任务执行失败,{}",e);
             return Result.error("任务执行失败，请联系管理员");

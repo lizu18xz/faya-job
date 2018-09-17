@@ -4,18 +4,16 @@ server:
     context-path: /datax-executor
 
 faya-job:
-  zookeeperServer: 192.168.88.130:2181
+  zookeeperServer: 192.168.76.139:2181
   registerPath: /job-register
   datax-executor:
-     server: 192.168.88.130
-     #server: localhost
+     server: 192.168.76.139
      port: 8070
      weight: 1
      name: DATAX
      mainClass: com.fayayo.job.datax.executor.DataxEngine
   datax:
       config: /home/faya/job_config
-      #config: D:\\Test
 #  ftp-server:
 #     ip: 192.168.88.129
 #     username: root

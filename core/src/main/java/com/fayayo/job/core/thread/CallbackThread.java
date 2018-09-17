@@ -1,5 +1,6 @@
 package com.fayayo.job.core.thread;
 
+import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.core.executor.result.Result;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,14 +41,14 @@ public class CallbackThread extends Thread{
 
     @Override
     public void run() {
-        log.info("wait deal with the run result......");
+        log.info("{}wait deal with the run result......",Constants.LOG_PREFIX);
         try {
             if(!toStop){
                 CallBackParam callBackParam= this.callBackQueue.take();//阻塞 doPull
 
                 Result<?> result= (Result<?>) callBackParam.getFuture().get();
 
-                log.info("get jobId:{},result:{}",callBackParam.getJobId(),result.getData());
+                log.info("{}Callable get jobId:{},result:{}",Constants.LOG_PREFIX,callBackParam.getJobId(),result.getData());
             }
         } catch (Exception e) {
             e.printStackTrace();
