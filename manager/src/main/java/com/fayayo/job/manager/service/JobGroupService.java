@@ -24,6 +24,7 @@ public interface JobGroupService {
     Page<JobGroup>query(Pageable pageable);
 
 
+    JobGroup findByName(String name);
 
 
 }

@@ -35,7 +35,7 @@ public class JobTranscationTest {
         jobInfoParams.setJobConfig("112121212");
         jobInfoParams.setJobDesc("dddd");
         jobInfoParams.setJobHa(1);
-        jobInfoParams.setJobGroup(1);
+        //jobInfoParams.setJobGroup(1);
         jobInfoParams.setJobStatus(1);
         jobInfoParams.setJobLoadBalance(1);
         jobInfoParams.setJobType("BEAN");

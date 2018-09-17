@@ -53,5 +53,10 @@ public class JobGroupServiceImpl implements JobGroupService{
         return page;
     }
 
+    @Override
+    public JobGroup findByName(String name) {
+        return jobGroupRepository.findByName(name);
+    }
+
 
 }

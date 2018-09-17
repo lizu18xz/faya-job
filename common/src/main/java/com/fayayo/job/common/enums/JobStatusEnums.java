@@ -9,11 +9,11 @@ import lombok.Getter;
  */
 @Getter
 public enum JobStatusEnums {
-
-    WAIT(0,"待分配"),
-    WAIT_SCHEDULER(1,"待调度"),
-    ON_LINE(2,"上线"),
-    OFF_LINE(3,"下线"),
+    ON_LINE(1,"上线"),
+    OFF_LINE(2,"下线"),
+    WAIT(3,"待分配"),
+    WAIT_SCHEDULER(4,"待调度"),
+    RUNING(5,"正在执行"),
     ;
 
     JobStatusEnums(Integer code, String desc) {

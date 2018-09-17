@@ -11,5 +11,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  */
 public interface JobGroupRepository extends JpaRepository<JobGroup,Integer>,JpaSpecificationExecutor {
 
+    JobGroup findByName(String name);
 
 }

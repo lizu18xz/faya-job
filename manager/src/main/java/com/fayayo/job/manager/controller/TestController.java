@@ -1,3 +1,4 @@
+/*
 package com.fayayo.job.manager.controller;
 
 import com.fayayo.job.common.enums.ResultEnum;
@@ -16,11 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+*/
 /**
  * @author dalizu on 2018/8/5.
  * @version v1.0
  * @desc
- */
+ *//*
+
 @RestController
 @RequestMapping("/test")
 public class TestController {
@@ -64,3 +67,4 @@ public class TestController {
     }
 
 }
+*/

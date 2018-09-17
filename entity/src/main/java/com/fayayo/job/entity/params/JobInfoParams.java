@@ -18,8 +18,8 @@ import java.util.Date;
 @Setter
 public class JobInfoParams {
 
-    @NotNull(message = "任务的jobGroup不能为空")
-    private Integer jobGroup;
+    /*@NotNull(message = "任务的jobGroup不能为空")
+    private Integer jobGroup;*/
 
     @NotNull(message = "执行周期不能为空")
     private String cron;
@@ -36,11 +36,13 @@ public class JobInfoParams {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startAt;
 
-    private Integer jobLoadBalance=3;//TODO 修改为常亮
+    @NotNull(message = "负载策略不能为空")
+    private Integer jobLoadBalance;
 
-    private Integer jobHa=1;
+    @NotNull(message = "高可用方式不能为空")
+    private Integer jobHa;
 
-    private Integer jobStatus= JobStatusEnums.WAIT_SCHEDULER.getCode();
+    private Integer jobStatus;
 
     private String jobConfig;//任务配置信息（DATAX任务才有)
 

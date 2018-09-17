@@ -2,16 +2,19 @@ package com.fayayo.job.manager.service.impl;
 
 import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.common.enums.JobExecutorTypeEnums;
+import com.fayayo.job.common.enums.JobStatusEnums;
 import com.fayayo.job.common.enums.JobTypeEnums;
 import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.common.util.KeyUtil;
 import com.fayayo.job.entity.JobConfig;
+import com.fayayo.job.entity.JobGroup;
 import com.fayayo.job.entity.JobInfo;
 import com.fayayo.job.entity.params.JobInfoParams;
 import com.fayayo.job.manager.repository.JobInfoRepository;
 import com.fayayo.job.manager.service.FileService;
 import com.fayayo.job.manager.service.JobConfigService;
+import com.fayayo.job.manager.service.JobGroupService;
 import com.fayayo.job.manager.service.JobInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -42,6 +45,9 @@ public class JobInfoServiceImpl implements JobInfoService {
 
     @Autowired
     private JobInfoRepository jobInfoRepository;
+
+    @Autowired
+    private JobGroupService jobGroupService;
 
     @Autowired
     private JobSchedulerCore jobSchedulerCore;
@@ -83,6 +89,7 @@ public class JobInfoServiceImpl implements JobInfoService {
                 JobConfig jobConfig=new JobConfig();
                 jobConfig.setJobId(keyId);
                 jobConfig.setContent(jobConfigBody);
+
                 jobConfigService.save(jobConfig);
                 log.info("{}保存配置信息成功",Constants.LOG_PREFIX);
             }else {
@@ -94,6 +101,10 @@ public class JobInfoServiceImpl implements JobInfoService {
         JobInfo jobInfo=new JobInfo();
         BeanUtils.copyProperties(jobInfoParams,jobInfo);
         jobInfo.setId(keyId);
+        jobInfo.setJobStatus(JobStatusEnums.ON_LINE.getCode());//设置状态 TODO 状态的设置需要系统的分析，什么时候改变
+        //获取groupId
+        JobGroup jobGroup=jobGroupService.findByName(jobInfo.getExecutorType());
+        jobInfo.setJobGroup(jobGroup.getId());
         jobInfo=jobInfoRepository.save(jobInfo);
 
         //把任务加入到quartz调度
@@ -116,11 +127,22 @@ public class JobInfoServiceImpl implements JobInfoService {
     public void pauseJob(String jobId,String groupId){
 
         jobSchedulerCore.pauseJob(jobId,groupId);
+
+        //修改数据库的状态
+        JobInfo jobInfo=findOne(jobId);
+        jobInfo.setJobStatus(JobStatusEnums.OFF_LINE.getCode());
+        jobInfoRepository.save(jobInfo);
+
     }
 
     public void resumeJob(String jobId,String groupId){
 
         jobSchedulerCore.resumeJob(jobId,groupId);
+
+        JobInfo jobInfo=findOne(jobId);
+        jobInfo.setJobStatus(JobStatusEnums.ON_LINE.getCode());
+        jobInfoRepository.save(jobInfo);
+
     }
 
 
