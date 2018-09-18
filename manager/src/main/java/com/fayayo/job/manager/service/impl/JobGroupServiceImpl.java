@@ -9,8 +9,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author dalizu on 2018/8/23.
@@ -50,7 +55,18 @@ public class JobGroupServiceImpl implements JobGroupService{
 
         Page<JobGroup> page=jobGroupRepository.findAll(pageable);
 
-        return page;
+
+        List<JobGroup> sortList=page.getContent();
+
+        //按照seq字段排序 seq从小到大
+        Collections.sort(sortList, new Comparator<JobGroup>() {
+            @Override
+            public int compare(JobGroup o1, JobGroup o2) {
+                return o1.getSeq() - o2.getSeq();
+            }
+        });
+
+        return new PageImpl<>(sortList,pageable,page.getTotalElements());
     }
 
     @Override

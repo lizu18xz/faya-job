@@ -14,4 +14,8 @@ public interface ResponseFuture extends Future, Response {
     long getCreateTime();
 
     void setReturnType(Class<?> clazz);
+
+
+
+
 }

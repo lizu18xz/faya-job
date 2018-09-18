@@ -76,14 +76,7 @@ public class JobInfoServiceImpl implements JobInfoService {
         if(jobExecutorType.equals(JobExecutorTypeEnums.DATAX.getName())){
             String jobConfigBody=jobInfoParams.getJobConfig();
             if(StringUtils.isNotBlank(jobConfigBody)){
-                //上传配置文件 为了减少其他组件的使用，暂时把信息保存到数据库
-                /*String configName=String.format(Constants.DATAX_JOB_NAME_PREFIX,keyId,Constants.FILE_EXTENSION);
-                InputStream inputStream= IOUtils.toInputStream(jobConfigBody);
-                String fileName=fileService.uploadFile(inputStream,path,configName);
-                if(!StringUtils.isNotBlank(fileName)){
-                    throw new CommonException(ResultEnum.FTP_UPLOAD_FAIL);
-                }
-                log.info("{}上传配置文件成功,文件地址是:{}",Constants.LOG_PREFIX,fileName);*/
+                //TODO 上传配置文件 为了减少其他组件的使用，暂时把信息保存到数据库
 
                 //保存配置文件信息到数据库
                 JobConfig jobConfig=new JobConfig();

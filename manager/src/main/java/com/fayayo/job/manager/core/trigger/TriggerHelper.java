@@ -5,12 +5,17 @@ import com.fayayo.job.common.enums.JobExecutorTypeEnums;
 import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.common.params.JobInfoParam;
+import com.fayayo.job.common.util.EnumUtil;
+import com.fayayo.job.common.util.KeyUtil;
 import com.fayayo.job.core.executor.result.Result;
 import com.fayayo.job.core.service.ExecutorRun;
 import com.fayayo.job.entity.JobConfig;
 import com.fayayo.job.entity.JobGroup;
 import com.fayayo.job.entity.JobInfo;
+import com.fayayo.job.entity.JobLog;
 import com.fayayo.job.manager.config.SpringHelper;
+import com.fayayo.job.manager.core.cluster.ha.HaStrategyEnums;
+import com.fayayo.job.manager.core.cluster.loadbalance.JobLoadBalanceEnums;
 import com.fayayo.job.manager.core.cluster.support.Cluster;
 import com.fayayo.job.manager.core.cluster.support.ClusterSupport;
 import com.fayayo.job.manager.core.proxy.ProxyFactory;
@@ -64,6 +69,22 @@ public class TriggerHelper {
             JobConfig jobConfig=jobConfigService.findOne(jobId);
             jobInfoParam.setJobConfig(jobConfig.getContent());
         }
+
+        //进行日志信息的统计+DATAX滚动日志
+        JobLog jobLog=new JobLog();
+        jobLog.setId(KeyUtil.genUniqueKey());
+        jobLog.setJobId(jobId);
+        jobLog.setJobDesc(jobInfo.getJobDesc());
+        jobLog.setLoadBalance(EnumUtil.getByCode(jobInfo.getJobLoadBalance(),JobLoadBalanceEnums.class).getDesc());
+        jobLog.setHa(EnumUtil.getByCode(jobInfo.getJobHa(),HaStrategyEnums.class).getDesc());
+
+        /*
+         jobLog.setRemoteIp();
+        jobLog.setStatus();
+        jobLog.setMessage();
+        jobLog.setRetry();*/
+
+
 
         Result<?> result=executorSpi.run(jobInfoParam);//ExecutorRunImpl.run()
 

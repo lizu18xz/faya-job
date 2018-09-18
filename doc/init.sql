@@ -29,6 +29,7 @@ create table faya_job_group(
   id int not null auto_increment,
   name varchar(64) not null comment '执行器名称',
   group_desc varchar(256) not null comment '执行器描述',
+  seq int(11) NOT NULL DEFAULT '0' COMMENT '执行器展示的的顺序，由小到大',
   create_time timestamp not null default current_timestamp comment '创建时间',
   update_time timestamp not null default current_timestamp on update current_timestamp comment '修改时间',
   primary key (id)
@@ -65,10 +66,22 @@ create table faya_job_config(
 )comment '任务配置文件信息';
 
 
-
-
--- 任务执行记录表 job_log
-
+-- 任务执行记录表 faya_job_log
+drop table if exists faya_job_log;
+create table faya_job_log(
+  id varchar(32) not null comment '日志id',
+  job_id varchar(32) not null comment '任务id',
+  job_desc varchar(256) not null comment '任务描述',
+  remote_ip varchar(32) not null comment '任务执行的机器地址',
+  load_balance varchar(32) not null comment'负载策略',
+  ha varchar(32) not null comment'失败策略',
+  status int not null comment '任务执行状态 成功 失败',
+  retry int not null comment '重试次数',
+  message VARCHAR(128) comment '任务执行信息',
+  create_time timestamp not null default current_timestamp comment '创建时间',
+  update_time timestamp not null default current_timestamp on update current_timestamp comment '修改时间',
+  primary key (job_id)
+)comment '任务配置文件信息';
 
 
 -- 初始化数据

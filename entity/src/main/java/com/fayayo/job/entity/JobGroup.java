@@ -26,6 +26,8 @@ public class JobGroup {
 
     private String groupDesc;
 
+    private Integer seq;
+
     private Date createTime;
 
     private Date updateTime;

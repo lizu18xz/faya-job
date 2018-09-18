@@ -28,7 +28,7 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
     }
 
      /**
-       *@描述 具体实现请求的方法
+       *@描述 代理方法会去发送请求到服务端,服务端获取到参数，进行方法的调用
      */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -41,8 +41,8 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
         request.setParamtersDesc(ReflectUtil.getMethodParamDesc(method));
         request.setParamtersTypes(method.getParameterTypes());
         request.setInterfaceName(method.getDeclaringClass().getName());
-        Response response=cluster.call(request);
-        return response.getValue();
+        Response response=cluster.call(request);//发送请求
+        return response.getValue();//接收请求
     }
 
     /**

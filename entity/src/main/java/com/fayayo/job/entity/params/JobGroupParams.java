@@ -22,6 +22,8 @@ public class JobGroupParams {
     @NotNull(message = "执行器描述不能为空")
     private String groupDesc;
 
+    private Integer seq;
+
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this);

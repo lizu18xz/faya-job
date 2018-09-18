@@ -27,12 +27,25 @@ public class DefaultResponseFuture implements ResponseFuture {
     protected List<FutureListener> listeners;
     protected Class returnType;
 
+    protected String remoteIp;
+
     public DefaultResponseFuture(Request requestObj, int timeout) {
         this.request = requestObj;
         this.timeout = timeout;
     }
 
-     /**
+
+    public String getRemoteIp() {
+        return remoteIp;
+    }
+
+    public void setRemoteIp(String remoteIp) {
+        this.remoteIp = remoteIp;
+    }
+
+
+
+    /**
        *@描述 当服务端返回信息后，会到客户端的handler中,如果正常返回，会把返回结果传递给此处onSuccess方法进行处理
        *   会唤醒getValue时阻塞的线程
      */
@@ -91,6 +104,7 @@ public class DefaultResponseFuture implements ResponseFuture {
             return getValueOrThrowable();//如果不是在运行就报错
         }
     }
+
 
     @Override
     public Exception getException() {
