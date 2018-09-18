@@ -78,15 +78,9 @@ public class TriggerHelper {
         jobLog.setLoadBalance(EnumUtil.getByCode(jobInfo.getJobLoadBalance(),JobLoadBalanceEnums.class).getDesc());
         jobLog.setHa(EnumUtil.getByCode(jobInfo.getJobHa(),HaStrategyEnums.class).getDesc());
 
-        /*
-         jobLog.setRemoteIp();
-        jobLog.setStatus();
-        jobLog.setMessage();
-        jobLog.setRetry();*/
-
-
-
+        //TODO 怎么获取重试的信息 怎么记录完整的日志信息
         Result<?> result=executorSpi.run(jobInfoParam);//ExecutorRunImpl.run()
+        jobLog.setRemoteIp(result.getData().toString());
 
          //获取任务的执行结果
         log.info("{}job success:{}", Constants.LOG_PREFIX,result);

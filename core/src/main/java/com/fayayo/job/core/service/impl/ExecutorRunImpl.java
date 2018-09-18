@@ -24,6 +24,13 @@ import java.util.concurrent.Future;
 @Slf4j
 public class ExecutorRunImpl implements ExecutorRun {
 
+
+    private String server;
+
+    public ExecutorRunImpl(String server) {
+        this.server = server;
+    }
+
     private static FutureThread futureThread=new FutureThread();
 
      /**
@@ -47,8 +54,7 @@ public class ExecutorRunImpl implements ExecutorRun {
         //把返回结果加入到回调处理
         CallbackThread.getInstance().pushFuture(new CallBackParam(jobInfo.getId(),future));
 
-        jobInfo.setJobStatus(JobStatusEnums.ON_LINE.getCode());
-        return Result.success(jobInfo);
+        return Result.success(server);//返回地址
     }
 
 }

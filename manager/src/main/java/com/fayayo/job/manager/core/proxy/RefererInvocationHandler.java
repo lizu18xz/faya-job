@@ -32,7 +32,7 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
      */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        log.info("{}RefererInvocationHandler invock start......", Constants.LOG_PREFIX);
+        log.info("{}发送RPC请求 RefererInvocationHandler invock start......", Constants.LOG_PREFIX);
         DefaultRequest request=new DefaultRequest();
         request.setRequestId(RequestIdGenerator.getRequestId());
         request.setArguments(args);

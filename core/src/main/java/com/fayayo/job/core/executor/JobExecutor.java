@@ -108,7 +108,7 @@ public class JobExecutor implements ApplicationContextAware {
         log.info("{}执行器初始化start......:{}", Constants.LOG_PREFIX, server);
         //然后启动这个服务端，准备接收请求
         CountDownLatch countDownLatch = new CountDownLatch(1);//阻塞线程
-        NettyServer nettyServer = new NettyServer(port);
+        NettyServer nettyServer = new NettyServer(server,port);
         nettyServer.start(countDownLatch);
         try {
             countDownLatch.await();

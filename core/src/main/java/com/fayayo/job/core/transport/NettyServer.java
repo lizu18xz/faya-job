@@ -30,9 +30,12 @@ public class NettyServer {
 
     private Integer port;
 
-    public NettyServer(Integer port) {
+    private String server;//当前执行器的地址
+
+    public NettyServer(String server,Integer port) {
+        this.server=server;
         this.port = port;
-        serviceMap.put(ExecutorRun.class.getName(),new ExecutorRunImpl());//保存调度任务接口和实现类的映射关系
+        serviceMap.put(ExecutorRun.class.getName(),new ExecutorRunImpl(server));//保存调度任务接口和实现类的映射关系
     }
 
     private Thread thread;
@@ -89,7 +92,7 @@ public class NettyServer {
 
     //服务启动
     public static void main(String[] args) {
-        NettyServer nettyServer=new NettyServer(8888);
+        NettyServer nettyServer=new NettyServer("",8888);
         nettyServer.start(null);
     }
 }

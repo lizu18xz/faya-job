@@ -34,8 +34,7 @@ public abstract class AbstractHaStrategy implements HaStrategy {
             client.open();
             Response response=client.request(request);
             //保存执行机器的地址到返回
-            response.getRemoteIp();
-
+            //response.setRemoteIp(endpoint.getHost());
             return response;
         } catch (Exception e) {
             e.printStackTrace();

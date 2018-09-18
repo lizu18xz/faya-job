@@ -7,6 +7,8 @@ package com.fayayo.job.core.transport.spi;
  * @desc 响应对象异步处理
  */
 public interface ResponseFuture extends Future, Response {
+
+
     void onSuccess(Response response);
 
     void onFailure(Response response) ;
@@ -14,8 +16,6 @@ public interface ResponseFuture extends Future, Response {
     long getCreateTime();
 
     void setReturnType(Class<?> clazz);
-
-
 
 
 }

@@ -2,16 +2,13 @@ package com.fayayo.job.datax.executor;
 
 import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.common.params.JobInfoParam;
-import com.fayayo.job.common.util.FtpUtil;
 import com.fayayo.job.common.util.ShellCall;
 import com.fayayo.job.core.annotation.FayaService;
 import com.fayayo.job.core.executor.result.Result;
 import com.fayayo.job.core.executor.handler.JobExecutorHandler;
-import com.fayayo.job.datax.config.FtpProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,9 +30,6 @@ public class DataxEngine extends JobExecutorHandler {
 
     private static final String BIN="bin";
 
-    @Autowired
-    private FtpProperties ftpProperties;
-
 
     @Override
     public Result<?> run(JobInfoParam jobInfoParam) {
@@ -46,10 +40,6 @@ public class DataxEngine extends JobExecutorHandler {
             String dataxHome=System.getenv("DATAX_HOME");
             String jobId=jobInfoParam.getId();//任务唯一的id
             String json_name=String.format(Constants.DATAX_JOB_NAME_PREFIX,jobId,Constants.FILE_EXTENSION);//配置文件名称
-
-            /*//下载配置文件到当前机器
-            FtpUtil ftpUtil=new FtpUtil(ftpProperties.getIp(),ftpProperties.getUsername(),ftpProperties.getPassword());
-            ftpUtil.downLoadFtpFile(ftpProperties.getServerPath(),"baf4fd11-c630-46a7-a997-013f55f74c60.json",configHome);*/
 
             //获取配置文件信息到指定路径
             String content=jobInfoParam.getJobConfig();
@@ -68,8 +58,11 @@ public class DataxEngine extends JobExecutorHandler {
             ShellCall.runCommand(cmdList);
         }catch (Exception e){
             log.info("datax任务执行失败,{}",e);
+            //TODO 删除文件
+
             return Result.error("任务执行失败，请联系管理员");
         }
+        //TODO 删除文件
         return Result.success("datax job success");
     }
 
