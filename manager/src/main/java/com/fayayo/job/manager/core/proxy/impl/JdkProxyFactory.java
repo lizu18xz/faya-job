@@ -1,4 +1,4 @@
-package com.fayayo.job.manager.core.proxy.spi;
+package com.fayayo.job.manager.core.proxy.impl;
 
 import com.fayayo.job.manager.core.cluster.support.Cluster;
 import com.fayayo.job.manager.core.proxy.ProxyFactory;

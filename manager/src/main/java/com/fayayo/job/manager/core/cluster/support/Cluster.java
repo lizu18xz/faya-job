@@ -14,5 +14,9 @@ public interface Cluster {
 
     void setHaStrategy(HaStrategy haStrategy);
 
+    void setRetries(Integer retries);
+
+    Integer getRetries();
+
     LoadBalance getLoadBalance();
 }

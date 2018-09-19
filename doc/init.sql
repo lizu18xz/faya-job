@@ -47,6 +47,7 @@ create table faya_job_info(
   job_type varchar(16) not null comment '任务类型(result,...)',
   job_load_balance int not null comment '任务执行策略',
   job_ha int not null comment '任务ha的策略',
+  retries int not null DEFAULT '0' comment '任务重试次数',
   job_status int not null comment '任务状态,上线,下线,删除',
   start_at datetime comment '第一次任务开始时间',
   create_time timestamp not null default current_timestamp comment '创建时间',
@@ -75,13 +76,13 @@ create table faya_job_log(
   remote_ip varchar(32) not null comment '任务执行的机器地址',
   load_balance varchar(32) not null comment'负载策略',
   ha varchar(32) not null comment'失败策略',
-  status int not null comment '任务执行状态 成功 失败',
-  retry int not null comment '重试次数',
+  status int  comment '任务执行状态 成功 失败',
+  retry int  comment '重试次数',
   message VARCHAR(128) comment '任务执行信息',
   create_time timestamp not null default current_timestamp comment '创建时间',
   update_time timestamp not null default current_timestamp on update current_timestamp comment '修改时间',
-  primary key (job_id)
-)comment '任务配置文件信息';
+  primary key (id)
+)comment '任务日志';
 
 
 -- 初始化数据

@@ -30,6 +30,8 @@ public class JobInfoParam {
 
     private Integer jobHa;
 
+    private Integer retries;//重试次数
+
     private String jobGroupName;//执行器名称
 
     private Integer jobStatus;

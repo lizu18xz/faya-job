@@ -12,6 +12,10 @@ public class ClusterSpi implements Cluster {
 
     private LoadBalance loadBalance;
 
+    private String jobLogId;//每个任务唯一的ID
+
+    private Integer retries=0;//策略重试的次数
+
     public ClusterSpi(HaStrategy haStrategy, LoadBalance loadBalance) {
         this.haStrategy = haStrategy;
         this.loadBalance = loadBalance;
@@ -43,5 +47,19 @@ public class ClusterSpi implements Cluster {
         return this.loadBalance;
     }
 
+    public String getJobLogId() {
+        return jobLogId;
+    }
 
+    public void setJobLogId(String jobLogId) {
+        this.jobLogId = jobLogId;
+    }
+
+    public Integer getRetries() {
+        return retries;
+    }
+
+    public void setRetries(Integer retries) {
+        this.retries = retries;
+    }
 }

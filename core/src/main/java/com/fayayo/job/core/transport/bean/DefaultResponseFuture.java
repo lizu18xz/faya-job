@@ -14,35 +14,26 @@ public class DefaultResponseFuture implements ResponseFuture {
 
     protected volatile FutureState state = FutureState.DOING;
 
-    protected Object lock = new Object();
+    protected Object lock = new Object();//对象锁
 
-    protected Object result = null;
-    protected Exception exception = null;
+    protected Object result = null;//真正的返回结果
+
+    protected Exception exception = null;//异常返回
 
     protected long createTime = System.currentTimeMillis();
-    protected int timeout = 0;
+    protected int timeout = 0;//超时时间
     protected long processTime = 0;
 
     protected Request request;
     protected List<FutureListener> listeners;
+
     protected Class returnType;
 
-    protected String remoteIp;
 
     public DefaultResponseFuture(Request requestObj, int timeout) {
         this.request = requestObj;
         this.timeout = timeout;
     }
-
-
-    public String getRemoteIp() {
-        return remoteIp;
-    }
-
-    public void setRemoteIp(String remoteIp) {
-        this.remoteIp = remoteIp;
-    }
-
 
 
     /**
@@ -172,11 +163,6 @@ public class DefaultResponseFuture implements ResponseFuture {
 
     public long getCreateTime() {
         return createTime;
-    }
-
-    @Override
-    public void setReturnType(Class<?> clazz) {
-        this.returnType = clazz;
     }
 
     public Object getRequestObj() {

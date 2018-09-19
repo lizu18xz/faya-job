@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * @author dalizu on 2018/8/7.
  * @version v1.0
- * @desc 响应对象
+ * @desc 实际的响应对象
  */
 @Getter
 @Setter

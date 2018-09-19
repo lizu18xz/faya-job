@@ -30,8 +30,9 @@ public class CallbackThread extends Thread{
      /**
        *@描述 新增获取任务结果的任务
      */
-    public  void pushFuture(CallBackParam callBackParam){
+    public void pushFuture(CallBackParam callBackParam){
         try {
+            log.info("{}加入获取任务返回队列......",Constants.LOG_PREFIX);
             this.callBackQueue.put(callBackParam);//阻塞等待有空闲的位置
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -43,9 +44,9 @@ public class CallbackThread extends Thread{
     public void run() {
         log.info("{}wait deal with the run result......",Constants.LOG_PREFIX);
         try {
-            if(!toStop){
+            while (!toStop){
                 CallBackParam callBackParam= this.callBackQueue.take();//阻塞 doPull
-
+                log.info("{}等待任务结果返回",Constants.LOG_PREFIX);
                 Result<?> result= (Result<?>) callBackParam.getFuture().get();
 
                 log.info("{}Callable get jobId:{},result:{}",Constants.LOG_PREFIX,callBackParam.getJobId(),result.getData());

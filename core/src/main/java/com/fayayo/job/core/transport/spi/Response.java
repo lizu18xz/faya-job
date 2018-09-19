@@ -19,10 +19,6 @@ public interface Response {
     Object getValue();
 
 
-    String getRemoteIp();
-
-    void setRemoteIp(String remoteIp);
-
     /**
      * 如果request处理有异常，那么调用该方法return exception 如果request还没处理完或者request处理正常，那么return null
      * 

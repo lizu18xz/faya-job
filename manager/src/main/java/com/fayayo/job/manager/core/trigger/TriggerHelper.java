@@ -19,10 +19,11 @@ import com.fayayo.job.manager.core.cluster.loadbalance.JobLoadBalanceEnums;
 import com.fayayo.job.manager.core.cluster.support.Cluster;
 import com.fayayo.job.manager.core.cluster.support.ClusterSupport;
 import com.fayayo.job.manager.core.proxy.ProxyFactory;
-import com.fayayo.job.manager.core.proxy.spi.JdkProxyFactory;
+import com.fayayo.job.manager.core.proxy.impl.JdkProxyFactory;
 import com.fayayo.job.manager.service.JobConfigService;
 import com.fayayo.job.manager.service.JobGroupService;
 import com.fayayo.job.manager.service.JobInfoService;
+import com.fayayo.job.manager.service.JobLogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 
@@ -54,6 +55,8 @@ public class TriggerHelper {
         JobGroup jobGroup=jobGroupService.findOne(jobInfoParam.getJobGroup());
         jobInfoParam.setJobGroupName(jobGroup.getName());
 
+        String jobLogId=KeyUtil.genUniqueKey();
+
         //build cluster  配置机器的ha和选择服务的策略
         ClusterSupport clusterSupport=new ClusterSupport();
         Cluster cluster=clusterSupport.buildClusterSupport(jobInfoParam);
@@ -72,15 +75,17 @@ public class TriggerHelper {
 
         //进行日志信息的统计+DATAX滚动日志
         JobLog jobLog=new JobLog();
-        jobLog.setId(KeyUtil.genUniqueKey());
+        jobLog.setId(jobLogId);
         jobLog.setJobId(jobId);
         jobLog.setJobDesc(jobInfo.getJobDesc());
         jobLog.setLoadBalance(EnumUtil.getByCode(jobInfo.getJobLoadBalance(),JobLoadBalanceEnums.class).getDesc());
         jobLog.setHa(EnumUtil.getByCode(jobInfo.getJobHa(),HaStrategyEnums.class).getDesc());
 
-        //TODO 怎么获取重试的信息 怎么记录完整的日志信息
         Result<?> result=executorSpi.run(jobInfoParam);//ExecutorRunImpl.run()
+
         jobLog.setRemoteIp(result.getData().toString());
+        JobLogService jobLogService=SpringHelper.popBean(JobLogService.class);
+        jobLogService.save(jobLog);
 
          //获取任务的执行结果
         log.info("{}job success:{}", Constants.LOG_PREFIX,result);

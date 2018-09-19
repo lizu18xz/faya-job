@@ -30,6 +30,8 @@ public class JobInfo {
 
     private Integer jobHa;
 
+    private Integer retries;//重试次数
+
     private Integer jobStatus;
 
     private Date startAt;

@@ -32,9 +32,7 @@ public abstract class AbstractHaStrategy implements HaStrategy {
         NettyClient client=new NettyClient(endpoint.getHost(),endpoint.getPort());
         try {
             client.open();
-            Response response=client.request(request);
-            //保存执行机器的地址到返回
-            //response.setRemoteIp(endpoint.getHost());
+            Response response=client.request(request);//返回的是DefaultResponseFuture
             return response;
         } catch (Exception e) {
             e.printStackTrace();

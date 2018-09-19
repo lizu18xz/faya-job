@@ -37,7 +37,7 @@ public class FailoverHaStrategy extends AbstractHaStrategy {
         if (endpointList.isEmpty()) {
             throw new CommonException(999999, String.format("FailoverHaStrategy No Endpoint　loadbalance:%s", loadBalance));
         }
-        int tryCount = 3;//TODO 获取用户配置的重试次数
+        int tryCount = request.getRetries();//获取用户配置的重试次数
         // 如果有问题，则设置为不重试
         if (tryCount < 0) {
             tryCount = 0;

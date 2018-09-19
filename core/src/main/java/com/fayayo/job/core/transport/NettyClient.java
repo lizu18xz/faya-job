@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public class NettyClient {
+
     private String remoteAddress;
 
     private int port;
@@ -52,7 +53,6 @@ public class NettyClient {
             bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, Params.CONNECTTIMEOUT);
             bootstrap.option(ChannelOption.TCP_NODELAY, true);
             bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
-            //NettyClientHandler nettyClientHandler=new NettyClientHandler();
             bootstrap.handler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 protected void initChannel(SocketChannel ch) {
@@ -63,10 +63,11 @@ public class NettyClient {
                     ch.pipeline().addLast(new NettyClientHandler(new MessageHandler() {
                         @Override
                         public Object handle(Object message) {
-                            Response response = (Response) message;
+                            DefaultResponse response = (DefaultResponse) message;//获取服务的返回
                             ResponseFuture responseFuture =NettyClient.this.removeCallback(response.getRequestId());
                             if (responseFuture == null) {
-                                log.warn("NettyClient has response from server, but responseFuture not exist, requestId={}", response.getRequestId());
+                                log.warn("NettyClient has response from server, but responseFuture not exist, requestId={}",
+                                        response.getRequestId());
                                 return null;
                             }
                             if (response.getException() != null) {

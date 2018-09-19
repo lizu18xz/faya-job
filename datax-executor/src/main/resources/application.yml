@@ -4,10 +4,10 @@ server:
     context-path: /datax-executor
 
 faya-job:
-  zookeeperServer: 192.168.76.139:2181
+  zookeeperServer: 192.168.88.130:2181
   registerPath: /job-register
   datax-executor:
-     server: 192.168.76.139
+     server: 192.168.88.130
      port: 8070
      weight: 1
      name: DATAX

@@ -52,12 +52,13 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<DefaultReque
                     FastClass serviceFastClass = FastClass.create(clazz);
                     FastMethod serviceFastMethod = serviceFastClass.getMethod(methodName, parameterTypes);
                     Object result=serviceFastMethod.invoke(serviceBean, parameters);//调用真正的方法  Result<?>
-                    DefaultResponse response = new DefaultResponse();
+                    DefaultResponse response = new DefaultResponse();//使用默认的响应对象返回
                     response.setRequestId(request.getRequestId());
                     response.setValue(result);
                     ctx.channel().writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
                 } catch (InvocationTargetException e) {
                     e.printStackTrace();
+                    //TODO 异常返回
                     log.error("处理请求信息异常:{}",e);
                 }
             }

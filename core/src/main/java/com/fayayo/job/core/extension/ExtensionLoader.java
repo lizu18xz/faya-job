@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentMap;
  * 	扩展增加的方式：
  * 		支持 JDK ServiceProvider 
  *      微博Motan框架代码
- * 		支持 weibo:spi 配置
+ * 		支持 weibo:impl 配置
  * </pre>
  * 
  * @author maijunsheng
@@ -36,7 +36,7 @@ public class ExtensionLoader<T> {
     private Class<T> type;
     private volatile boolean init = false;
 
-    // spi path prefix
+    // impl path prefix
     private static final String PREFIX = "META-INF/services/";
     private ClassLoader classLoader;
 
@@ -316,7 +316,7 @@ public class ExtensionLoader<T> {
                     map.put(spiName, clz);
                 }
             } catch (Exception e) {
-                failLog(type, "Error load spi class", e);
+                failLog(type, "Error load impl class", e);
             }
         }
         return map;
@@ -351,7 +351,7 @@ public class ExtensionLoader<T> {
                 parseLine(type, url, line, indexNumber, classNames);
             }
         } catch (Exception x) {
-            failLog(type, "Error reading spi configuration file", x);
+            failLog(type, "Error reading impl configuration file", x);
         } finally {
             try {
                 if (reader != null) {
@@ -361,7 +361,7 @@ public class ExtensionLoader<T> {
                     inputStream.close();
                 }
             } catch (IOException y) {
-                failLog(type, "Error closing spi configuration file", y);
+                failLog(type, "Error closing impl configuration file", y);
             }
         }
     }
@@ -381,18 +381,18 @@ public class ExtensionLoader<T> {
         }
 
         if ((line.indexOf(' ') >= 0) || (line.indexOf('\t') >= 0)) {
-            failThrows(type, url, lineNumber, "Illegal spi configuration-file syntax");
+            failThrows(type, url, lineNumber, "Illegal impl configuration-file syntax");
         }
 
         int cp = line.codePointAt(0);
         if (!Character.isJavaIdentifierStart(cp)) {
-            failThrows(type, url, lineNumber, "Illegal spi provider-class name: " + line);
+            failThrows(type, url, lineNumber, "Illegal impl provider-class name: " + line);
         }
 
         for (int i = Character.charCount(cp); i < line.length(); i += Character.charCount(cp)) {
             cp = line.codePointAt(i);
             if (!Character.isJavaIdentifierPart(cp) && (cp != '.')) {
-                failThrows(type, url, lineNumber, "Illegal spi provider-class name: " + line);
+                failThrows(type, url, lineNumber, "Illegal impl provider-class name: " + line);
             }
         }
 

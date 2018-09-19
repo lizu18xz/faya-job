@@ -59,11 +59,24 @@ public class DataxEngine extends JobExecutorHandler {
         }catch (Exception e){
             log.info("datax任务执行失败,{}",e);
             //TODO 删除文件
-
             return Result.error("任务执行失败，请联系管理员");
         }
         //TODO 删除文件
         return Result.success("datax job success");
     }
+
+
+    private void deleteConfig(String path){
+
+        //获取到文件然后删除
+        File file=new File(path);
+        if(file.exists()){
+            file.delete();
+        }
+
+    }
+
+
+
 
 }

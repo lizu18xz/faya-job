@@ -41,6 +41,9 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
         request.setParamtersDesc(ReflectUtil.getMethodParamDesc(method));
         request.setParamtersTypes(method.getParameterTypes());
         request.setInterfaceName(method.getDeclaringClass().getName());
+
+        request.setRetries(cluster.getRetries());//设置重试次数
+
         Response response=cluster.call(request);//发送请求
         return response.getValue();//接收请求
     }

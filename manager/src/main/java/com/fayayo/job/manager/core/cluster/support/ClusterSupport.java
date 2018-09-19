@@ -42,6 +42,9 @@ public class ClusterSupport {
         //获取loadbalance的实现
         LoadBalance loadBalance = getLoadBalance(jobInfo);
         Cluster cluster = new ClusterSpi(haStrategy, loadBalance);
+        //设置重试次数
+        cluster.setRetries(jobInfo.getRetries());
+
         return cluster;
     }
 
