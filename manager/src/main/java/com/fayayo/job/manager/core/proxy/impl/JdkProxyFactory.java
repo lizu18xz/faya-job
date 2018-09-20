@@ -1,5 +1,6 @@
 package com.fayayo.job.manager.core.proxy.impl;
 
+import com.fayayo.job.core.extension.SpiMeta;
 import com.fayayo.job.manager.core.cluster.support.Cluster;
 import com.fayayo.job.manager.core.proxy.ProxyFactory;
 import com.fayayo.job.manager.core.proxy.RefererInvocationHandler;
@@ -11,6 +12,7 @@ import java.lang.reflect.Proxy;
  * @version v1.0
  * @desc jdkProxy
  */
+@SpiMeta(name = "jdk")
 public class JdkProxyFactory implements ProxyFactory {
 
     @Override

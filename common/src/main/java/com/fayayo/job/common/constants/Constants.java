@@ -20,4 +20,10 @@ public class Constants {
     public static final String DATAX_JOB_NAME_PREFIX="DATAX_%s%s";
 
 
+    /**
+     * 业务需求
+     * */
+    public static final String PROXY_JDK = "jdk";
+
+
 }

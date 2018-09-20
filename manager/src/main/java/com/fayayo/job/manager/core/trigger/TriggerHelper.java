@@ -8,6 +8,7 @@ import com.fayayo.job.common.params.JobInfoParam;
 import com.fayayo.job.common.util.EnumUtil;
 import com.fayayo.job.common.util.KeyUtil;
 import com.fayayo.job.core.executor.result.Result;
+import com.fayayo.job.core.extension.ExtensionLoader;
 import com.fayayo.job.core.service.ExecutorRun;
 import com.fayayo.job.entity.JobConfig;
 import com.fayayo.job.entity.JobGroup;
@@ -96,7 +97,8 @@ public class TriggerHelper {
      * @描述 获取代理类
      */
     public static ExecutorRun getExecutorSpi(Cluster cluster) {
-        ProxyFactory proxyFactory = new JdkProxyFactory();
+        //TODO 暂时只有一种代理，后期增加可以把类型通过参数传入进来
+        ProxyFactory proxyFactory = ExtensionLoader.getExtensionLoader(ProxyFactory.class).getExtension(Constants.PROXY_JDK);
         return proxyFactory.getProxy(ExecutorRun.class, cluster);
     }
 

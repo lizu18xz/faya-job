@@ -56,13 +56,12 @@ public class JobRouteExchange {
     public LoadBalance getLoadBalance(JobInfoParam jobInfo){
         LoadBalance loadBalance=null;
         String jobId=jobInfo.getId();//获取jobId
-        //判断此job是否已经存在轮训策略
+        //判断当前job是否已经存在负载策略
         loadBalance=jobMap.get(jobId);
         if(loadBalance!=null){
             loadBalance.onRefresh(endpoints);
             return loadBalance;
         }
-        //不存在在获取获取类型
         Integer loadBalanceCode=jobInfo.getJobLoadBalance();
         String loadBalanceDesc= EnumUtil.getByCode(loadBalanceCode,JobLoadBalanceEnums.class).getDesc();
         loadBalance= ExtensionLoader.getExtensionLoader(LoadBalance.class).getExtension(loadBalanceDesc);

@@ -2,3 +2,4 @@ com.fayayo.job.manager.core.cluster.loadbalance.ConsistentHashLoadBalance
 com.fayayo.job.manager.core.cluster.loadbalance.RandomLoadBalance
 com.fayayo.job.manager.core.cluster.loadbalance.RoundRobinLoadBalance
 com.fayayo.job.manager.core.cluster.loadbalance.WeightRoundRobinLoadBalance
+com.fayayo.job.manager.core.cluster.loadbalance.ActiveWeightLoadBalance

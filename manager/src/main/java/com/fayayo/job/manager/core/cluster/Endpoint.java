@@ -1,9 +1,29 @@
 package com.fayayo.job.manager.core.cluster;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class Endpoint {
     private final String host;
     private final int port;
     private Integer weight;
+
+    //统计当前时间地址被调用的次数
+    private AtomicInteger activeCount = new AtomicInteger(0);
+
+
+    public void incrActiveCount() {
+        activeCount.incrementAndGet();
+    }
+
+    public void decrActiveCount() {
+        activeCount.decrementAndGet();
+    }
+
+
+    public int activeCount() {
+        return activeCount.get();
+    }
+
 
     public Endpoint(String host, int port) {
         this.host = host;
@@ -51,6 +71,8 @@ public class Endpoint {
                 "host='" + host + '\'' +
                 ", port=" + port +
                 ", weight=" + weight +
+                ", activeCount=" + activeCount() +
                 '}';
     }
+
 }

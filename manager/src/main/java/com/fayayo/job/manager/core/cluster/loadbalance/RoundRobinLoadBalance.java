@@ -64,6 +64,9 @@ public class RoundRobinLoadBalance extends AbstractLoadBalance {
         loadBalance.onRefresh(list);//刷新地址
         while (true) {
             Endpoint endpoint = loadBalance.select(new DefaultRequest());//获取一个地址
+
+            endpoint.incrActiveCount();
+
             System.out.println(endpoint.toString());
             Thread.sleep(1000);
         }

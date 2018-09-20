@@ -28,8 +28,8 @@ public abstract class AbstractHaStrategy implements HaStrategy {
 
     public Response request(Endpoint endpoint,Request request){
         log.info("{}start request......:{}",Constants.LOG_PREFIX,request.toString());
-
         NettyClient client=new NettyClient(endpoint.getHost(),endpoint.getPort());
+        endpoint.incrActiveCount();
         try {
             client.open();
             Response response=client.request(request);//返回的是DefaultResponseFuture
@@ -38,7 +38,11 @@ public abstract class AbstractHaStrategy implements HaStrategy {
             e.printStackTrace();
             //TODO
             return null;
+        }finally {
+            endpoint.decrActiveCount();
         }
     }
+
+
 
 }
