@@ -76,9 +76,10 @@ public class JobGroupServiceImpl implements JobGroupService{
                     return o1.getSeq() - o2.getSeq();
                 }
             });
+            return new PageImpl<>(bodyList,pageable,page.getTotalElements());
         }
 
-        return new PageImpl<>(bodyList,pageable,page.getTotalElements());
+        return page;
     }
 
     @Override
