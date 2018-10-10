@@ -5,6 +5,7 @@ import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.core.annotation.FayaService;
 import com.fayayo.job.core.executor.handler.JobExecutorHandler;
+import com.fayayo.job.core.service.impl.ExecutorRunImpl;
 import com.fayayo.job.core.service.impl.ZkServiceRegistry;
 import com.fayayo.job.core.thread.CallbackThread;
 import com.fayayo.job.core.transport.NettyServer;
@@ -128,5 +129,17 @@ public class JobExecutor implements ApplicationContextAware {
         zkServiceRegistry.register(name, serviceAddress);
         log.info("{}注册到服务中心完成", Constants.LOG_PREFIX);
     }
+
+
+    public void close(){
+
+        log.info("{}准备关闭资源......", Constants.LOG_PREFIX);
+
+        ExecutorRunImpl.futureThread.shutdown();
+
+    }
+
+
+
 
 }

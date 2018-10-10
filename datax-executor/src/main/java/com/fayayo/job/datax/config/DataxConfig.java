@@ -17,7 +17,7 @@ public class DataxConfig {
     private ExecutorProperties properties;
 
 
-    @Bean
+    @Bean(destroyMethod = "close")
     public JobExecutor jobExecutor(){
 
         return new JobExecutor(properties.getServer(),

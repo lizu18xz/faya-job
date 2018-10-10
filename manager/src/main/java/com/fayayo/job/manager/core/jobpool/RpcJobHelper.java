@@ -15,6 +15,14 @@ public class RpcJobHelper {
     private StandardThreadExecutor rpcJobThreadPool= StandardThreadManager.rpcJobThreadPool();
 
     private RpcJobHelper() {
+
+        Runtime.getRuntime().addShutdownHook(new Thread(){
+            @Override
+            public void run() {
+                RpcJobHelper.getInstance().toStop();//关闭资源
+            }
+        });
+
     }
 
     private static class RpcJobHelperHolder{

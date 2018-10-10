@@ -102,6 +102,7 @@ public class StandardThreadExecutor extends ThreadPoolExecutor {
     }
 
     public void shutdown() {
+        log.info("{}关闭线程池",Constants.LOG_PREFIX);
         super.shutdown();
     }
 

@@ -23,13 +23,14 @@ import java.util.concurrent.Future;
 @Slf4j
 public class ExecutorRunImpl implements ExecutorRun {
 
+    public static StandardThreadExecutor futureThread= StandardThreadManager.futureThread();
+
     private String server;
 
     public ExecutorRunImpl(String server) {
         this.server = server;
     }
 
-    private static StandardThreadExecutor futureThread= StandardThreadManager.futureThread();
 
      /**
        *@描述 真正执行业务逻辑的地方,在rpc server里面通过反射调用

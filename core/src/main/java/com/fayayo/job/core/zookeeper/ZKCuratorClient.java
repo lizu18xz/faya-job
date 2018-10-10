@@ -41,10 +41,14 @@ public class ZKCuratorClient implements Closable {
 
         //启动zk客户端
         RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 5);
-        client = CuratorFrameworkFactory
-                .newClient(zkProperties.getZookeeperServer(), 10000, 10000, retryPolicy);
+        /*client = CuratorFrameworkFactory
+                .newClient(zkProperties.getZookeeperServer(), 10000, 10000, retryPolicy);*/
+
+        client = CuratorFrameworkFactory.builder().connectString(zkProperties.getZookeeperServer())
+                .sessionTimeoutMs(10000).connectionTimeoutMs(10000).retryPolicy(retryPolicy).namespace("admin").build();
+
         client.start();
-        client = client.usingNamespace("admin");
+        //client=client.usingNamespace("admin");
 
         try {
             // 判断在admin命名空间下是否有jobRegister节点  /job-register   后续注册操作在此下面
@@ -63,7 +67,6 @@ public class ZKCuratorClient implements Closable {
             log.info("zookeeper服务器状态：{}", client.getState());
             addChildWatch(zkProperties.getRegisterPath());
             ShutDownHook.registerShutdownHook(this);//加入到hook事件
-
         } catch (Exception e) {
             log.error("zookeeper客户端连接、初始化错误...");
             e.printStackTrace();
@@ -208,7 +211,7 @@ public class ZKCuratorClient implements Closable {
     @Override
     public void closeResource() {
         if (client != null) {
-            log.info("断开与zk的连接......");
+            log.info("断开与zk的连接......{}",client.getState());
             client.close();
         }
     }
