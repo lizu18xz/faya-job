@@ -3,6 +3,10 @@ package com.fayayo.job.common.constants;
 
 public class Constants {
 
+
+    public static final String FRAMEWORK_NAME="faya-job";
+
+
     /**
      * http返回码
      * */

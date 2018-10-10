@@ -1,5 +1,7 @@
 package com.fayayo.job.manager.core.jobpool;
 
+import com.fayayo.job.core.pool.StandardThreadExecutor;
+import com.fayayo.job.core.pool.StandardThreadManager;
 import com.fayayo.job.manager.core.trigger.TriggerHelper;
 
 /**
@@ -10,7 +12,7 @@ import com.fayayo.job.manager.core.trigger.TriggerHelper;
 public class RpcJobHelper {
 
     //定义一个线程池用来提交任务
-    private RpcJobThreadPool rpcJobThreadPool=new RpcJobThreadPool();
+    private StandardThreadExecutor rpcJobThreadPool= StandardThreadManager.rpcJobThreadPool();
 
     private RpcJobHelper() {
     }
