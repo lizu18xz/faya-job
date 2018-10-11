@@ -6,12 +6,12 @@ import com.fayayo.job.common.params.JobInfoParam;
 import com.fayayo.job.core.executor.JobExecutor;
 import com.fayayo.job.core.executor.result.Result;
 import com.fayayo.job.core.executor.handler.JobExecutorHandler;
-import com.fayayo.job.core.pool.StandardThreadExecutor;
-import com.fayayo.job.core.pool.StandardThreadManager;
+import com.fayayo.job.core.thread.StandardThreadExecutor;
+import com.fayayo.job.core.thread.StandardThreadManager;
 import com.fayayo.job.core.service.ExecutorRun;
-import com.fayayo.job.core.thread.CallBackParam;
-import com.fayayo.job.core.thread.CallbackThread;
-import com.fayayo.job.core.thread.task.HandlerTask;
+import com.fayayo.job.core.callback.CallBackParam;
+import com.fayayo.job.core.callback.CallbackThread;
+import com.fayayo.job.core.callback.task.HandlerTask;
 import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.Future;
 

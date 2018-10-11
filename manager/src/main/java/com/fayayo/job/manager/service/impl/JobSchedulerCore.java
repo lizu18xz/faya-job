@@ -4,9 +4,11 @@ import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.common.util.DateTimeUtil;
+import com.fayayo.job.manager.core.helper.RpcJobHelper;
 import com.fayayo.job.manager.core.jobbean.RpcJobBean;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +21,7 @@ import java.util.Date;
  */
 @Slf4j
 @Service
-public class JobSchedulerCore {
+public class JobSchedulerCore implements DisposableBean{
 
     @Autowired
     private Scheduler scheduler;
@@ -177,8 +179,9 @@ public class JobSchedulerCore {
     }
 
 
-
-
-
-
+    @Override
+    public void destroy() throws Exception {
+        log.info("close Rpc pool");
+        RpcJobHelper.getInstance().toStop();//关闭线程池
+    }
 }

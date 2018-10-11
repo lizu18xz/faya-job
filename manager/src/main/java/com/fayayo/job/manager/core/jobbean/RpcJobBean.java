@@ -1,7 +1,7 @@
 package com.fayayo.job.manager.core.jobbean;
 
 import com.fayayo.job.common.constants.Constants;
-import com.fayayo.job.manager.core.jobpool.RpcJobHelper;
+import com.fayayo.job.manager.core.helper.RpcJobHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;

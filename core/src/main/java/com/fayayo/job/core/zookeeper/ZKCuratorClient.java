@@ -13,6 +13,7 @@ import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.apache.curator.retry.ExponentialBackoffRetry;
+import org.apache.curator.utils.CloseableUtils;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.ZooDefs;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,14 +42,11 @@ public class ZKCuratorClient implements Closable {
 
         //启动zk客户端
         RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 5);
-        /*client = CuratorFrameworkFactory
-                .newClient(zkProperties.getZookeeperServer(), 10000, 10000, retryPolicy);*/
 
         client = CuratorFrameworkFactory.builder().connectString(zkProperties.getZookeeperServer())
                 .sessionTimeoutMs(10000).connectionTimeoutMs(10000).retryPolicy(retryPolicy).namespace("admin").build();
 
         client.start();
-        //client=client.usingNamespace("admin");
 
         try {
             // 判断在admin命名空间下是否有jobRegister节点  /job-register   后续注册操作在此下面
@@ -73,15 +71,19 @@ public class ZKCuratorClient implements Closable {
         }
     }
 
+
+    private PathChildrenCache pcache=null;
+
+
     /**
      * @描述 监听事件
      * 永久监听指定节点下的节点,只能监听指定节点下一级节点的变化,可以监听到的事件：节点创建、节点数据的变化、节点删除等
      */
     private void addChildWatch(String registerPath) throws Exception {
         log.info("{}启动zk监听", Constants.LOG_PREFIX);
-        final PathChildrenCache cache = new PathChildrenCache(client, registerPath, true);
-        cache.start();
-        cache.getListenable().addListener(new PathChildrenCacheListener() {
+        pcache = new PathChildrenCache(client, registerPath, true);
+        pcache.start();
+        pcache.getListenable().addListener(new PathChildrenCacheListener() {
             @Override
             public void childEvent(CuratorFramework curatorFramework, PathChildrenCacheEvent event) throws Exception {
 
@@ -100,9 +102,11 @@ public class ZKCuratorClient implements Closable {
         });
     }
 
+    private PathChildrenCache cache=null;
+
     private void addChildsWatch(String registerPath) throws Exception {
         log.info("{}zk监听执行器", Constants.LOG_PREFIX);
-        final PathChildrenCache cache = new PathChildrenCache(client, registerPath, true);
+        cache = new PathChildrenCache(client, registerPath, true);
         cache.start();
         cache.getListenable().addListener(new PathChildrenCacheListener() {
             @Override
@@ -118,7 +122,6 @@ public class ZKCuratorClient implements Closable {
                 } else if (event.getType().equals(PathChildrenCacheEvent.Type.CHILD_REMOVED)) {
 
                     //TODO 服务端口后，做某些事情，比如 可以把服务缓存到内存，每次新加入或者端口 刷新缓存
-
 
                 }
             }
@@ -211,8 +214,11 @@ public class ZKCuratorClient implements Closable {
     @Override
     public void closeResource() {
         if (client != null) {
-            log.info("断开与zk的连接......{}",client.getState());
-            client.close();
+            log.info("释放zk客户端的连接......{}",client.getState());
+            CloseableUtils.closeQuietly(pcache);
+            CloseableUtils.closeQuietly(cache);
+            CloseableUtils.closeQuietly(client);
+            log.info("释放zk客户端的连接result......{}",client.getState());
         }
     }
 

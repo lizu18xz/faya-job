@@ -3,7 +3,7 @@ package com.fayayo.job.manager.core.cluster.loadbalance;
 
 
 import com.fayayo.job.common.exception.CommonException;
-import com.fayayo.job.core.transport.spi.Request;
+import com.fayayo.job.core.transport.protocol.request.RequestPacket;
 import com.fayayo.job.manager.core.cluster.Endpoint;
 import com.fayayo.job.manager.core.cluster.LoadBalance;
 
@@ -29,7 +29,7 @@ public abstract class AbstractLoadBalance implements LoadBalance {
      * @描述 获取一个服务地址
      */
     @Override
-    public Endpoint select(Request request) {
+    public Endpoint select(RequestPacket request) {
         List<Endpoint> endpoints = this.endpoints;
         if (endpoints == null) {
             throw new CommonException(999999, this.getClass().getSimpleName() + " No available referers for call request:");
@@ -51,7 +51,7 @@ public abstract class AbstractLoadBalance implements LoadBalance {
      * @描述 根据规则获取服务集合
      */
     @Override
-    public void selectToHolder(Request request,List<Endpoint> endpointHolder) {
+    public void selectToHolder(RequestPacket request,List<Endpoint> endpointHolder) {
 
         List<Endpoint> endpoints = this.endpoints;
 
@@ -74,8 +74,8 @@ public abstract class AbstractLoadBalance implements LoadBalance {
         return endpoints;
     }
 
-    protected abstract Endpoint doSelect(Request request);
+    protected abstract Endpoint doSelect(RequestPacket request);
 
-    protected abstract void doSelectToHolder(Request request,List<Endpoint> refersHolder);
+    protected abstract void doSelectToHolder(RequestPacket request,List<Endpoint> refersHolder);
 
 }

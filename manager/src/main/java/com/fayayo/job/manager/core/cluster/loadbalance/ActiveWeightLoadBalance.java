@@ -1,7 +1,7 @@
 package com.fayayo.job.manager.core.cluster.loadbalance;
 
 import com.fayayo.job.core.extension.SpiMeta;
-import com.fayayo.job.core.transport.spi.Request;
+import com.fayayo.job.core.transport.protocol.request.RequestPacket;
 import com.fayayo.job.manager.core.cluster.Endpoint;
 
 import java.util.Collections;
@@ -27,7 +27,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ActiveWeightLoadBalance extends AbstractLoadBalance {
 
     @Override
-    protected Endpoint doSelect(Request request) {
+    protected Endpoint doSelect(RequestPacket request) {
         List<Endpoint> endpoints = getEndpoints();
 
         int refererSize = endpoints.size();
@@ -56,7 +56,7 @@ public class ActiveWeightLoadBalance extends AbstractLoadBalance {
     }
 
     @Override
-    protected void doSelectToHolder(Request request, List<Endpoint> refersHolder) {
+    protected void doSelectToHolder(RequestPacket request, List<Endpoint> refersHolder) {
         List<Endpoint> endpoints = getEndpoints();
 
         int refererSize = endpoints.size();

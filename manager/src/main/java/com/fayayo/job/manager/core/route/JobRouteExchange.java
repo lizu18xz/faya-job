@@ -4,8 +4,7 @@ import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.common.params.JobInfoParam;
 import com.fayayo.job.common.util.EnumUtil;
 import com.fayayo.job.core.extension.ExtensionLoader;
-import com.fayayo.job.core.transport.bean.DefaultRequest;
-import com.fayayo.job.entity.JobInfo;
+import com.fayayo.job.core.transport.protocol.request.RequestPacket;
 import com.fayayo.job.manager.core.cluster.Endpoint;
 import com.fayayo.job.manager.core.cluster.LoadBalance;
 import com.fayayo.job.manager.core.cluster.loadbalance.*;
@@ -86,7 +85,7 @@ public class JobRouteExchange {
                     jobInfo.setJobLoadBalance(3);
                     jobInfo.setId("1");
                     LoadBalance loadBalance=jobRouteExchange.getLoadBalance(jobInfo);
-                    System.out.println(loadBalance.select(new DefaultRequest()).toString());
+                    System.out.println(loadBalance.select(new RequestPacket()).toString());
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -111,7 +110,7 @@ public class JobRouteExchange {
                     jobInfo1.setJobLoadBalance(3);
                     jobInfo1.setId("1");
                     LoadBalance loadBalance1=jobRouteExchange1.getLoadBalance(jobInfo1);
-                    System.out.println(loadBalance1.select(new DefaultRequest()).toString());
+                    System.out.println(loadBalance1.select(new RequestPacket()).toString());
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {

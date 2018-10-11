@@ -7,8 +7,8 @@ import com.fayayo.job.core.annotation.FayaService;
 import com.fayayo.job.core.executor.handler.JobExecutorHandler;
 import com.fayayo.job.core.service.impl.ExecutorRunImpl;
 import com.fayayo.job.core.service.impl.ZkServiceRegistry;
-import com.fayayo.job.core.thread.CallbackThread;
-import com.fayayo.job.core.transport.NettyServer;
+import com.fayayo.job.core.callback.CallbackThread;
+import com.fayayo.job.core.transport.server.NettyServer;
 import com.fayayo.job.core.zookeeper.ZKCuratorClient;
 import com.fayayo.job.core.zookeeper.ZkProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +49,8 @@ public class JobExecutor implements ApplicationContextAware {
     private String name;
 
     private static String mainClass;
+
+    NettyServer nettyServer =null;
 
     public JobExecutor() {
     }
@@ -109,7 +111,7 @@ public class JobExecutor implements ApplicationContextAware {
         log.info("{}执行器初始化start......:{}", Constants.LOG_PREFIX, server);
         //然后启动这个服务端，准备接收请求
         CountDownLatch countDownLatch = new CountDownLatch(1);//阻塞线程
-        NettyServer nettyServer = new NettyServer(server,port);
+        nettyServer = new NettyServer(server,port);
         nettyServer.start(countDownLatch);
         try {
             countDownLatch.await();
@@ -132,14 +134,10 @@ public class JobExecutor implements ApplicationContextAware {
 
 
     public void close(){
-
         log.info("{}准备关闭资源......", Constants.LOG_PREFIX);
-
         ExecutorRunImpl.futureThread.shutdown();
-
+        CallbackThread.getInstance().toStop();
+        nettyServer.close();
     }
-
-
-
 
 }

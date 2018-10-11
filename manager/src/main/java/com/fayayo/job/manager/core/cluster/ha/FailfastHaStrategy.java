@@ -3,8 +3,8 @@ package com.fayayo.job.manager.core.cluster.ha;
 
 import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.core.extension.SpiMeta;
-import com.fayayo.job.core.transport.spi.Request;
-import com.fayayo.job.core.transport.spi.Response;
+import com.fayayo.job.core.transport.future.ResponseFuture;
+import com.fayayo.job.core.transport.protocol.request.RequestPacket;
 import com.fayayo.job.manager.core.cluster.Endpoint;
 import com.fayayo.job.manager.core.cluster.LoadBalance;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class FailfastHaStrategy extends AbstractHaStrategy {
 
     //快速失败策略
-    public Response call(Request request, LoadBalance loadBalance) {
+    public ResponseFuture call(RequestPacket request, LoadBalance loadBalance) {
         //获取执行的服务
         Endpoint endpoint = loadBalance.select(request);
         log.info("{}FailfastHaStrategy start to call ......{},request:{}", Constants.LOG_PREFIX,endpoint.getHost(),request.toString());

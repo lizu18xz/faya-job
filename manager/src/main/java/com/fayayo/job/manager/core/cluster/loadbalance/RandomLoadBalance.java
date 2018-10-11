@@ -2,8 +2,7 @@
 package com.fayayo.job.manager.core.cluster.loadbalance;
 
 import com.fayayo.job.core.extension.SpiMeta;
-import com.fayayo.job.core.transport.bean.DefaultRequest;
-import com.fayayo.job.core.transport.spi.Request;
+import com.fayayo.job.core.transport.protocol.request.RequestPacket;
 import com.fayayo.job.manager.core.cluster.Endpoint;
 import com.fayayo.job.manager.core.cluster.LoadBalance;
 
@@ -20,7 +19,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class RandomLoadBalance extends AbstractLoadBalance {
 
     @Override
-    public Endpoint doSelect(Request request) {
+    public Endpoint doSelect(RequestPacket request) {
 
         List<Endpoint> endpoints = getEndpoints();
 
@@ -34,7 +33,7 @@ public class RandomLoadBalance extends AbstractLoadBalance {
     }
 
     @Override
-    protected void doSelectToHolder(Request request,List<Endpoint> refersHolder) {
+    protected void doSelectToHolder(RequestPacket request,List<Endpoint> refersHolder) {
         List<Endpoint> endpoints = getEndpoints();
         int idx = (int) (ThreadLocalRandom.current().nextDouble() * endpoints.size());
         for (int i = 0; i < endpoints.size(); i++) {
@@ -53,7 +52,7 @@ public class RandomLoadBalance extends AbstractLoadBalance {
         list.add(new Endpoint("13", 9004));
 
         loadBalance.onRefresh(list);//刷新地址
-        Endpoint endpoint = loadBalance.select(new DefaultRequest());//获取一个地址
+        Endpoint endpoint = loadBalance.select(new RequestPacket());//获取一个地址
         System.out.println(endpoint.toString());
     }
 

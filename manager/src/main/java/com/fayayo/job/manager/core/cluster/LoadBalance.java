@@ -4,7 +4,7 @@ package com.fayayo.job.manager.core.cluster;
 
 import com.fayayo.job.core.extension.Scope;
 import com.fayayo.job.core.extension.Spi;
-import com.fayayo.job.core.transport.spi.Request;
+import com.fayayo.job.core.transport.protocol.request.RequestPacket;
 
 import java.util.List;
 /**
@@ -13,9 +13,9 @@ import java.util.List;
 @Spi(scope = Scope.PROTOTYPE)
 public interface LoadBalance {
 
-    Endpoint select(Request request);
+    Endpoint select(RequestPacket request);
 
     void onRefresh(List<Endpoint> endpoints);
 
-    void selectToHolder(Request request,List<Endpoint> endpointHolder);
+    void selectToHolder(RequestPacket request,List<Endpoint> endpointHolder);
 }
