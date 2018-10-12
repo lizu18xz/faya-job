@@ -3,8 +3,8 @@ package com.fayayo.job.manager.core.cluster.ha;
 import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.core.extension.SpiMeta;
-import com.fayayo.job.core.transport.future.ResponseFuture;
 import com.fayayo.job.core.transport.protocol.request.RequestPacket;
+import com.fayayo.job.core.transport.protocol.response.ResponsePacket;
 import com.fayayo.job.manager.core.cluster.Endpoint;
 import com.fayayo.job.manager.core.cluster.LoadBalance;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class FailoverHaStrategy extends AbstractHaStrategy {
         }
     };
 
-    public ResponseFuture call(RequestPacket request, LoadBalance loadBalance) {
+    public ResponsePacket call(RequestPacket request, LoadBalance loadBalance) {
 
         //根据规则获取一组endpoint
         List<Endpoint> endpointList = selectReferers(request,loadBalance);

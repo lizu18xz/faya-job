@@ -1,8 +1,10 @@
 package com.fayayo.job.core;
 
+import com.fayayo.job.core.service.ExecutorRun;
 import com.fayayo.job.core.transport.client.NettyClient;
 import com.fayayo.job.core.transport.future.ResponseFuture;
 import com.fayayo.job.core.transport.protocol.request.RequestPacket;
+import com.fayayo.job.core.transport.protocol.response.ResponsePacket;
 import com.fayayo.job.core.transport.util.RequestIdGenerator;
 
 /**
@@ -30,12 +32,12 @@ public class TransportTest {
                             RequestPacket request=new RequestPacket();
                             request = new RequestPacket();
                             request.setRequestId(RequestIdGenerator.getRequestId());
-                            request.setInterfaceName("xxxxxxxx");
-                            request.setMethodName("hello");
+                            request.setInterfaceName(ExecutorRun.class.getName());
+                            request.setMethodName("run");
                             request.setParamtersDesc("void");
-                            ResponseFuture response=client.request(request);
+                            ResponsePacket response=client.request(request);// 会阻塞 直到服务端返回后调用onSuccess回调
                             System.out.println("start  get result");
-                            System.out.println("result:"+response.getValue());//获取执行结果   会阻塞 直到服务端返回后调用onSuccess回调
+                            System.out.println("result:"+response.getValue());//获取执行结果
                         }
                     }
                 }).start();

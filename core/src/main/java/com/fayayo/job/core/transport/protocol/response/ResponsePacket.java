@@ -1,5 +1,6 @@
 package com.fayayo.job.core.transport.protocol.response;
 
+import com.fayayo.job.core.transport.future.ResponseFuture;
 import com.fayayo.job.core.transport.protocol.Packet;
 import com.fayayo.job.core.transport.protocol.command.Command;
 import lombok.Getter;
@@ -26,6 +27,15 @@ public class ResponsePacket extends Packet implements Serializable {
 
     private int timeout;
 
+    public ResponsePacket() {
+    }
+
+    public ResponsePacket(ResponseFuture response) {
+        this.value = response.getValue();//阻塞等待返回
+        this.exception = response.getException();
+        this.requestId = response.getRequestId();
+        this.timeout = response.getTimeout();
+    }
 
     @Override
     public Byte getCommand() {

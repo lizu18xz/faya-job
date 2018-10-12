@@ -2,8 +2,8 @@
 package com.fayayo.job.manager.core.proxy;
 import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.common.util.ReflectUtil;
-import com.fayayo.job.core.transport.future.ResponseFuture;
 import com.fayayo.job.core.transport.protocol.request.RequestPacket;
+import com.fayayo.job.core.transport.protocol.response.ResponsePacket;
 import com.fayayo.job.core.transport.util.RequestIdGenerator;
 import com.fayayo.job.manager.core.cluster.support.Cluster;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +43,7 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
 
         request.setRetries(cluster.getRetries());//设置重试次数
 
-        ResponseFuture response=cluster.call(request);//发送请求,等待返回(阻塞)
+        ResponsePacket response=cluster.call(request);//发送请求,等待返回(阻塞)
         return response.getValue();//接收请求
     }
 

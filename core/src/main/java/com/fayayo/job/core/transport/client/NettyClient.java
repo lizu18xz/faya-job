@@ -113,10 +113,22 @@ public class NettyClient {
         }
     }
 
+
+    /**
+     *@描述 发送请求,返回Response对象
+     */
+    public ResponsePacket request(RequestPacket request){
+
+        ResponseFuture responseFuture=this.channelRequest(request);
+
+       return new ResponsePacket(responseFuture);
+    }
+
+
     /**
      *@描述 发送请求,直接返回ResponseFuture
      */
-    public ResponseFuture request(RequestPacket request){
+    public ResponseFuture channelRequest(RequestPacket request){
         try {
             int timeout = NettyConstants.REQUESTTIMEOUT;
             if (timeout <= 0) {
@@ -157,7 +169,9 @@ public class NettyClient {
     }
 
     public void close(){
-        eventLoopGroup.shutdownGracefully();
+        log.info("关闭客户端连接");
+        this.channel.close();
+        //eventLoopGroup.shutdownGracefully();
     }
 
     public void registerCallback(long requestId, ResponseFuture responseFuture) {

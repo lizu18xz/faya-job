@@ -15,4 +15,9 @@ public interface ResponseFuture extends Future {
 
     void onFailure(ResponsePacket response) ;
 
+
+    long getRequestId();
+
+    int getTimeout();
+
 }

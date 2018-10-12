@@ -3,8 +3,8 @@ package com.fayayo.job.manager.core.cluster;
 
 import com.fayayo.job.core.extension.Scope;
 import com.fayayo.job.core.extension.Spi;
-import com.fayayo.job.core.transport.future.ResponseFuture;
 import com.fayayo.job.core.transport.protocol.request.RequestPacket;
+import com.fayayo.job.core.transport.protocol.response.ResponsePacket;
 
 /**
    *@描述 SPI机制 每次创建新对象
@@ -12,6 +12,6 @@ import com.fayayo.job.core.transport.protocol.request.RequestPacket;
 @Spi(scope = Scope.PROTOTYPE)
 public interface HaStrategy {
 
-    ResponseFuture doCall(RequestPacket request, LoadBalance loadBalance);
+    ResponsePacket doCall(RequestPacket request, LoadBalance loadBalance);
 
 }
