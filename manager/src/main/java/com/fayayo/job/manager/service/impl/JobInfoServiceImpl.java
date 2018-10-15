@@ -11,6 +11,7 @@ import com.fayayo.job.entity.JobConfig;
 import com.fayayo.job.entity.JobGroup;
 import com.fayayo.job.entity.JobInfo;
 import com.fayayo.job.entity.params.JobInfoParams;
+import com.fayayo.job.manager.core.cluster.ha.HaStrategyEnums;
 import com.fayayo.job.manager.repository.JobInfoRepository;
 import com.fayayo.job.manager.service.FileService;
 import com.fayayo.job.manager.service.JobConfigService;
@@ -98,6 +99,9 @@ public class JobInfoServiceImpl implements JobInfoService {
         //获取groupId
         JobGroup jobGroup=jobGroupService.findByName(jobInfo.getExecutorType());
         jobInfo.setJobGroup(jobGroup.getId());
+        if(jobInfo.getJobHa() != HaStrategyEnums.FAIL_OVER.getCode()){
+            jobInfo.setRetries(0);//不需要重试，快速失败
+        }
         jobInfo=jobInfoRepository.save(jobInfo);
 
         //把任务加入到quartz调度

@@ -4,6 +4,7 @@ import com.fayayo.job.core.transport.protocol.command.Command;
 import com.fayayo.job.core.transport.protocol.request.RequestPacket;
 import com.fayayo.job.core.transport.protocol.response.ResponsePacket;
 import com.fayayo.job.core.transport.serialize.Serializer;
+import com.fayayo.job.core.transport.serialize.impl.HessianSerializer;
 import com.fayayo.job.core.transport.serialize.impl.JSONSerializer;
 import io.netty.buffer.ByteBuf;
 
@@ -33,6 +34,10 @@ public class PacketCodeC {
         serializerMap = new HashMap<Byte, Serializer>();
         Serializer serializer = new JSONSerializer();
         serializerMap.put(serializer.getSerializerAlogrithm(), serializer);
+
+        Serializer hessianSerializer = new HessianSerializer();
+        serializerMap.put(hessianSerializer.getSerializerAlogrithm(), hessianSerializer);
+
 
     }
 

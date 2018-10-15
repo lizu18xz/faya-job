@@ -17,6 +17,7 @@ common:通用的方法工具
 core:核心实现
 entity:实体类相关
 manager:job管理端
+demo-executor 执行器的demo
 datax-executor 数据交换执行器
 jar-executor  可执行jar执行器
 ````
@@ -38,8 +39,12 @@ jar-executor  可执行jar执行器
 - 任务流信息
 - 任务详细信息
 
-### 整合新的执行器
-- 可以参考默认的datax-executor 基于springboot
+### 整合新的执行器(基于springboot)
+- demo-executor测试使用
+
+- 也可以参考默认的datax-executor 基于springboot
+
+### datax-executor详情
 ````
 参数讲解:
 xxx-executor:
@@ -110,6 +115,7 @@ core.container.taskGroup.channel 5
 ````
 
 ### 常用的cron表达式
+- */10 * * * * ?  每10秒钟
 - 0 0/10 /1 * * ? 每十分钟
 - 0 0 /1 * * ?    每小时
 - 0 0 2 1/1 * ?   每日凌晨两点
@@ -121,6 +127,7 @@ core.container.taskGroup.channel 5
 ### 前端页面(React)
 - 执行器管理页面
 - 执行器下面具体任务管理页面
+- 运维中心  展示任务名称  和任务执行的日志  滚动
 ### github地址:https://github.com/lizu18xz/admin-v1-fe.git
 
 

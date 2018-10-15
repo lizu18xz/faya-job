@@ -2,13 +2,15 @@ package com.fayayo.job.core.executor.result;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author dalizu on 2018/8/31.
  * @version v1.0
  * @desc  任务统一返回
  */
 @Data
-public class Result <T>{
+public class Result <T> implements Serializable{
 
     /** 错误码. */
     private Integer code;

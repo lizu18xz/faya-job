@@ -7,7 +7,7 @@ import com.fayayo.job.core.transport.serialize.SerializerAlogrithm;
 /**
  * @author dalizu on 2018/10/11.
  * @version v1.0
- * @desc
+ * @desc 对于嵌套场景无法支持
  */
 public class JSONSerializer implements Serializer {
     @Override

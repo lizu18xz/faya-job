@@ -42,7 +42,7 @@ public class JobInfoParams {
     @NotNull(message = "高可用方式不能为空")
     private Integer jobHa;
 
-    private Integer retries;//重试次数
+    private Integer retries;
 
     private Integer jobStatus;
 

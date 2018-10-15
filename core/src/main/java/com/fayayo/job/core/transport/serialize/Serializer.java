@@ -1,5 +1,6 @@
 package com.fayayo.job.core.transport.serialize;
 
+import com.fayayo.job.core.transport.serialize.impl.HessianSerializer;
 import com.fayayo.job.core.transport.serialize.impl.JSONSerializer;
 
 /**
@@ -9,8 +10,8 @@ import com.fayayo.job.core.transport.serialize.impl.JSONSerializer;
  */
 public interface Serializer {
 
-    Serializer DEFAULT=new JSONSerializer();
-
+    //Serializer DEFAULT=new JSONSerializer();
+    Serializer DEFAULT=new HessianSerializer();
 
     /**
      * java 对象转换成二进制

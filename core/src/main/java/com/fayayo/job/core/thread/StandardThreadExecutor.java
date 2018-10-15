@@ -46,7 +46,7 @@ public class StandardThreadExecutor extends ThreadPoolExecutor {
                                   int queueCapacity, ThreadFactory threadFactory, RejectedExecutionHandler handler) {
 
         super(coreThreads, maxThreads, keepAliveTime, unit, new LinkedBlockingQueue<Runnable>(queueCapacity), threadFactory, handler);
-        log.info("{}初始化一个线程池:{}",Constants.LOG_PREFIX,"StandardThreadExecutor");
+        //log.info("{}初始化一个线程池:{}",Constants.LOG_PREFIX,"StandardThreadExecutor");
         submittedTasksCount = new AtomicInteger(0);
 
         // 无界队列 可以进行 最大并发任务限制： 队列buffer数 + 最大线程数

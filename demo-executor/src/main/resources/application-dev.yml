@@ -1,0 +1,15 @@
+server:
+  port: 8083
+  servlet:
+    context-path: /demo-executor
+
+faya-job:
+  zookeeperServer: 192.168.76.139:2181
+  registerPath: /job-register
+  demo-executor:
+     server: 192.168.88.130
+     port: 8070
+     weight: 1
+     name: DEMO
+     mainClass: com.fayayo.job.demo.executor.DemoEngine
+

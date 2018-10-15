@@ -42,8 +42,6 @@ public class NettyServer {
         serviceMap.put(ExecutorRun.class.getName(), new ExecutorRunImpl(server));//保存调度任务接口和实现类的映射关系
     }
 
-    private Thread thread;
-
     EventLoopGroup bossGroup = null;
     EventLoopGroup workerGroup=null;
 
