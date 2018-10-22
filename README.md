@@ -21,30 +21,31 @@ demo-executor 执行器的demo
 datax-executor 数据交换执行器
 jar-executor  可执行jar执行器
 ````
-###  springboot quartz整合
+###  调度核心 springboot+quartz整合
 - 使用quartz的集群模式
 - 和springboot 进行整合  用户任务的调度
 
-### zk 整合 进行服务注册和发现
+###  注册中心  zk 进行服务注册和发现
 - auto configureation
 - 服务端启动后创建zkClient   客户端启动后也需要创建zkClient
 - 注册服务  发现服务  监听服务的注册
 
-### netty服务端客户端
-- 使用Netty实现RPC的通信
-- 负载均衡 部分代码来源于Motan
+### 高可用 客户端负载均衡
+- 负载均衡策略 部分代码来源于Motan
 - ha的策略 部分代码来源于Motan
+
+###  transport层  netty实现服务端客户端
+- 使用Netty实现RPC的通信
 
 ### 业务表设计
 - 任务流信息
 - 任务详细信息
 
-### 整合新的执行器(基于springboot)
-- demo-executor测试使用
+### 如何整合新的执行器(基于springboot)?
+- demo-executor作为基本的测试DEMO，可以先从此入手
+- 也可以参考默认的datax-executor 基于springboot,用于实现数据交换
 
-- 也可以参考默认的datax-executor 基于springboot
-
-### datax-executor详情
+### datax-executor 参数详细信息
 ````
 参数讲解:
 xxx-executor:
