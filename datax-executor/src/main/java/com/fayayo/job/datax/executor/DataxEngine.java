@@ -34,7 +34,7 @@ public class DataxEngine extends JobExecutorHandler {
     @Override
     public Result<?> run(JobInfoParam jobInfoParam) {
         try {
-            log.info("datax task start....获取配置文件,调用shell脚本,启动datax");
+            log.info("{},获取配置文件,调用shell脚本,启动datax",Constants.LOG_PREFIX);
 
             //获取datax的环境变量
             String dataxHome=System.getenv("DATAX_HOME");

@@ -20,7 +20,7 @@ public class DemoEngine extends JobExecutorHandler {
         log.info("demo task start....运行DemoEngine！！！！！！");
 
         try {
-            Thread.sleep(1000);
+            Thread.sleep(11000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

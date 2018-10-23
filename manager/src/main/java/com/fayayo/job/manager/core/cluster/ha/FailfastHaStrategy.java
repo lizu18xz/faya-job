@@ -23,7 +23,7 @@ public class FailfastHaStrategy extends AbstractHaStrategy {
     public ResponsePacket call(RequestPacket request, LoadBalance loadBalance) {
         //获取执行的服务
         Endpoint endpoint = loadBalance.select(request);
-        log.info("{}FailfastHaStrategy start to call ......{},request:{}", Constants.LOG_PREFIX,endpoint.getHost(),request.toString());
+        log.info("{}FailfastHaStrategy start to call {},request:{}", Constants.LOG_PREFIX,endpoint.getHost(),request.toString());
 
         //获取nettyClient  发送RPC请求
 

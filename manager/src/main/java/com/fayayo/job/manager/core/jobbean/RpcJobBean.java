@@ -20,7 +20,7 @@ public class RpcJobBean extends QuartzJobBean {
 
         //获取任务的jobKey和groupId
         String jobId=jobExecutionContext.getJobDetail().getKey().getName();
-        log.info("{}start to execute job key：{}",Constants.LOG_PREFIX,jobId);
+        log.info("{}Start to execute quartz job, key：{}",Constants.LOG_PREFIX,jobId);
 
         //执行具体的业务逻辑  发送rpc请求
         RpcJobHelper.getInstance().addJobInPool(jobId);

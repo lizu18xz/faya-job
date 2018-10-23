@@ -30,7 +30,7 @@ public class JobLogServiceImpl implements JobLogService {
 
     public void save(JobLog jobLog){
 
-        log.info("{}新增任务日志,参数:{}", Constants.LOG_PREFIX,jobLog);
+        log.info("{}新增任务日志,参数:{}", Constants.LOG_PREFIX,jobLog.toString());
 
         jobLogRepository.save(jobLog);
 

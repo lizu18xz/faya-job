@@ -39,7 +39,7 @@ public class RequestHandler extends SimpleChannelInboundHandler<RequestPacket> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RequestPacket request) throws Exception {
-        log.info("{}receive:{}", Constants.LOG_PREFIX,request.toString());
+        log.info("{}Receive Client Request:{}", Constants.LOG_PREFIX,request.toString());
         transportThreadPool.execute(new Runnable() {
             @Override
             public void run() {

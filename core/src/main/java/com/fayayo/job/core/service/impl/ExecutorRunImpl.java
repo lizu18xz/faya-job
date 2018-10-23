@@ -38,11 +38,12 @@ public class ExecutorRunImpl implements ExecutorRun {
     @Override
     public Result<?> run(JobInfoParam jobInfo) {
 
-        log.info("{}start to run job......params:{}", Constants.LOG_PREFIX,jobInfo.toString());
+        log.info("{}Start to Run Job,执行器类型:{},Params:{}", Constants.LOG_PREFIX,jobInfo.getExecutorType(),
+                jobInfo.toString());
+
         String type=jobInfo.getJobType();
         JobExecutorHandler handler=null;
         if(type.equalsIgnoreCase(JobTypeEnums.BEAN.getName())){
-            log.info("{}执行器类型:{}",Constants.LOG_PREFIX,jobInfo.getExecutorType());
             //获取具体执行的服务
             handler=JobExecutor.getHandler();
         }else {

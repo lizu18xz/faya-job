@@ -61,7 +61,6 @@ public class ZKCuratorClient implements Closable {
                         .withACL(ZooDefs.Ids.OPEN_ACL_UNSAFE)            // acl：匿名权限
                         .forPath(zkProperties.getRegisterPath());
             }
-            log.info("zookeeper初始化成功...");
             log.info("zookeeper服务器状态：{}", client.getState());
             addChildWatch(zkProperties.getRegisterPath());
             ShutDownHook.registerShutdownHook(this);//加入到hook事件
@@ -80,7 +79,6 @@ public class ZKCuratorClient implements Closable {
      * 永久监听指定节点下的节点,只能监听指定节点下一级节点的变化,可以监听到的事件：节点创建、节点数据的变化、节点删除等
      */
     private void addChildWatch(String registerPath) throws Exception {
-        log.info("{}启动zk监听", Constants.LOG_PREFIX);
         pcache = new PathChildrenCache(client, registerPath, true);
         pcache.start();
         pcache.getListenable().addListener(new PathChildrenCacheListener() {
@@ -90,7 +88,7 @@ public class ZKCuratorClient implements Closable {
                 if (event.getType().equals(PathChildrenCacheEvent.Type.CHILD_ADDED)) {
 
                     String path = event.getData().getPath();
-                    log.info("{}新注册执行器:{}", Constants.LOG_PREFIX, path);
+                    log.info("{}当前系统存在的执行器:{}", Constants.LOG_PREFIX, path);
 
                     addChildsWatch(path);
 
@@ -105,7 +103,6 @@ public class ZKCuratorClient implements Closable {
     private PathChildrenCache cache=null;
 
     private void addChildsWatch(String registerPath) throws Exception {
-        log.info("{}zk监听执行器", Constants.LOG_PREFIX);
         cache = new PathChildrenCache(client, registerPath, true);
         cache.start();
         cache.getListenable().addListener(new PathChildrenCacheListener() {
@@ -117,7 +114,7 @@ public class ZKCuratorClient implements Closable {
                     String path = event.getData().getPath();
                     //log.info("{}新服务注册path:{}",Constants.LOG_PREFIX,path);
                     String data = new String(event.getData().getData());
-                    log.info("{}执行器:{}有新服务加入:{}", Constants.LOG_PREFIX, registerPath, data);
+                    log.info("{}执行器:{},有新服务加入:{}", Constants.LOG_PREFIX, registerPath, data);
 
                 } else if (event.getType().equals(PathChildrenCacheEvent.Type.CHILD_REMOVED)) {
 

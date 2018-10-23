@@ -67,12 +67,13 @@ public class ClusterSupport {
         List<String> addressList = list.stream().map(e -> {
             return zkCuratorClient.getData(e);
         }).collect(Collectors.toList());
-        log.info("{}获取服务地址列表,jobid:{},执行器名称:{},addressList:{}",Constants.LOG_PREFIX,jobInfoParam.getId(), jobInfoParam.getJobGroupName(), StringUtils.join(addressList, ","));
+        log.info("{}执行器名称:{},服务地址列表:【{}】,jobid:{}",Constants.LOG_PREFIX,jobInfoParam.getJobGroupName(), StringUtils.join(addressList, ","),
+                jobInfoParam.getId());
 
         //获取负载均衡的策略  +  Ha策略  然后对选择的机器发送请求任务
         JobRouteExchange jobRouteExchange = new JobRouteExchange(addressList);
         LoadBalance loadBalance = jobRouteExchange.getLoadBalance(jobInfoParam);
-        log.info("{}服务执行负载策略:{}", Constants.LOG_PREFIX,loadBalance.getClass().getName());
+        log.info("{}服务负载策略:{}", Constants.LOG_PREFIX,loadBalance.getClass().getSimpleName());
         return loadBalance;
     }
 }

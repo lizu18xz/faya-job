@@ -32,7 +32,7 @@ public class CallbackThread extends Thread{
      */
     public void pushFuture(CallBackParam callBackParam){
         try {
-            log.info("{}加入获取任务返回队列......",Constants.LOG_PREFIX);
+            log.info("{}Add Future to Queue",Constants.LOG_PREFIX);
             this.callBackQueue.put(callBackParam);//阻塞等待有空闲的位置
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -42,14 +42,12 @@ public class CallbackThread extends Thread{
 
     @Override
     public void run() {
-        log.info("{}wait deal with the run result......",Constants.LOG_PREFIX);
+        log.info("{}Wait deal with the run result......",Constants.LOG_PREFIX);
         try {
             while (!toStop){
                 CallBackParam callBackParam= this.callBackQueue.take();//阻塞 doPull
-                log.info("{}等待任务结果返回",Constants.LOG_PREFIX);
                 Result<?> result= (Result<?>) callBackParam.getFuture().get();
-
-                log.info("{}Callable get jobId:{},result:{}",Constants.LOG_PREFIX,callBackParam.getJobId(),result.getData());
+                log.info("{}Callable get jobId:{},Result:{}",Constants.LOG_PREFIX,callBackParam.getJobId(),result.getData());
             }
         } catch (Exception e) {
             e.printStackTrace();

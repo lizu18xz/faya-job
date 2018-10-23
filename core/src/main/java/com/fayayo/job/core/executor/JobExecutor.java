@@ -108,7 +108,7 @@ public class JobExecutor implements ApplicationContextAware {
     }
 
     private void initServer() {
-        log.info("{}执行器初始化start......:{}", Constants.LOG_PREFIX, server);
+        log.info("{}执行器初始化,server:{},port:{}", Constants.LOG_PREFIX, server,port);
         //然后启动这个服务端，准备接收请求
         CountDownLatch countDownLatch = new CountDownLatch(1);//阻塞线程
         nettyServer = new NettyServer(server,port);
@@ -118,7 +118,7 @@ public class JobExecutor implements ApplicationContextAware {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        log.info("{}服务端启动完毕,开始注册到服务中心", Constants.LOG_PREFIX);
+        log.info("{}服务端启动完毕,注册服务到注册中心", Constants.LOG_PREFIX);
     }
 
     private void initRegister() {

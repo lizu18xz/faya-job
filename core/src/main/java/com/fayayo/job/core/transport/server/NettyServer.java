@@ -83,7 +83,7 @@ public class NettyServer {
                     addListener(new ChannelFutureListener() {
                         @Override
                         public void operationComplete(ChannelFuture future) throws Exception {
-                            log.info("{}bind success in port: {}", Constants.LOG_PREFIX, port);
+                            log.info("{}Server bind success in port: {}", Constants.LOG_PREFIX, port);
                             countDownLatch.countDown();
                         }
                     });

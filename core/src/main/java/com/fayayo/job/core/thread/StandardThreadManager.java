@@ -15,7 +15,7 @@ public class StandardThreadManager {
 
     //每个执行器拥有的线程池(根据机器等信息合理分配)
     public static StandardThreadExecutor futureThread(){
-        log.info("{}初始化一个线程池:{}", Constants.LOG_PREFIX,"futureThread");
+        log.info("{}初始化线程池:{}", Constants.LOG_PREFIX,"FUTURETHREAD");
         return new StandardThreadExecutor(10, 30, 60, TimeUnit.SECONDS,30,
                 new DefaultThreadFactory("futureThread"),
                 new StandardThreadExecutor.BlockRejectedExecutionHandler());
@@ -24,7 +24,7 @@ public class StandardThreadManager {
 
     //管理端提交任务的线程池
     public static StandardThreadExecutor rpcJobThreadPool(){
-        log.info("{}初始化一个线程池:{}", Constants.LOG_PREFIX,"rpcJob");
+        log.info("{}初始化线程池:{}", Constants.LOG_PREFIX,"RPCJOB");
         return new StandardThreadExecutor(10, 50, 60, TimeUnit.SECONDS,50,
                 new DefaultThreadFactory("rpcJob"),
                 new StandardThreadExecutor.BlockRejectedExecutionHandler());
@@ -33,7 +33,7 @@ public class StandardThreadManager {
 
 
     public static StandardThreadExecutor transportThreadPool(){
-        log.info("{}初始化一个线程池:{}", Constants.LOG_PREFIX,"transport");
+        log.info("{}初始化线程池:{}", Constants.LOG_PREFIX,"TRANSPORT");
         return new StandardThreadExecutor(10, 50, 60, TimeUnit.SECONDS,50,
                 new DefaultThreadFactory("transport"),
                 new StandardThreadExecutor.BlockRejectedExecutionHandler());

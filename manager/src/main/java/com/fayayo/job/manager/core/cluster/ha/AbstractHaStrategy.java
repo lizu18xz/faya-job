@@ -19,7 +19,7 @@ public abstract class AbstractHaStrategy implements HaStrategy {
 
     @Override
     public ResponsePacket doCall(RequestPacket request, LoadBalance loadBalance) {
-        log.info("{}HaStrategy start on loadBalance:{}", Constants.LOG_PREFIX, loadBalance);
+        log.info("{}HaStrategy start on loadBalance:{}", Constants.LOG_PREFIX, loadBalance.getClass().getSimpleName());
         return call(request,loadBalance);
     }
 
@@ -27,7 +27,7 @@ public abstract class AbstractHaStrategy implements HaStrategy {
 
 
     public ResponsePacket request(Endpoint endpoint,RequestPacket request){
-        log.info("{}start request......:{}",Constants.LOG_PREFIX,request.toString());
+        log.info("{}Start request:{}",Constants.LOG_PREFIX,request.toString());
         NettyClient client=new NettyClient(endpoint.getHost(),endpoint.getPort());
         endpoint.incrActiveCount();
         try {

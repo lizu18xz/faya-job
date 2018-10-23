@@ -28,7 +28,7 @@ public class ResponseHandler extends SimpleChannelInboundHandler<ResponsePacket>
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        log.info("NettyChannelHandler channelActive: remote={} local={}", ctx.channel().remoteAddress(), ctx.channel().localAddress());
+        log.info("ResponseHandler channelActive: remote={} local={}", ctx.channel().remoteAddress(), ctx.channel().localAddress());
         ctx.fireChannelActive();
     }
 

@@ -42,4 +42,21 @@ public class JobLog {
 
     private Date updateTime;
 
+
+    @Override
+    public String toString() {
+        return "JobLog{" +
+                "id='" + id + '\'' +
+                ", jobId='" + jobId + '\'' +
+                ", jobDesc='" + jobDesc + '\'' +
+                ", remoteIp='" + remoteIp + '\'' +
+                ", loadBalance='" + loadBalance + '\'' +
+                ", ha='" + ha + '\'' +
+                ", status=" + status +
+                ", retry=" + retry +
+                ", message='" + message + '\'' +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                '}';
+    }
 }
