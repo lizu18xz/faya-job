@@ -39,7 +39,9 @@ public class NettyServer {
     public NettyServer(String server, Integer port) {
         this.server = server;
         this.port = port;
-        serviceMap.put(ExecutorRun.class.getName(), new ExecutorRunImpl(server));//保存调度任务接口和实现类的映射关系
+        serviceMap.put(ExecutorRun.class.getName(), new ExecutorRunImpl(new StringBuilder().
+                append(server).append(":").
+                append(port).toString()));//保存调度任务接口和实现类的映射关系
     }
 
     EventLoopGroup bossGroup = null;

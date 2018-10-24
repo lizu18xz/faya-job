@@ -69,6 +69,20 @@ public class JobRouteExchange {
         return loadBalance;
     }
 
+    /**
+     *@描述 获取日志 loadBalance
+     *@创建人  dalizu
+     *@创建时间  2018/10/24
+     */
+    public LoadBalance getLogLoadBalance(){
+        // 执行器日志只在固定执行的机器上面，此处固定策略即可
+        LoadBalance loadBalance= ExtensionLoader.getExtensionLoader(LoadBalance.class).getExtension(
+                JobLoadBalanceEnums.ROUNDROBIN.getDesc());
+        loadBalance.onRefresh(endpoints);
+        return loadBalance;
+    }
+
+
 
     public static void main(String[] args) throws InterruptedException {
         new Thread(new Runnable() {

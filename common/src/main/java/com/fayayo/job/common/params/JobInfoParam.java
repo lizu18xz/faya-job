@@ -10,12 +10,15 @@ import java.util.Date;
 /**
  * @author dalizu on 2018/8/22.
  * @version v1.0
- * @desc
+ * @desc 传到具体执行器的参数
  */
 @Getter
 @Setter
 public class JobInfoParam implements Serializable {
+
     private String id;
+
+    private String logId;//没执行一次任务对应一次日志记录,用于唯一的标志
 
     private Integer jobGroup;//执行器id
 

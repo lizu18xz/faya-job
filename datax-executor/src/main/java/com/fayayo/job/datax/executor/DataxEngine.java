@@ -38,8 +38,9 @@ public class DataxEngine extends JobExecutorHandler {
 
             //获取datax的环境变量
             String dataxHome=System.getenv("DATAX_HOME");
-            String jobId=jobInfoParam.getId();//任务唯一的id
-            String json_name=String.format(Constants.DATAX_JOB_NAME_PREFIX,jobId,Constants.FILE_EXTENSION);//配置文件名称
+            //String jobId=jobInfoParam.getId();//任务ID
+            String jobLogId=jobInfoParam.getLogId();//任务执行唯一的id
+            String json_name=String.format(Constants.DATAX_JOB_NAME_PREFIX,jobLogId,Constants.FILE_EXTENSION);//配置文件名称
 
             //获取配置文件信息到指定路径
             String content=jobInfoParam.getJobConfig();

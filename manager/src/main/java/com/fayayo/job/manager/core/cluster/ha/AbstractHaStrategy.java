@@ -32,7 +32,7 @@ public abstract class AbstractHaStrategy implements HaStrategy {
         endpoint.incrActiveCount();
         try {
             client.open();
-            ResponsePacket response=client.request(request);//返回的是DefaultResponseFuture
+            ResponsePacket response=client.request(request);
             return response;
         } catch (Exception e) {
             e.printStackTrace();

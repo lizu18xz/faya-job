@@ -57,6 +57,7 @@ public class TriggerHelper {
         jobInfoParam.setJobGroupName(jobGroup.getName());
 
         String jobLogId=KeyUtil.genUniqueKey();
+        jobInfoParam.setLogId(jobLogId);
 
         //build cluster  配置机器的ha和选择服务的策略
         ClusterSupport clusterSupport=new ClusterSupport();
@@ -74,7 +75,7 @@ public class TriggerHelper {
             jobInfoParam.setJobConfig(jobConfig.getContent());
         }
 
-        //进行日志信息的统计+DATAX滚动日志
+        //进行日志信息的统计+DATAX滚动日志(logId 作为日志标志)
         JobLog jobLog=new JobLog();
         jobLog.setId(jobLogId);
         jobLog.setJobId(jobId);
@@ -82,7 +83,7 @@ public class TriggerHelper {
         jobLog.setLoadBalance(EnumUtil.getByCode(jobInfo.getJobLoadBalance(),JobLoadBalanceEnums.class).getDesc());
         jobLog.setHa(EnumUtil.getByCode(jobInfo.getJobHa(),HaStrategyEnums.class).getDesc());
 
-        Result<?> result=executorSpi.run(jobInfoParam);//ExecutorRunImpl.run()
+        Result<?> result=executorSpi.run(jobInfoParam);//jdkProxy
 
         jobLog.setRemoteIp(result.getData().toString());
         JobLogService jobLogService=SpringHelper.popBean(JobLogService.class);
@@ -96,7 +97,7 @@ public class TriggerHelper {
     /**
      * @描述 获取代理类
      */
-    public static ExecutorRun getExecutorSpi(Cluster cluster) {
+    private static ExecutorRun getExecutorSpi(Cluster cluster) {
         //TODO 暂时只有一种代理，后期增加可以把类型通过参数传入进来
         ProxyFactory proxyFactory = ExtensionLoader.getExtensionLoader(ProxyFactory.class).getExtension(Constants.PROXY_JDK);
         return proxyFactory.getProxy(ExecutorRun.class, cluster);

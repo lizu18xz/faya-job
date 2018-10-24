@@ -17,7 +17,6 @@ public class KeyUtil {
      * */
     public static synchronized String genUniqueKey(){
         Random random=new Random();
-
         //六位随机数
         Integer num=random.nextInt(900000)+10000;
 
@@ -25,7 +24,6 @@ public class KeyUtil {
 
 
     }
-
 
 
 }

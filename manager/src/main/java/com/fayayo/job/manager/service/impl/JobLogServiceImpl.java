@@ -37,18 +37,25 @@ public class JobLogServiceImpl implements JobLogService {
     }
 
     @Override
-    public Page<JobLog> query(Pageable pageable, String jobDesc) {
+    public Page<JobLog> query(Pageable pageable, String jobDesc,String remoteIp) {
 
         Specification<JobLog> specification=new Specification<JobLog>() {
             @Override
             public Predicate toPredicate(Root<JobLog> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                 //获取列信息
                 Expression<String> job_Desc = root.get("jobDesc");
+
+                Expression<String> remote_Ip = root.get("remoteIp");
+
                 List<Predicate> predicates = new ArrayList<Predicate>();
 
                 //通过 CriteriaBuilder 来创建查询条件
                 if (StringUtils.isNotEmpty(jobDesc)) {
                     predicates.add(criteriaBuilder.equal(job_Desc,jobDesc));
+                }
+
+                if (StringUtils.isNotEmpty(remoteIp)) {
+                    predicates.add(criteriaBuilder.equal(remote_Ip,remoteIp));
                 }
 
                 query.where(predicates.toArray(new Predicate[0]));

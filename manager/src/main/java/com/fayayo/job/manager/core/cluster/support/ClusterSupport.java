@@ -14,7 +14,9 @@ import com.fayayo.job.manager.config.SpringHelper;
 import com.fayayo.job.manager.core.cluster.HaStrategy;
 import com.fayayo.job.manager.core.cluster.LoadBalance;
 import com.fayayo.job.manager.core.cluster.ha.HaStrategyEnums;
+import com.fayayo.job.manager.core.cluster.loadbalance.JobLoadBalanceEnums;
 import com.fayayo.job.manager.core.route.JobRouteExchange;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -76,4 +78,31 @@ public class ClusterSupport {
         log.info("{}服务负载策略:{}", Constants.LOG_PREFIX,loadBalance.getClass().getSimpleName());
         return loadBalance;
     }
+
+
+
+
+    /**
+     * @描述 构造获取执行器日志的cluster
+     */
+    public Cluster buildLogClusterSupport(String executorAddress) {
+        //获取ha的实现 默认使用快速失败
+        HaStrategy haStrategy = ExtensionLoader.getExtensionLoader(HaStrategy.class).getExtension(
+                HaStrategyEnums.FAIL_FAST.getDesc()
+        );
+
+        //一个日志只存在固定的一台机器的情况,默认直接轮训就可以
+        JobRouteExchange jobRouteExchange = new JobRouteExchange(Lists.newArrayList(executorAddress));
+        LoadBalance loadBalance = jobRouteExchange.getLogLoadBalance();
+
+        Cluster cluster = new ClusterSpi(haStrategy, loadBalance);
+        //设置重试次数
+        cluster.setRetries(0);
+
+        return cluster;
+    }
+
+
+
+
 }

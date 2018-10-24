@@ -4,6 +4,7 @@ import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.common.enums.JobTypeEnums;
 import com.fayayo.job.common.params.JobInfoParam;
 import com.fayayo.job.core.executor.JobExecutor;
+import com.fayayo.job.core.executor.result.LogResult;
 import com.fayayo.job.core.executor.result.Result;
 import com.fayayo.job.core.executor.handler.JobExecutorHandler;
 import com.fayayo.job.core.thread.StandardThreadExecutor;
@@ -56,6 +57,24 @@ public class ExecutorRunImpl implements ExecutorRun {
         CallbackThread.getInstance().pushFuture(new CallBackParam(jobInfo.getId(),future));
 
         return Result.success(server);//返回地址
+    }
+
+
+    /**
+     *@描述 获取执行器产生的日志返回给管理端
+     */
+    @Override
+    public Result<LogResult> log(String logfile, long pointer) {
+
+        log.info("Get log start:{},{}",logfile,pointer);
+
+
+
+
+
+
+
+        return Result.success(new LogResult(1212,"xxxx"));
     }
 
 }

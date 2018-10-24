@@ -13,6 +13,6 @@ public interface JobLogService {
 
     void save(JobLog jobLog);
 
-    Page<JobLog> query(Pageable pageable, String jobDesc);
+    Page<JobLog> query(Pageable pageable, String jobDesc,String remoteIp);
 
 }

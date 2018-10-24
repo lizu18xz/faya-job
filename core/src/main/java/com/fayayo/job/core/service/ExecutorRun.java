@@ -1,6 +1,7 @@
 package com.fayayo.job.core.service;
 
 import com.fayayo.job.common.params.JobInfoParam;
+import com.fayayo.job.core.executor.result.LogResult;
 import com.fayayo.job.core.executor.result.Result;
 
 /**
@@ -12,6 +13,9 @@ public interface ExecutorRun {
 
 
     Result<?> run(JobInfoParam jobInfo);
+
+
+    Result<LogResult> log(String logfile, long pointer);
 
 
 

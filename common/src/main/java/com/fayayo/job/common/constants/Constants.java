@@ -30,4 +30,12 @@ public class Constants {
     public static final String PROXY_JDK = "jdk";
 
 
+    /**
+     *
+     * DATAX日志路径管理端配置
+     * /home/faya/datax/log/154020971946352539.json-04_33_50.960.log
+     * */
+    public static final String LOG="/home/faya/datax/log/";
+
+
 }
