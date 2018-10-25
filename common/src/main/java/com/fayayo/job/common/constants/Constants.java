@@ -21,6 +21,8 @@ public class Constants {
 
     public static final String FILE_EXTENSION=".json";
 
+    public static final String LOG_EXTENSION=".log";
+
     public static final String DATAX_JOB_NAME_PREFIX="DATAX_%s%s";
 
 

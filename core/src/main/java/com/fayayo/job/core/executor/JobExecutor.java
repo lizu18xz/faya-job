@@ -48,6 +48,8 @@ public class JobExecutor implements ApplicationContextAware {
 
     private String name;
 
+    private String logPath;
+
     private static String mainClass;
 
     NettyServer nettyServer =null;
@@ -55,7 +57,7 @@ public class JobExecutor implements ApplicationContextAware {
     public JobExecutor() {
     }
 
-    public JobExecutor(String server, Integer port, Integer weight, String name, String mainClass) {
+    public JobExecutor(String server, Integer port, Integer weight, String name, String mainClass,String logPath) {
         this.server = server;
         this.port = port;
         this.weight = weight;
@@ -64,6 +66,7 @@ public class JobExecutor implements ApplicationContextAware {
             this.weight = 1;//如果不写默认全是1
         }
         this.mainClass = mainClass;
+        this.logPath = logPath;
     }
 
     @Override
@@ -111,7 +114,7 @@ public class JobExecutor implements ApplicationContextAware {
         log.info("{}执行器初始化,server:{},port:{}", Constants.LOG_PREFIX, server,port);
         //然后启动这个服务端，准备接收请求
         CountDownLatch countDownLatch = new CountDownLatch(1);//阻塞线程
-        nettyServer = new NettyServer(server,port);
+        nettyServer = new NettyServer(server,port,logPath);
         nettyServer.start(countDownLatch);
         try {
             countDownLatch.await();

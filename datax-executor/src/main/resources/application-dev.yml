@@ -12,6 +12,7 @@ faya-job:
      weight: 1
      name: DATAX
      mainClass: com.fayayo.job.datax.executor.DataxEngine
+     logPath: /home/faya/datax/log
   datax:
       config: /home/faya/job_config
 

@@ -68,5 +68,13 @@ public class JobLogServiceImpl implements JobLogService {
         return page;
     }
 
+    @Override
+    public JobLog findOne(String logId) {
+
+        JobLog jobLog=jobLogRepository.findById(logId).orElse(null);
+
+        return jobLog;
+    }
+
 
 }

@@ -36,12 +36,12 @@ public class NettyServer {
 
     private StandardThreadExecutor standardThreadExecutor = null;
 
-    public NettyServer(String server, Integer port) {
+    public NettyServer(String server, Integer port,String logPath) {
         this.server = server;
         this.port = port;
         serviceMap.put(ExecutorRun.class.getName(), new ExecutorRunImpl(new StringBuilder().
                 append(server).append(":").
-                append(port).toString()));//保存调度任务接口和实现类的映射关系
+                append(port).toString(),logPath));//保存调度任务接口和实现类的映射关系
     }
 
     EventLoopGroup bossGroup = null;

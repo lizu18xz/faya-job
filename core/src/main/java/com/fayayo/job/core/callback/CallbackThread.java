@@ -50,7 +50,7 @@ public class CallbackThread extends Thread{
                 log.info("{}Callable get jobId:{},Result:{}",Constants.LOG_PREFIX,callBackParam.getJobId(),result.getData());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 

@@ -15,4 +15,7 @@ public interface JobLogService {
 
     Page<JobLog> query(Pageable pageable, String jobDesc,String remoteIp);
 
+
+    JobLog findOne(String logId);
+
 }

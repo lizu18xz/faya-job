@@ -19,10 +19,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class DateTimeUtil {
 
     //常用时间格式
-    private static final String DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
-    private static final String DATE_PATTERN = "yyyy-MM-dd";
-    private static final String TIME_PATTERN = "HH:mm:ss";
-    private static final String ALL_PATTERN = "yyyyMMddHHmmss";
+    public static final String DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    public static final String DATE_PATTERN = "yyyy-MM-dd";
+    public static final String TIME_PATTERN = "HH:mm:ss";
+    public static final String ALL_PATTERN = "yyyyMMddHHmmss";
 
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormat.forPattern(DATE_PATTERN);
     public static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormat.forPattern(DATETIME_PATTERN);

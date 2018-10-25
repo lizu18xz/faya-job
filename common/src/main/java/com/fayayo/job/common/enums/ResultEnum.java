@@ -52,8 +52,10 @@ public enum ResultEnum {
 
 
     //业务
-    LOGIN_ERROR(50001,"登陆失败，请检查用户名密码")
-
+    LOGIN_ERROR(50001,"登陆失败，请检查用户名密码"),
+    LOG_INFO_NOT_EXIST(50002,"日志记录不存在"),
+    JOB_INFO_NOT_EXIST(50003,"任务记录不存在"),
+    JOB_NOT_SUPPORT_LOG(50004,"任务不支持在线查看日志")
 
     ;
 

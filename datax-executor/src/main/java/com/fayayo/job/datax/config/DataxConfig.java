@@ -22,7 +22,7 @@ public class DataxConfig {
 
         return new JobExecutor(properties.getServer(),
                 properties.getPort(),properties.getWeight(),properties.getName(),
-                properties.getMainClass());
+                properties.getMainClass(),properties.getLogPath());
 
     }
 

@@ -1,5 +1,6 @@
 package com.fayayo.job.manager.controller;
 
+import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.result.ResultVO;
 import com.fayayo.job.common.result.ResultVOUtil;
 import com.fayayo.job.core.executor.result.LogResult;
@@ -65,9 +66,11 @@ public class JobLogController {
          //获取日志的逻辑,发送请求到对应的机器，然后获取日志信息,获取完毕后,可以将日志内容保存到数据库中
 
          Result<LogResult>resultResult=LoggerHelper.getLogger(executorAddress,logId,pointer);
+         if(resultResult==null){
+             return ResultVOUtil.error(ResultEnum.JOB_NOT_SUPPORT_LOG);
+         }
 
-
-         return ResultVOUtil.success(resultResult);
+         return ResultVOUtil.success(resultResult.getData());
      }
 
 

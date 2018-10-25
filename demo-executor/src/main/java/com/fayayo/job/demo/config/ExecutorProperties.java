@@ -25,4 +25,6 @@ public class ExecutorProperties {
     private String name;//应用名称
 
     private String mainClass;//运行引擎
+
+    private String logPath="";
 }

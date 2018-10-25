@@ -212,9 +212,16 @@ public class ZKCuratorClient implements Closable {
     public void closeResource() {
         if (client != null) {
             log.info("释放zk客户端的连接......{}",client.getState());
-            CloseableUtils.closeQuietly(pcache);
-            CloseableUtils.closeQuietly(cache);
-            CloseableUtils.closeQuietly(client);
+            if(pcache!=null){
+                CloseableUtils.closeQuietly(pcache);
+            }
+            if(cache!=null){
+                CloseableUtils.closeQuietly(cache);
+            }
+
+            if(client!=null){
+                CloseableUtils.closeQuietly(client);
+            }
             log.info("释放zk客户端的连接result......{}",client.getState());
         }
     }
