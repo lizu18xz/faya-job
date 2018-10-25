@@ -76,17 +76,16 @@ public class TriggerHelper {
         }
 
         //进行日志信息的统计+DATAX滚动日志(logId 作为日志标志)
+        JobLogService jobLogService=SpringHelper.popBean(JobLogService.class);
         JobLog jobLog=new JobLog();
         jobLog.setId(jobLogId);
         jobLog.setJobId(jobId);
         jobLog.setJobDesc(jobInfo.getJobDesc());
         jobLog.setLoadBalance(EnumUtil.getByCode(jobInfo.getJobLoadBalance(),JobLoadBalanceEnums.class).getDesc());
         jobLog.setHa(EnumUtil.getByCode(jobInfo.getJobHa(),HaStrategyEnums.class).getDesc());
-
+        jobLogService.save(jobLog);
         Result<?> result=executorSpi.run(jobInfoParam);//jdkProxy
-
         jobLog.setRemoteIp(result.getData().toString());
-        JobLogService jobLogService=SpringHelper.popBean(JobLogService.class);
         jobLogService.save(jobLog);
 
          //获取任务的执行结果

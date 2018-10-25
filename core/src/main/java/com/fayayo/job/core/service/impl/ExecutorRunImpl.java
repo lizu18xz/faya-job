@@ -98,6 +98,7 @@ public class ExecutorRunImpl implements ExecutorRun {
                 }
                 line = new String(line.getBytes("ISO-8859-1"), "utf-8");
                 result.append(line);
+                result.append("\r\n");
             }
 
             pointer = raf.getFilePointer();

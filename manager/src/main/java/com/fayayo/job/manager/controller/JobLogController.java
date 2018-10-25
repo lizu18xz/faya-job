@@ -1,12 +1,17 @@
 package com.fayayo.job.manager.controller;
 
+import com.fayayo.job.common.enums.JobExecutorTypeEnums;
 import com.fayayo.job.common.enums.ResultEnum;
+import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.common.result.ResultVO;
 import com.fayayo.job.common.result.ResultVOUtil;
 import com.fayayo.job.core.executor.result.LogResult;
 import com.fayayo.job.core.executor.result.Result;
+import com.fayayo.job.entity.JobInfo;
 import com.fayayo.job.entity.JobLog;
+import com.fayayo.job.manager.config.SpringHelper;
 import com.fayayo.job.manager.core.helper.LoggerHelper;
+import com.fayayo.job.manager.service.JobInfoService;
 import com.fayayo.job.manager.service.JobLogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +36,10 @@ public class JobLogController {
 
     @Autowired
     private JobLogService jobLogService;
+
+    @Autowired
+    private JobInfoService jobInfoService;
+
 
     /**
      *@描述 分页条件查询
@@ -59,16 +68,30 @@ public class JobLogController {
 
      */
      @PostMapping("/loadLog")
-     public ResultVO<?> loadLog(@RequestParam(value = "executorAddress",required = true)String executorAddress,
-                                @RequestParam(value = "logId",required = true)String logId,
-                                @RequestParam(value = "seek",defaultValue = "0")long pointer){
+     public ResultVO<?> loadLog(@RequestParam(value = "logId")String logId,
+                                @RequestParam(value = "pointer",defaultValue = "0")long pointer){
 
          //获取日志的逻辑,发送请求到对应的机器，然后获取日志信息,获取完毕后,可以将日志内容保存到数据库中
+         String executorAddress="";
+         JobLog jobLog=jobLogService.findOne(logId);
+
+         if(jobLog!=null){
+             executorAddress=jobLog.getRemoteIp();
+             String jobId=jobLog.getJobId();
+             JobInfo jobInfo=jobInfoService.findOne(jobId);
+             if(jobInfo!=null){
+                 String executorType=jobInfo.getExecutorType();
+                 if(!executorType.equals(JobExecutorTypeEnums.DATAX.getName())){
+                     return ResultVOUtil.error(ResultEnum.JOB_NOT_SUPPORT_LOG);
+                 }
+             }else {
+                 throw new CommonException(ResultEnum.JOB_INFO_NOT_EXIST);
+             }
+         }else {
+             throw new CommonException(ResultEnum.LOG_INFO_NOT_EXIST);
+         }
 
          Result<LogResult>resultResult=LoggerHelper.getLogger(executorAddress,logId,pointer);
-         if(resultResult==null){
-             return ResultVOUtil.error(ResultEnum.JOB_NOT_SUPPORT_LOG);
-         }
 
          return ResultVOUtil.success(resultResult.getData());
      }
