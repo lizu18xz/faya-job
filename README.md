@@ -41,6 +41,23 @@ jar-executor  可执行jar执行器
 - 任务流信息
 - 任务详细信息
 
+### 管理端部署
+- mvn clean package -DskipTests  项目整体打包
+- 启动项目的zk
+- 启动管理端:java -jar FayaManager.jar
+- 访问管理页面地址:http://localhost:8086(需要启动前端项目)
+- 日志配置: 因为datax项目本身的日志规则不符合项目需求，所以修改启动脚本。
+````
+  进入datax/conf目录
+  1-修改datax.py
+  #jobParams = ("-Dlog.file.name=%s") % (jobResource[-20:].replace('/', '_').replace('.', '_'))
+  jobParams = ("-Dlog.file.name=%s") % (jobResource[-24:].replace('/','_'))
+  
+  2-修改logback.xml,让日志根据日志ID来生成文件
+  <!--  <file>${log.dir}/${ymd}/${log.file.name}-${byMillionSecond}.log</file> -->
+        <file>${log.dir}/${ymd}/${log.file.name}.log</file>
+````
+
 ### 如何整合新的执行器(基于springboot)?
 - demo-executor作为基本的测试DEMO，可以先从此入手
 - 也可以参考默认的datax-executor 基于springboot,用于实现数据交换
@@ -129,6 +146,8 @@ core.container.taskGroup.channel 5
 - 执行器管理页面
 - 执行器下面具体任务管理页面
 - 运维中心  展示任务名称  和任务执行的日志  滚动
+- 部署 yarn install
+- 启动 yarn dev
 ### github地址:https://github.com/lizu18xz/admin-v1-fe.git
 
 
@@ -142,22 +161,5 @@ core.container.taskGroup.channel 5
 ````
 暂停不支持其他执行器查看日志
 DATAX比较特殊。支持在线查看日志。
-
-执行器新增熟悉   ：OnLine 机器地址
   
-日志文件名称
-
-调度机器：10.49.139.62
-执行器-注册方式：自动注册
-执行器-地址列表：[10.49.139.62:9999]
-路由策略：第一个
-阻塞处理策略：单机串行
-失败处理策略：无
-任务超时时间：0
-
->>>>>>>>>>>触发调度<<<<<<<<<<< 
-触发调度：
-address：10.49.139.62:9999
-code：200
-msg：null
 ````

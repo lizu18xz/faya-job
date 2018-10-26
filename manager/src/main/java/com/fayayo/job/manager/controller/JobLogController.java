@@ -9,10 +9,10 @@ import com.fayayo.job.core.executor.result.LogResult;
 import com.fayayo.job.core.executor.result.Result;
 import com.fayayo.job.entity.JobInfo;
 import com.fayayo.job.entity.JobLog;
-import com.fayayo.job.manager.config.SpringHelper;
 import com.fayayo.job.manager.core.helper.LoggerHelper;
 import com.fayayo.job.manager.service.JobInfoService;
 import com.fayayo.job.manager.service.JobLogService;
+import com.fayayo.job.manager.vo.JobLogVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -96,8 +96,13 @@ public class JobLogController {
          return ResultVOUtil.success(resultResult.getData());
      }
 
+    @PostMapping("/detail")
+     public ResultVO<JobLogVo> detail(@RequestParam(value = "logId")String logId){
 
+        JobLogVo jobLogVo=jobLogService.findJobLogVo(logId);
 
+        return ResultVOUtil.success(jobLogVo);
+     }
 
 
 }

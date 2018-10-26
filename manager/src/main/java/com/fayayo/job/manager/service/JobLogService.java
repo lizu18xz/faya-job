@@ -1,6 +1,7 @@
 package com.fayayo.job.manager.service;
 
 import com.fayayo.job.entity.JobLog;
+import com.fayayo.job.manager.vo.JobLogVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -18,4 +19,5 @@ public interface JobLogService {
 
     JobLog findOne(String logId);
 
+    JobLogVo findJobLogVo(String logId);
 }

@@ -8,6 +8,7 @@ import com.fayayo.job.common.result.ResultVOUtil;
 import com.fayayo.job.entity.JobGroup;
 import com.fayayo.job.entity.JobInfo;
 import com.fayayo.job.entity.params.JobInfoParams;
+import com.fayayo.job.manager.core.helper.TriggerHelper;
 import com.fayayo.job.manager.service.JobInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +90,22 @@ public class JobInfoController {
         log.info("查询执行器,结果={}", jobInfoPage);
         return ResultVOUtil.success(jobInfoPage);
 
+    }
+
+
+     /**
+
+       *@描述 手动执行一次任务
+
+       *@参数  服务名称
+
+     */
+    @PostMapping("/trigger")
+    public ResultVO trigger(@RequestParam("jobId")String jobId){
+
+        TriggerHelper.Trigger(jobId);
+
+        return ResultVOUtil.success();
     }
 
 

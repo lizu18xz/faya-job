@@ -1,11 +1,15 @@
 package com.fayayo.job.manager.service.impl;
 
 import com.fayayo.job.common.constants.Constants;
+import com.fayayo.job.entity.JobInfo;
 import com.fayayo.job.entity.JobLog;
 import com.fayayo.job.manager.repository.JobLogRepository;
+import com.fayayo.job.manager.service.JobInfoService;
 import com.fayayo.job.manager.service.JobLogService;
+import com.fayayo.job.manager.vo.JobLogVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,9 +28,11 @@ import java.util.List;
 @Service
 public class JobLogServiceImpl implements JobLogService {
 
-
     @Autowired
     private JobLogRepository jobLogRepository;
+
+    @Autowired
+    private JobInfoService jobInfoService;
 
     public void save(JobLog jobLog){
 
@@ -74,6 +80,19 @@ public class JobLogServiceImpl implements JobLogService {
         JobLog jobLog=jobLogRepository.findById(logId).orElse(null);
 
         return jobLog;
+    }
+
+    @Override
+    public JobLogVo findJobLogVo(String logId) {
+
+        JobLog jobLog=findOne(logId);
+        String jobId=jobLog.getJobId();
+        JobInfo jobInfo=jobInfoService.findOne(jobId);
+        JobLogVo jobLogVo=new JobLogVo();
+        BeanUtils.copyProperties(jobLog,jobLogVo);
+        jobLogVo.setExecutorType(jobInfo.getExecutorType());
+
+        return jobLogVo;
     }
 
 
