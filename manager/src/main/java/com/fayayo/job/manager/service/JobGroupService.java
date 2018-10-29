@@ -13,7 +13,7 @@ import org.springframework.data.domain.Pageable;
 public interface JobGroupService {
 
 
-    JobGroup addJobGroup(JobGroupParams jobGroupParams);
+    JobGroup saveOrUpdate(JobGroupParams jobGroupParams);
 
     /**
      *@描述 获取jobInfo
@@ -26,5 +26,6 @@ public interface JobGroupService {
 
     JobGroup findByName(String name);
 
+    void deleteById(Integer id);
 
 }

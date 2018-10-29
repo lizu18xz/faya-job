@@ -33,7 +33,7 @@ public class JobGroupServiceImpl implements JobGroupService{
 
 
     @Override
-    public JobGroup addJobGroup(JobGroupParams jobGroupParams) {
+    public JobGroup saveOrUpdate(JobGroupParams jobGroupParams) {
 
         JobGroup jobGroup=new JobGroup();
         BeanUtils.copyProperties(jobGroupParams,jobGroup);
@@ -85,6 +85,11 @@ public class JobGroupServiceImpl implements JobGroupService{
     @Override
     public JobGroup findByName(String name) {
         return jobGroupRepository.findByName(name);
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        jobGroupRepository.deleteById(id);
     }
 
 

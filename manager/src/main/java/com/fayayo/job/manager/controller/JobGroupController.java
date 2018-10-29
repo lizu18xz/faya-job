@@ -45,8 +45,8 @@ public class JobGroupController {
             throw new CommonException(ResultEnum.PARAM_ERROR.getCode(),bindingResult.getFieldError().getDefaultMessage());
         }
 
-        log.info("{}新增任务,参数:{}", Constants.LOG_PREFIX,jobGroupParams);
-        JobGroup jobGroup=jobGroupService.addJobGroup(jobGroupParams);
+        log.info("{}新增执行器,参数:{}", Constants.LOG_PREFIX,jobGroupParams);
+        JobGroup jobGroup=jobGroupService.saveOrUpdate(jobGroupParams);
         return ResultVOUtil.success();
     }
 
@@ -65,6 +65,37 @@ public class JobGroupController {
          return ResultVOUtil.success(jobGroupPage);
      }
 
+    /**
+     *@描述 修改执行器
+     */
+    @PostMapping("/update")
+    public ResultVO updateJob(@Valid JobGroupParams jobGroupParams, BindingResult bindingResult){
 
+        if(bindingResult.hasErrors()){
+            throw new CommonException(ResultEnum.PARAM_ERROR.getCode(),bindingResult.getFieldError().getDefaultMessage());
+        }
+
+        log.info("{}修改执行器,参数:{}", Constants.LOG_PREFIX,jobGroupParams);
+        JobGroup jobGroup=jobGroupService.saveOrUpdate(jobGroupParams);
+        return ResultVOUtil.success();
+    }
+
+
+    @PostMapping("/detail")
+    public ResultVO<JobGroup> detail(@RequestParam(value = "id") Integer id){
+
+        JobGroup jobGroup=jobGroupService.findOne(id);
+
+        return ResultVOUtil.success(jobGroup);
+    }
+
+
+    @PostMapping("/delete")
+    public ResultVO<JobGroup> delete(@RequestParam(value = "id") Integer id){
+
+        jobGroupService.deleteById(id);
+
+        return ResultVOUtil.success();
+    }
 
 }

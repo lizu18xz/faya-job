@@ -16,6 +16,10 @@ import java.util.Date;
 @Setter
 public class JobGroupParams {
 
+
+    private Integer id;
+
+
     @NotNull(message = "执行器名称不能为空")
     private String name;
 
