@@ -80,15 +80,15 @@ public class NettyServer {
 
                 }
             });
-            //异步
-            ChannelFuture f = bootstrap.bind(port).
-                    addListener(new ChannelFutureListener() {
-                        @Override
-                        public void operationComplete(ChannelFuture future) throws Exception {
-                            log.info("{}Server bind success in port: {}", Constants.LOG_PREFIX, port);
-                            countDownLatch.countDown();
-                        }
-                    });
+            //异步 log.info( " 端口[" + port + "]绑定成功!");
+            ChannelFuture f =bootstrap.bind(port).addListener(future -> {
+                if (future.isSuccess()) {
+                    log.info( " 端口[" + port + "]绑定成功!");
+                    countDownLatch.countDown();
+                } else {
+                    log.error("端口[" + port + "]绑定失败!");
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

@@ -4,6 +4,8 @@ import com.fayayo.job.entity.JobInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+import java.util.List;
+
 /**
  * @author dalizu on 2018/8/8.
  * @version v1.0
@@ -11,6 +13,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  */
 public interface JobInfoRepository extends JpaRepository<JobInfo,String>,JpaSpecificationExecutor {
 
-
+    List<JobInfo>findByJobGroup(Integer jobGroup);
 
 }

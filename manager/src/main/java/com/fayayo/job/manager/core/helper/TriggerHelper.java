@@ -83,6 +83,7 @@ public class TriggerHelper {
         jobLog.setJobDesc(jobInfo.getJobDesc());
         jobLog.setLoadBalance(EnumUtil.getByCode(jobInfo.getJobLoadBalance(),JobLoadBalanceEnums.class).getDesc());
         jobLog.setHa(EnumUtil.getByCode(jobInfo.getJobHa(),HaStrategyEnums.class).getDesc());
+        jobLog.setRemoteIp("");
         jobLogService.save(jobLog);
         Result<?> result=executorSpi.run(jobInfoParam);//jdkProxy
         jobLog.setRemoteIp(result.getData().toString());

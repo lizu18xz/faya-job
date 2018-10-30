@@ -2,6 +2,7 @@ package com.fayayo.job.manager.service;
 
 import com.fayayo.job.entity.JobGroup;
 import com.fayayo.job.entity.params.JobGroupParams;
+import com.fayayo.job.manager.vo.JobGroupVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -21,7 +22,7 @@ public interface JobGroupService {
     JobGroup findOne(Integer jobGroupId);
 
 
-    Page<JobGroup>query(Pageable pageable);
+    Page<JobGroupVo>query(Pageable pageable);
 
 
     JobGroup findByName(String name);

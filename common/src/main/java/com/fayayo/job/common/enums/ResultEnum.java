@@ -55,7 +55,8 @@ public enum ResultEnum {
     LOGIN_ERROR(50001,"登陆失败，请检查用户名密码"),
     LOG_INFO_NOT_EXIST(50002,"日志记录不存在"),
     JOB_INFO_NOT_EXIST(50003,"任务记录不存在"),
-    JOB_NOT_SUPPORT_LOG(50004,"任务不支持在线查看日志")
+    JOB_NOT_SUPPORT_LOG(50004,"任务不支持在线查看日志"),
+    GROUP_HAVE_JOB(50005,"请先删除执行器下配置的任务"),
 
     ;
 

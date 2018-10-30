@@ -5,9 +5,14 @@ import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.common.result.ResultVO;
 import com.fayayo.job.common.result.ResultVOUtil;
+import com.fayayo.job.core.service.ServiceDiscovery;
+import com.fayayo.job.core.service.impl.ZkServiceDiscovery;
+import com.fayayo.job.core.zookeeper.ZKCuratorClient;
+import com.fayayo.job.core.zookeeper.ZkProperties;
 import com.fayayo.job.entity.JobGroup;
 import com.fayayo.job.entity.params.JobGroupParams;
 import com.fayayo.job.manager.service.JobGroupService;
+import com.fayayo.job.manager.vo.JobGroupVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author dalizu on 2018/8/23.
@@ -34,6 +40,7 @@ public class JobGroupController {
 
     @Autowired
     private JobGroupService jobGroupService;
+
 
     /**
      *@描述 新增执行器
@@ -55,12 +62,12 @@ public class JobGroupController {
        *@返回值  List
      */
      @PostMapping("/list")
-     public ResultVO<Page<JobGroup>>list(@RequestParam(value = "page",defaultValue = "1")Integer page,
-                                   @RequestParam(value = "size",defaultValue = "10")Integer size){
+     public ResultVO<Page<JobGroupVo>>list(@RequestParam(value = "page",defaultValue = "1")Integer page,
+                                           @RequestParam(value = "size",defaultValue = "10")Integer size){
          log.info("查询执行器,pageNum={},pageSize={}",page,size);
          Sort sort=new Sort(Sort.Direction.DESC,"createTime");
          Pageable pageable = PageRequest.of((page-1),size,sort);
-         Page<JobGroup>jobGroupPage=jobGroupService.query(pageable);
+         Page<JobGroupVo>jobGroupPage=jobGroupService.query(pageable);
          log.info("查询执行器,结果={}", jobGroupPage);
          return ResultVOUtil.success(jobGroupPage);
      }
@@ -97,5 +104,19 @@ public class JobGroupController {
 
         return ResultVOUtil.success();
     }
+
+
+    /**
+     *@描述 获取执行器所在机器的地址
+     */
+    /*@PostMapping("/server")
+    public ResultVO<JobGroup> server(@RequestParam(value = "name") String name){
+
+        ServiceDiscovery serviceDiscovery = new ZkServiceDiscovery(zkCuratorClient, zkProperties);
+
+        List<String>list=serviceDiscovery.discover(name);
+
+        return ResultVOUtil.success(list);
+    }*/
 
 }

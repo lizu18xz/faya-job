@@ -1,10 +1,19 @@
 package com.fayayo.job.manager.service.impl;
 
 import com.fayayo.job.common.constants.Constants;
+import com.fayayo.job.common.enums.ResultEnum;
+import com.fayayo.job.common.exception.CommonException;
+import com.fayayo.job.core.service.ServiceDiscovery;
+import com.fayayo.job.core.service.impl.ZkServiceDiscovery;
+import com.fayayo.job.core.zookeeper.ZKCuratorClient;
+import com.fayayo.job.core.zookeeper.ZkProperties;
 import com.fayayo.job.entity.JobGroup;
+import com.fayayo.job.entity.JobInfo;
 import com.fayayo.job.entity.params.JobGroupParams;
 import com.fayayo.job.manager.repository.JobGroupRepository;
 import com.fayayo.job.manager.service.JobGroupService;
+import com.fayayo.job.manager.service.JobInfoService;
+import com.fayayo.job.manager.vo.JobGroupVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +40,14 @@ public class JobGroupServiceImpl implements JobGroupService{
     @Autowired
     private JobGroupRepository jobGroupRepository;
 
+    @Autowired
+    private JobInfoService jobInfoService;
+
+    @Autowired
+    private ZKCuratorClient zkCuratorClient;
+
+    @Autowired
+    private ZkProperties zkProperties;
 
     @Override
     public JobGroup saveOrUpdate(JobGroupParams jobGroupParams) {
@@ -53,33 +70,42 @@ public class JobGroupServiceImpl implements JobGroupService{
     }
 
     @Override
-    public Page<JobGroup> query(Pageable pageable) {
+    public Page<JobGroupVo> query(Pageable pageable) {
 
         Page<JobGroup> page=jobGroupRepository.findAll(pageable);
 
         List<JobGroup> sortList=page.getContent();
 
-        List bodyList=null;
+        List <JobGroupVo>bodyList=null;
         if(!CollectionUtils.isEmpty(sortList)){
 
                 bodyList=sortList.stream().map(e->{
-                JobGroup jobGroup=new JobGroup();
-                BeanUtils.copyProperties(e,jobGroup);
-                return jobGroup;
+                JobGroupVo jobGroupVo=new JobGroupVo();
+                BeanUtils.copyProperties(e,jobGroupVo);
+                ServiceDiscovery serviceDiscovery = new ZkServiceDiscovery(zkCuratorClient, zkProperties);
+                List<String>list=serviceDiscovery.discover(e.getName());
+                if(!CollectionUtils.isEmpty(list)){
+                    //获取具体的ip
+                    List<String> addressList = list.stream().map(p -> {
+
+                        return " 【"+zkCuratorClient.getData(p)+"】";
+
+                    }).collect(Collectors.toList());
+                    jobGroupVo.setServerList(addressList);
+                }
+                return jobGroupVo;
 
             }).collect(Collectors.toList());
 
             //按照seq字段排序 seq从小到大
-            Collections.sort(bodyList, new Comparator<JobGroup>() {
+            Collections.sort(bodyList, new Comparator<JobGroupVo>() {
                 @Override
-                public int compare(JobGroup o1, JobGroup o2) {
+                public int compare(JobGroupVo o1, JobGroupVo o2) {
                     return o1.getSeq() - o2.getSeq();
                 }
             });
-            return new PageImpl<>(bodyList,pageable,page.getTotalElements());
         }
-
-        return page;
+        return new PageImpl<>(bodyList,pageable,page.getTotalElements());
     }
 
     @Override
@@ -88,8 +114,15 @@ public class JobGroupServiceImpl implements JobGroupService{
     }
 
     @Override
-    public void deleteById(Integer id) {
-        jobGroupRepository.deleteById(id);
+    public void deleteById(Integer groupId) {
+
+
+        List<JobInfo>jobInfoList=jobInfoService.findByGroupId(groupId);
+        if(!CollectionUtils.isEmpty(jobInfoList)){
+            throw new CommonException(ResultEnum.GROUP_HAVE_JOB);
+        }
+
+        jobGroupRepository.deleteById(groupId);
     }
 
 

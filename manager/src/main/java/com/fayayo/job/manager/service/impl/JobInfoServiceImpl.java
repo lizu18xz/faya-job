@@ -3,7 +3,6 @@ package com.fayayo.job.manager.service.impl;
 import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.common.enums.JobExecutorTypeEnums;
 import com.fayayo.job.common.enums.JobStatusEnums;
-import com.fayayo.job.common.enums.JobTypeEnums;
 import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.common.util.KeyUtil;
@@ -13,12 +12,11 @@ import com.fayayo.job.entity.JobInfo;
 import com.fayayo.job.entity.params.JobInfoParams;
 import com.fayayo.job.manager.core.cluster.ha.HaStrategyEnums;
 import com.fayayo.job.manager.repository.JobInfoRepository;
-import com.fayayo.job.manager.service.FileService;
 import com.fayayo.job.manager.service.JobConfigService;
 import com.fayayo.job.manager.service.JobGroupService;
 import com.fayayo.job.manager.service.JobInfoService;
+import com.fayayo.job.manager.vo.JobInfoVo;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +25,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
-import java.io.InputStream;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,8 +51,7 @@ public class JobInfoServiceImpl implements JobInfoService {
     @Autowired
     private JobConfigService jobConfigService;
 
-    @Autowired
-    private FileService fileService;
+
 
     @Value("${faya-job.upload.tempPath}")
     private String path;
@@ -78,14 +72,7 @@ public class JobInfoServiceImpl implements JobInfoService {
             String jobConfigBody=jobInfoParams.getJobConfig();
             if(StringUtils.isNotBlank(jobConfigBody)){
                 //TODO 上传配置文件 为了减少其他组件的使用，暂时把信息保存到数据库
-
-                //保存配置文件信息到数据库
-                JobConfig jobConfig=new JobConfig();
-                jobConfig.setJobId(keyId);
-                jobConfig.setContent(jobConfigBody);
-
-                jobConfigService.save(jobConfig);
-                log.info("{}保存配置信息成功",Constants.LOG_PREFIX);
+                saveConfig(keyId,jobConfigBody);
             }else {
                 throw new CommonException(ResultEnum.JOB_CONFIG_NOT_EXIST);
             }
@@ -111,6 +98,47 @@ public class JobInfoServiceImpl implements JobInfoService {
 
 
     @Override
+    public JobInfo updateJob(JobInfoParams jobInfoParams) {
+        //TODO 校验任务信息  获取任务配置相关的信息  比如依赖任务等
+
+        String keyId= jobInfoParams.getId();//获取主键ID
+
+        String jobExecutorType=jobInfoParams.getExecutorType();
+        if(jobExecutorType.equals(JobExecutorTypeEnums.DATAX.getName())){
+            String jobConfigBody=jobInfoParams.getJobConfig();
+            if(StringUtils.isNotBlank(jobConfigBody)){
+
+                saveConfig(keyId,jobConfigBody);
+
+            }else {
+                throw new CommonException(ResultEnum.JOB_CONFIG_NOT_EXIST);
+            }
+        }
+
+        //更新任务信息到数据库
+        JobInfo jobInfo=findOne(keyId);
+        BeanUtils.copyProperties(jobInfoParams,jobInfo);
+
+        jobInfo=jobInfoRepository.save(jobInfo);
+
+        jobSchedulerCore.rescheduleJob(keyId,String.valueOf(jobInfo.getJobGroup()),jobInfo.getCron());
+
+        return jobInfo;
+    }
+
+
+    private void saveConfig(String keyId,String jobConfigBody){
+        //保存配置文件信息到数据库
+        JobConfig jobConfig=new JobConfig();
+        jobConfig.setJobId(keyId);
+        jobConfig.setContent(jobConfigBody);
+        jobConfigService.save(jobConfig);
+        log.info("{}保存配置信息成功",Constants.LOG_PREFIX);
+    }
+
+
+
+    @Override
     public JobInfo findOne(String jobId) {
 
         JobInfo jobInfo=jobInfoRepository.findById(jobId).orElse(null);
@@ -118,6 +146,20 @@ public class JobInfoServiceImpl implements JobInfoService {
         log.debug("{}查询单个任务信息, 结果:{}", Constants.LOG_PREFIX, jobInfo);
 
         return jobInfo;
+    }
+
+    @Override
+    public JobInfoVo findJobInfoVo(String jobId) {
+
+        JobInfo jobInfo=findOne(jobId);
+        JobInfoVo jobInfoVo=new JobInfoVo();
+        BeanUtils.copyProperties(jobInfo,jobInfoVo);
+        JobConfig jobConfig=jobConfigService.findOne(jobId);
+        if(jobConfig!=null){
+            jobInfoVo.setJobContent(jobConfig.getContent());
+        }
+
+        return jobInfoVo;
     }
 
 
@@ -178,6 +220,13 @@ public class JobInfoServiceImpl implements JobInfoService {
         Page<JobInfo> page=jobInfoRepository.findAll(specification,pageable);
 
         return page;
+    }
+
+    @Override
+    public List<JobInfo> findByGroupId(Integer groupId) {
+
+
+        return jobInfoRepository.findByJobGroup(groupId);
     }
 
 }

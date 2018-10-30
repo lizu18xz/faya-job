@@ -151,7 +151,7 @@ public class JobSchedulerCore implements DisposableBean{
 
     /**
 
-     *@描述 从quartz修改某个已经存在的任务
+     *@描述 从quartz修改一个任务的触发时间
 
      *@创建人  dalizu
 
@@ -166,11 +166,19 @@ public class JobSchedulerCore implements DisposableBean{
             // 表达式调度构建器
             CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(cron);
             CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
+            if (trigger == null) {
+                return;
+            }
+            String oldTime = trigger.getCronExpression();
 
-            trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
+            if (!oldTime.equalsIgnoreCase(cron)){
+                trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
 
-            scheduler.rescheduleJob(triggerKey,trigger);
-
+                scheduler.rescheduleJob(triggerKey,trigger);
+                log.info("{}成功修改任务到调度中心");
+            }else {
+                log.info("{}调度时间没有修改");
+            }
         } catch (SchedulerException e) {
             e.printStackTrace();
             log.error("修改调度任务异常:{}",e);

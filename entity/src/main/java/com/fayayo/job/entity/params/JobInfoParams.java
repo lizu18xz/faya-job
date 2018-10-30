@@ -21,6 +21,8 @@ public class JobInfoParams {
     /*@NotNull(message = "任务的jobGroup不能为空")
     private Integer jobGroup;*/
 
+    private String id;
+
     @NotNull(message = "执行周期不能为空")
     private String cron;
 
@@ -43,8 +45,6 @@ public class JobInfoParams {
     private Integer jobHa;
 
     private Integer retries;
-
-    private Integer jobStatus;
 
     private String jobConfig;//任务配置信息（DATAX任务才有)
 

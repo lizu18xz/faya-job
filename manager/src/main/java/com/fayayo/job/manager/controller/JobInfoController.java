@@ -10,6 +10,7 @@ import com.fayayo.job.entity.JobInfo;
 import com.fayayo.job.entity.params.JobInfoParams;
 import com.fayayo.job.manager.core.helper.TriggerHelper;
 import com.fayayo.job.manager.service.JobInfoService;
+import com.fayayo.job.manager.vo.JobInfoVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,6 +43,20 @@ public class JobInfoController {
         JobInfo jobInfo=jobInfoService.addJob(jobInfoParams);
         return ResultVOUtil.success();
     }
+
+
+    @PostMapping("/editor")
+    public ResultVO editorJob(@Valid JobInfoParams jobInfoParams, BindingResult bindingResult){
+
+        if(bindingResult.hasErrors()){
+            throw new CommonException(ResultEnum.PARAM_ERROR.getCode(),bindingResult.getFieldError().getDefaultMessage());
+        }
+
+        log.info("{}修改任务,参数:{}",Constants.LOG_PREFIX,jobInfoParams);
+        JobInfo jobInfo=jobInfoService.updateJob(jobInfoParams);
+        return ResultVOUtil.success();
+    }
+
 
     /**
      *@描述 暂停任务
@@ -108,5 +123,13 @@ public class JobInfoController {
         return ResultVOUtil.success();
     }
 
+    /**
+     *@描述 任务详情
+     */
+    @PostMapping("/detail")
+    public ResultVO delete(@RequestParam("jobId")String jobId){
+        JobInfoVo jobInfoVo=jobInfoService.findJobInfoVo(jobId);
+        return ResultVOUtil.success(jobInfoVo);
+    }
 
 }

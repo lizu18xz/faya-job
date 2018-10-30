@@ -1,5 +1,5 @@
 server:
-  port: 8083
+  port: 8084
   servlet:
     context-path: /demo-executor
 
@@ -8,9 +8,7 @@ faya-job:
   registerPath: /job-register
   demo-executor:
      server: 127.0.0.1
-     port: 8071
+     port: 8072
      weight: 1
      name: DEMO
      mainClass: com.fayayo.job.demo.executor.DemoEngine
-
-
