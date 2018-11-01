@@ -161,5 +161,8 @@ core.container.taskGroup.channel 5
 ````
 暂停不支持其他执行器查看日志
 DATAX比较特殊。支持在线查看日志。
+daterangepicker 新增时间选择控件
+任务种类细分
+单次任务,分钟任务,小时任务,天任务,周任务，月任务
   
 ````
