@@ -82,7 +82,8 @@ public class JobLogController {
              if(jobInfo!=null){
                  String executorType=jobInfo.getExecutorType();
                  if(!executorType.equals(JobExecutorTypeEnums.DATAX.getName())){
-                     return ResultVOUtil.error(ResultEnum.JOB_NOT_SUPPORT_LOG);
+                     //return ResultVOUtil.error(ResultEnum.JOB_NOT_SUPPORT_LOG);
+                     return ResultVOUtil.success(new LogResult(-1,ResultEnum.JOB_NOT_SUPPORT_LOG.getMessage()));
                  }
              }else {
                  throw new CommonException(ResultEnum.JOB_INFO_NOT_EXIST);

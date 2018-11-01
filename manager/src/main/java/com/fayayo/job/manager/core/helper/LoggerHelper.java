@@ -24,8 +24,7 @@ public class LoggerHelper {
                                               long pointer){
 
         //build cluster  配置机器的ha和选择服务的策略
-        ClusterSupport clusterSupport=new ClusterSupport();
-        Cluster cluster=clusterSupport.buildLogClusterSupport(executorAddress);
+        Cluster cluster=ClusterSupport.buildLogClusterSupport(executorAddress);
 
         //获取代理类
         ExecutorRun executorSpi=getExecutorSpi(cluster);

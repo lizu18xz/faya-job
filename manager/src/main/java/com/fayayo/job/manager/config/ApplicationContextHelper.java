@@ -19,6 +19,5 @@ public class ApplicationContextHelper implements ApplicationContextAware {
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         SpringHelper.setApplicationContext(applicationContext);
         //执行一些初始化的操作
-        //InitConfigData.start();
     }
 }

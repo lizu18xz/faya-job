@@ -31,13 +31,17 @@ public abstract class AbstractHaStrategy implements HaStrategy {
         NettyClient client=new NettyClient(endpoint.getHost(),endpoint.getPort());
         endpoint.incrActiveCount();
         try {
-            client.open();
-            ResponsePacket response=client.request(request);
-            return response;
+            if(client.open()){
+                ResponsePacket response=client.request(request);
+                return response;
+            }else {
+                return null;
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             //TODO
-            return null;
+            throw new RuntimeException("发送RPC请求异常!!!");
         }finally {
             endpoint.decrActiveCount();
             //关闭资源

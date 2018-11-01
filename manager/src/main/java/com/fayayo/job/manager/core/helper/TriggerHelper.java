@@ -60,8 +60,7 @@ public class TriggerHelper {
         jobInfoParam.setLogId(jobLogId);
 
         //build cluster  配置机器的ha和选择服务的策略
-        ClusterSupport clusterSupport=new ClusterSupport();
-        Cluster cluster=clusterSupport.buildClusterSupport(jobInfoParam);
+        Cluster cluster=ClusterSupport.buildClusterSupport(jobInfoParam);
 
         //获取代理类
         ExecutorRun executorSpi=getExecutorSpi(cluster);

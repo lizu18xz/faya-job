@@ -112,14 +112,12 @@ public class ZKCuratorClient implements Closable {
                 if (event.getType().equals(PathChildrenCacheEvent.Type.CHILD_ADDED)) {
 
                     String path = event.getData().getPath();
-                    //log.info("{}新服务注册path:{}",Constants.LOG_PREFIX,path);
                     String data = new String(event.getData().getData());
-                    log.info("{}执行器:{},有新服务加入:{}", Constants.LOG_PREFIX, registerPath, data);
+                    log.info("{}执行器:{},有新服务加入:{}", Constants.LOG_PREFIX, registerPath.substring(registerPath.lastIndexOf(Constants.JOIN_SYMBOL)+1,
+                            registerPath.length()), data);
 
                 } else if (event.getType().equals(PathChildrenCacheEvent.Type.CHILD_REMOVED)) {
-
-                    //TODO 服务端口后，做某些事情，比如 可以把服务缓存到内存，每次新加入或者端口 刷新缓存
-
+                    log.info("{}执行器:{},有服务退出", Constants.LOG_PREFIX, registerPath);
                 }
             }
         });

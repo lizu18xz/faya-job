@@ -44,6 +44,9 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
         request.setRetries(cluster.getRetries());//设置重试次数
 
         ResponsePacket response=cluster.call(request);//发送请求,等待返回(阻塞)
+        if(response==null){
+            throw new RuntimeException("和服务端建立连接失败!!!");
+        }
         return response.getValue();//接收请求
     }
 

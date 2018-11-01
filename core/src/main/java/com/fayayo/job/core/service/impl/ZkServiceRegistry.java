@@ -1,5 +1,6 @@
 package com.fayayo.job.core.service.impl;
 
+import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.core.service.ServiceRegistry;
 import com.fayayo.job.core.zookeeper.ZKCuratorClient;
 import com.fayayo.job.core.zookeeper.ZkProperties;
@@ -33,12 +34,12 @@ public class ZkServiceRegistry implements ServiceRegistry {
     public void register(String serviceName, String serviceAddress) {
 
         //创建服务的节点
-        String serviceNode=zkProperties.getRegisterPath()+"/"+serviceName;
+        String serviceNode=zkProperties.getRegisterPath()+ Constants.JOIN_SYMBOL+serviceName;
 
         zkCuratorClient.createPersistentNode(serviceNode);
 
         //创建地址的节点
-        String addressNode=serviceNode+"/"+"address-";
+        String addressNode=serviceNode+Constants.JOIN_SYMBOL+"address-";
 
         zkCuratorClient.createPhemeralEphemeralNode(addressNode+serviceAddress,serviceAddress);
 

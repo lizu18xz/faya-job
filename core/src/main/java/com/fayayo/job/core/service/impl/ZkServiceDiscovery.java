@@ -42,7 +42,7 @@ public class ZkServiceDiscovery implements ServiceDiscovery {
     public List<String> discover(String executorName) {
 
         //获取service节点
-        String serviceNode=zkProperties.getRegisterPath()+"/"+executorName;
+        String serviceNode=zkProperties.getRegisterPath()+Constants.JOIN_SYMBOL+executorName;
 
         List<String> list=zkCuratorClient.getChildNode(serviceNode);
         if(CollectionUtils.isEmpty(list)){
@@ -51,7 +51,7 @@ public class ZkServiceDiscovery implements ServiceDiscovery {
         }
 
         list=list.stream().map(e->{
-            return serviceNode+"/"+e;//加上前缀返回完整的路径
+            return serviceNode+Constants.JOIN_SYMBOL+e;//加上前缀返回完整的路径
         }).collect(Collectors.toList());
 
         return list;

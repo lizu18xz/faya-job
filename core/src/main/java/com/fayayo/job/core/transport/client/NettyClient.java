@@ -105,7 +105,6 @@ public class NettyClient {
                 channel = channelFuture.channel();//获取channel
                 return true;
             }
-
             throw new RuntimeException("NettyClient init Error.");
         }catch (Exception e){
             e.printStackTrace();
@@ -170,7 +169,9 @@ public class NettyClient {
 
     public void close(){
         log.info("关闭客户端连接");
-        this.channel.close();
+        if(this.channel!=null){
+            this.channel.close();
+        }
         //eventLoopGroup.shutdownGracefully();
     }
 
