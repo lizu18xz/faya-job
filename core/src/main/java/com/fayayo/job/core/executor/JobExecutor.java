@@ -1,10 +1,12 @@
 package com.fayayo.job.core.executor;
 
 import com.fayayo.job.common.constants.Constants;
+import com.fayayo.job.common.enums.JobExecutorTypeEnums;
 import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.core.annotation.FayaService;
 import com.fayayo.job.core.executor.handler.JobExecutorHandler;
+import com.fayayo.job.core.log.LoggerUtil;
 import com.fayayo.job.core.service.impl.ExecutorRunImpl;
 import com.fayayo.job.core.service.impl.ZkServiceRegistry;
 import com.fayayo.job.core.callback.CallbackThread;
@@ -74,6 +76,14 @@ public class JobExecutor implements ApplicationContextAware {
         this.applicationContext = applicationContext;
         initRpcService();//初始化RPC服务
         initServer();//启动服务端
+
+        //DATAX任务特殊处理,获取datax自己的日志展示到前台
+        if(!name.equals(JobExecutorTypeEnums.DATAX.getName())){
+            if(!"".equals(logPath)){
+                LoggerUtil.init(logPath);//初始化日志
+            }
+        }
+
         initRegister();//注册服务
 
         //启动结果处理线程

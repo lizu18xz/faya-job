@@ -78,6 +78,7 @@ public class ClusterSupport {
         );
 
         //一个日志只存在固定的一台机器的情况,默认直接轮训就可以
+        //TODO 判断执行器地址是否可连接
         JobRouteExchange jobRouteExchange = new JobRouteExchange(Lists.newArrayList(executorAddress));
         LoadBalance loadBalance = jobRouteExchange.getLogLoadBalance();
 
@@ -99,7 +100,7 @@ public class ClusterSupport {
 
         List<String> list = serviceDiscovery.discover(executorName);//根据所属执行器查询ip地址
         if (CollectionUtils.isEmpty(list)) {
-            throw new CommonException(ResultEnum.JOB_NOT_FIND_ADDRESS);
+            throw new CommonException(ResultEnum.EXECUTOR_ADDRESS_NOT_EXIST);
         }
         //获取具体的ip
         List addressList = list.stream().map(e -> {

@@ -15,7 +15,7 @@ public interface ExecutorRun {
     Result<?> run(JobInfoParam jobInfo);
 
 
-    Result<LogResult> log(String logId, long pointer);
+    Result<LogResult> log(String executorType,String logId, long pointer);
 
 
 

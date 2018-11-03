@@ -2,6 +2,7 @@ package com.fayayo.job.core.executor.handler;
 
 import com.fayayo.job.common.params.JobInfoParam;
 import com.fayayo.job.core.executor.result.Result;
+import com.fayayo.job.core.log.LogContextHolder;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -18,5 +19,25 @@ public abstract class JobExecutorHandler {
 
 
         public abstract Result<?> run (JobInfoParam jobInfoParam);
+
+
+        public void post(){
+
+            LogContextHolder.remove();
+
+            log.info("end JobExecutorHandler");
+        }
+
+        public Result<?> execute(JobInfoParam jobInfoParam){
+
+            init();
+
+            Result<?>result=run(jobInfoParam);
+
+            post();
+
+            return result;
+        }
+
 
 }

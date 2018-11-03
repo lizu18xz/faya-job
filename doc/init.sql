@@ -23,7 +23,7 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
--- 任务组
+-- 执行器
 drop table if exists faya_job_group;
 create table faya_job_group(
   id int not null auto_increment,
@@ -36,7 +36,26 @@ create table faya_job_group(
 )comment '任务组信息表';
 
 
+-- 任务流
+drop table if exists faya_job_flow;
+create table faya_job_flow(
+  id int not null auto_increment,
+  name varchar(64) not null comment '任务流名称',
+  flow_desc varchar(256) not null comment '任务流描述',
+  seq int(11) NOT NULL DEFAULT '0' COMMENT '任务流展示的的顺序，由小到大',
+  job_cycle int not null comment '任务执行周期 0-一次性 1-分钟任务 2-小时任务 3-天任务 4-周任务 5-月任务 6-cron自定义任务',
+  job_cycle_value int not null comment '执行周期值',
+  flow_priority int not null comment '任务流的优先级',
+  start_at datetime comment '任务开始时间',
+  create_time timestamp not null default current_timestamp comment '创建时间',
+  update_time timestamp not null default current_timestamp on update current_timestamp comment '修改时间',
+  primary key (id)
+)comment '任务流信息表';
+
+
+
 -- 任务信息表 job_info
+-- alert table faya_job_info add job_cycle int not null comment '任务执行周期 0-一次性 1-分钟任务 2-小时任务 3-天任务 4-周任务 5-月任务 6-cron自定义任务';
 drop table if exists faya_job_info;
 create table faya_job_info(
   id varchar(32) not null comment '主键',

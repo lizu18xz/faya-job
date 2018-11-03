@@ -74,17 +74,13 @@ public class JobLogController {
          //获取日志的逻辑,发送请求到对应的机器，然后获取日志信息,获取完毕后,可以将日志内容保存到数据库中
          String executorAddress="";
          JobLog jobLog=jobLogService.findOne(logId);
-
+         String executorType="";
          if(jobLog!=null){
              executorAddress=jobLog.getRemoteIp();
              String jobId=jobLog.getJobId();
              JobInfo jobInfo=jobInfoService.findOne(jobId);
              if(jobInfo!=null){
-                 String executorType=jobInfo.getExecutorType();
-                 if(!executorType.equals(JobExecutorTypeEnums.DATAX.getName())){
-                     //return ResultVOUtil.error(ResultEnum.JOB_NOT_SUPPORT_LOG);
-                     return ResultVOUtil.success(new LogResult(-1,ResultEnum.JOB_NOT_SUPPORT_LOG.getMessage()));
-                 }
+                 executorType=jobInfo.getExecutorType();
              }else {
                  throw new CommonException(ResultEnum.JOB_INFO_NOT_EXIST);
              }
@@ -92,7 +88,8 @@ public class JobLogController {
              throw new CommonException(ResultEnum.LOG_INFO_NOT_EXIST);
          }
 
-         Result<LogResult>resultResult=LoggerHelper.getLogger(executorAddress,logId,pointer);
+         //TODO 没有判断机器地址是否可用
+         Result<LogResult>resultResult=LoggerHelper.getLogger(executorType,executorAddress,logId,pointer);
 
          return ResultVOUtil.success(resultResult.getData());
      }

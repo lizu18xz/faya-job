@@ -1,6 +1,7 @@
 package com.fayayo.job.core.service.impl;
 
 import com.fayayo.job.common.constants.Constants;
+import com.fayayo.job.common.enums.JobExecutorTypeEnums;
 import com.fayayo.job.common.enums.JobTypeEnums;
 import com.fayayo.job.common.params.JobInfoParam;
 import com.fayayo.job.common.util.DateTimeUtil;
@@ -8,6 +9,7 @@ import com.fayayo.job.core.executor.JobExecutor;
 import com.fayayo.job.core.executor.result.LogResult;
 import com.fayayo.job.core.executor.result.Result;
 import com.fayayo.job.core.executor.handler.JobExecutorHandler;
+import com.fayayo.job.core.log.LogContextHolder;
 import com.fayayo.job.core.thread.StandardThreadExecutor;
 import com.fayayo.job.core.thread.StandardThreadManager;
 import com.fayayo.job.core.service.ExecutorRun;
@@ -72,19 +74,30 @@ public class ExecutorRunImpl implements ExecutorRun {
      * @描述 获取执行器产生的日志返回给管理端
      */
     @Override
-    public Result<LogResult> log(String logId, long pointer) {
+    public Result<LogResult> log(String executorType,String logId, long pointer) {
 
-        log.info("Get log start:{},{}", logId, pointer);
+        log.info("Get log start:{},{},{}", executorType,logId, pointer);
 
         StringBuilder result=new StringBuilder();
         try {
 
             //获取完整的日志路径+文件名称  2018-10-24/154020971946352539.json-04_33_50.960.log
             String day= DateTimeUtil.dateToStr(new Date(),DateTimeUtil.DATE_PATTERN);
-            String logFile=day+File.separator+logId+Constants.FILE_EXTENSION+Constants.LOG_EXTENSION;
-            String path=logPath+File.separator+logFile;
 
-            File file = new File(path);
+            StringBuilder path=new StringBuilder();
+
+            if(executorType.equals(JobExecutorTypeEnums.DATAX.getName())){
+                path.append(logPath).append(File.separator);
+                path.append(day).append(File.separator).append(logId).
+                        append(Constants.FILE_EXTENSION).
+                        append(Constants.LOG_EXTENSION);
+            }else {
+                path.append(logPath).append(File.separator).
+                        append(day).append(File.separator).
+                        append(logId).append(Constants.LOG_EXTENSION);
+            }
+
+            File file = new File(path.toString());
             if (file == null) {
                 return Result.success(new LogResult(0, "日志文件不存在"));
             }

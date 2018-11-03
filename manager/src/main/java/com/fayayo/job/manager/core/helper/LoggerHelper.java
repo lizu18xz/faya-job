@@ -20,7 +20,7 @@ import java.util.Date;
 public class LoggerHelper {
 
 
-    public static Result<LogResult> getLogger(String executorAddress, String logId,
+    public static Result<LogResult> getLogger(String executorType,String executorAddress, String logId,
                                               long pointer){
 
         //build cluster  配置机器的ha和选择服务的策略
@@ -32,7 +32,7 @@ public class LoggerHelper {
         //获取完整的日志路径+文件名称  2018-10-24/154020971946352539.json-04_33_50.960.log
 
         //执行具体请求
-        return executorSpi.log(logId,pointer);
+        return executorSpi.log(executorType,logId,pointer);
 
     }
 

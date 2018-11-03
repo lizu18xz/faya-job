@@ -12,3 +12,4 @@ faya-job:
      weight: 1
      name: DEMO
      mainClass: com.fayayo.job.demo.executor.DemoEngine
+     logPath: D:/app/workspace/logs/faya_job/datax-executor

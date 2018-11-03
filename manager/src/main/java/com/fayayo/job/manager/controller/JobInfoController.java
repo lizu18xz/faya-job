@@ -5,7 +5,6 @@ import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.common.result.ResultVO;
 import com.fayayo.job.common.result.ResultVOUtil;
-import com.fayayo.job.entity.JobGroup;
 import com.fayayo.job.entity.JobInfo;
 import com.fayayo.job.entity.params.JobInfoParams;
 import com.fayayo.job.manager.core.helper.TriggerHelper;

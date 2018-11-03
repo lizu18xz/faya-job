@@ -3,6 +3,7 @@ package com.fayayo.job.core.callback.task;
 import com.fayayo.job.common.params.JobInfoParam;
 import com.fayayo.job.core.executor.result.Result;
 import com.fayayo.job.core.executor.handler.JobExecutorHandler;
+import com.fayayo.job.core.log.LogContextHolder;
 
 import java.util.concurrent.Callable;
 
@@ -25,9 +26,9 @@ public class HandlerTask implements Callable<Result<?>> {
     @Override
     public Result<?> call() throws Exception {
 
-        handler.init();
+        LogContextHolder.add(jobInfo.getLogId());//设置线程 独立 的副本
 
-        return handler.run(jobInfo);
+        return handler.execute(jobInfo);
 
     }
 

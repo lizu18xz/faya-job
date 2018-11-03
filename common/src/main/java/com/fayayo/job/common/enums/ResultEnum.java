@@ -32,7 +32,7 @@ public enum ResultEnum {
     CREATE_SCHEDULE_ERROR(20001,"创建调度任务失败!!!"),
     JOB_REPEAT_ERROR(20002,"不能重复添加相同的调度任务!!!"),
     JOB_NOT_EXIST(20003,"任务不存在了!!!"),
-    JOB_NOT_FIND_ADDRESS(20004,"任务获取不到执行地址,请检查执行器是否启动!!!"),
+    EXECUTOR_ADDRESS_NOT_EXIST(20004,"任务获取不到执行地址,请检查执行器是否启动!!!"),
     JOB_HANDLER_ERROR(20005,"任务执行器的引擎配置错误!!!!!!"),
     JOB_RUN_ERROR(20006,"任务执行失败，请联系管理员!!!!!!"),
     PAUSE_SCHEDULE_ERROR(20007,"暂停调度任务失败!!!"),
