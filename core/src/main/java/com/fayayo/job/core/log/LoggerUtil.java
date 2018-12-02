@@ -3,6 +3,7 @@ package com.fayayo.job.core.log;
 import com.fayayo.job.common.util.DateTimeUtil;
 
 import java.util.Date;
+import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * @author dalizu on 2018/11/2.
@@ -13,18 +14,44 @@ public class LoggerUtil {
 
     private static DefaultLogService logService = new DefaultLogService();// 可以通过设置为不同logservice控制log行为。
 
+    private static ArrayBlockingQueue<String> queue = new ArrayBlockingQueue<String>(128);
+
     //初始化执行器日志路径xxxx/2010-09-01
     public static void init(String rootPath){
         logService.init(rootPath);
+        //启动消费者
+        new Thread(new Runnable() {
+            public void run() {
+                while (true){
+                    try {
+                        String logMsg=queue.take();//阻塞等待日志
+                        Thread.sleep(1000);
+                        //开始异步写日志
+                        logService.writer(logMsg);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+
     }
 
+    //之前是同步打印会阻塞，修改为异步记录日志
     public static void info(String msg) {
         StringBuilder info=new StringBuilder();
         info.append(DateTimeUtil.dateToStr(new Date()))
                 .append(",").append("【info】").append(" - ")
                 .append(msg).append("\r\n");
 
-        logService.info(info.toString());
+        try {
+            boolean b=queue.offer(info.toString());
+            if(!b){//加入不进队列就从主线程写
+                logService.writer(info.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void error(String msg) {
@@ -32,7 +59,25 @@ public class LoggerUtil {
         error.append(DateTimeUtil.dateToStr(new Date()))
                 .append(",").append("【error】").append(" - ")
                 .append(msg).append("\r\n");
-        logService.error(error.toString());
+
+        try {
+            boolean b=queue.offer(error.toString());
+            if(!b){//加入不进队列就从主线程写
+                logService.writer(error.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
+    public static void main(String[] args) {
+        //测试
+        LoggerUtil.init("D:\\Test");
+
+        for (int i=0;i<100;i++) {
+            LoggerUtil.info("cccccc"+i);
+        }
+    }
+
 
 }

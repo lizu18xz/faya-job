@@ -31,16 +31,7 @@ public class DefaultLogService {
         }
     }
 
-    public void info(String msg) {
-        if(rootDir!=null){
-            append(msg);
-        }else {
-            log.error("执行器日志记录失败，请配置执行器日志目录");
-        }
-    }
-
-
-    public void error(String msg) {
+    public void writer(String msg) {
         if(rootDir!=null){
             append(msg);
         }else {
