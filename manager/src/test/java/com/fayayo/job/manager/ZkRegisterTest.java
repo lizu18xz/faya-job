@@ -1,9 +1,6 @@
 package com.fayayo.job.manager;
 
-import com.fayayo.job.core.service.impl.ZkServiceDiscovery;
-import com.fayayo.job.core.service.impl.ZkServiceRegistry;
-import com.fayayo.job.core.zookeeper.ZKCuratorClient;
-import com.fayayo.job.core.zookeeper.ZkProperties;
+import com.fayayo.job.core.register.ServiceRegistry;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,46 +18,32 @@ import java.util.List;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ZkRegisterTest {
 
-    @Autowired
-    private ZKCuratorClient zkCuratorClient;
 
     @Autowired
-    private ZkProperties zkProperties;
+    private ServiceRegistry serviceRegistry;
 
     @Test
-    public void register(){
-
-        ZkServiceRegistry zkServiceRegistry=new ZkServiceRegistry(zkCuratorClient,zkProperties);
+    public void register() {
 
         //groupId=1
 
-        zkServiceRegistry.register("1","192.168.76.111");
+        serviceRegistry.register("1", "192.168.76.111");
 
     }
 
 
-
     @Test
-    public void discover(){
+    public void discover() {
 
-        ZkServiceDiscovery zkServiceDiscovery=new ZkServiceDiscovery(zkCuratorClient,zkProperties);
 
-        List<String> list=zkServiceDiscovery.discover("testService");
+        List<String> list = serviceRegistry.discover("testService");
 
-        for (String s:list){
+        for (String s : list) {
             System.out.println(s);
         }
 
 
     }
-
-
-
-
-
-
-
-
 
 
 }

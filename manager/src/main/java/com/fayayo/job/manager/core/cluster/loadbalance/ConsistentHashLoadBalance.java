@@ -1,4 +1,5 @@
 package com.fayayo.job.manager.core.cluster.loadbalance;
+
 import com.fayayo.job.common.util.MathUtil;
 import com.fayayo.job.core.extension.SpiMeta;
 import com.fayayo.job.core.transport.protocol.request.RequestPacket;
@@ -47,7 +48,7 @@ public class ConsistentHashLoadBalance extends AbstractLoadBalance {
         int hash = getHash(request);
         for (int i = 0; i < endpoints.size(); i++) {
             Endpoint ref = consistentHashReferers.get((hash + i) % consistentHashReferers.size());
-                refersHolder.add(ref);
+            refersHolder.add(ref);
         }
     }
 
@@ -74,15 +75,15 @@ public class ConsistentHashLoadBalance extends AbstractLoadBalance {
 
 
     public static void main(String[] args) throws InterruptedException {
-        LoadBalance loadBalance=new ConsistentHashLoadBalance();
-        List<Endpoint>list=new ArrayList<>();
-        list.add(new Endpoint("10",9001));
-        list.add(new Endpoint("11",9002));
-        list.add(new Endpoint("12",9003));
-        list.add(new Endpoint("13",9004));
+        LoadBalance loadBalance = new ConsistentHashLoadBalance();
+        List<Endpoint> list = new ArrayList<>();
+        list.add(new Endpoint("10", 9001));
+        list.add(new Endpoint("11", 9002));
+        list.add(new Endpoint("12", 9003));
+        list.add(new Endpoint("13", 9004));
         loadBalance.onRefresh(list);//刷新地址
-        while (true){
-            Endpoint endpoint=loadBalance.select(new RequestPacket());//获取一个地址
+        while (true) {
+            Endpoint endpoint = loadBalance.select(new RequestPacket());//获取一个地址
             System.out.println(endpoint.toString());
             Thread.sleep(1000);
         }

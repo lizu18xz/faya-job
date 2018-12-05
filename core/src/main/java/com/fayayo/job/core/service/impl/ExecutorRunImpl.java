@@ -37,7 +37,7 @@ public class ExecutorRunImpl implements ExecutorRun {
 
     private String logPath;
 
-    public ExecutorRunImpl(String server,String logPath) {
+    public ExecutorRunImpl(String server, String logPath) {
         this.server = server;
         this.logPath = logPath;
     }
@@ -74,24 +74,24 @@ public class ExecutorRunImpl implements ExecutorRun {
      * @描述 获取执行器产生的日志返回给管理端
      */
     @Override
-    public Result<LogResult> log(String executorType,String logId, long pointer) {
+    public Result<LogResult> log(String executorType, String logId, long pointer) {
 
-        log.info("Get log start:{},{},{}", executorType,logId, pointer);
+        log.info("Get log start:{},{},{}", executorType, logId, pointer);
 
-        StringBuilder result=new StringBuilder();
+        StringBuilder result = new StringBuilder();
         try {
 
             //获取完整的日志路径+文件名称  2018-10-24/154020971946352539.json-04_33_50.960.log
-            String day= DateTimeUtil.dateToStr(new Date(),DateTimeUtil.DATE_PATTERN);
+            String day = DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_PATTERN);
 
-            StringBuilder path=new StringBuilder();
+            StringBuilder path = new StringBuilder();
 
-            if(executorType.equals(JobExecutorTypeEnums.DATAX.getName())){
+            if (executorType.equals(JobExecutorTypeEnums.DATAX.getName())) {
                 path.append(logPath).append(File.separator);
                 path.append(day).append(File.separator).append(logId).
                         append(Constants.FILE_EXTENSION).
                         append(Constants.LOG_EXTENSION);
-            }else {
+            } else {
                 path.append(logPath).append(File.separator).
                         append(day).append(File.separator).
                         append(logId).append(Constants.LOG_EXTENSION);

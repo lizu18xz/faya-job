@@ -2,7 +2,6 @@ package com.fayayo.job.core.thread;
 
 import com.fayayo.job.common.constants.Constants;
 import lombok.extern.slf4j.Slf4j;
-
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -74,7 +73,6 @@ public class StandardThreadExecutor extends ThreadPoolExecutor {
 
     public void execute(Runnable command) {
         int count = submittedTasksCount.incrementAndGet();
-
         // 超过最大的并发任务限制，进行 reject
         // 如果依赖的队列没有长度限制，因此这里进行控制
 

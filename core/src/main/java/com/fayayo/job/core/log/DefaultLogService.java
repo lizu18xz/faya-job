@@ -71,6 +71,7 @@ public class DefaultLogService {
                     e.printStackTrace();
                     log.error("写入流关闭失败,{}",e);
                 }
+
             }
         }
 

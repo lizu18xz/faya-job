@@ -31,7 +31,7 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
      */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        log.info("{}Send request", Constants.LOG_PREFIX);
+        log.info("{}Send Request", Constants.LOG_PREFIX);
         RequestPacket request=new RequestPacket();
         request.setRequestId(RequestIdGenerator.getRequestId());
         request.setArguments(args);
@@ -40,14 +40,13 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
         request.setParamtersDesc(ReflectUtil.getMethodParamDesc(method));
         request.setParamtersTypes(method.getParameterTypes());
         request.setInterfaceName(method.getDeclaringClass().getName());
-
-        request.setRetries(cluster.getRetries());//设置重试次数
-
-        ResponsePacket response=cluster.call(request);//发送请求,等待返回(阻塞)
+        request.setRetries(cluster.getRetries());
+        //发送请求,等待返回(阻塞)
+        ResponsePacket response=cluster.call(request);
         if(response==null){
             throw new RuntimeException("和服务端建立连接失败!!!");
         }
-        return response.getValue();//接收请求
+        return response.getValue();
     }
 
     /**

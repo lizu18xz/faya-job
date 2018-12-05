@@ -21,17 +21,16 @@ import java.util.Date;
  */
 @Slf4j
 @Service
-public class JobSchedulerCore implements DisposableBean{
+public class JobSchedulerCore {
 
     @Autowired
     private Scheduler scheduler;
 
-     /**
-       *@描述 新增任务到quartz调度  name+group才是组成一个唯一key，通过key可以更新、停止任务等等。
-
-       *@参数  任务id,任务组,任务调度表达式
+    /**
+     * @描述 新增任务到quartz调度  name+group才是组成一个唯一key，通过key可以更新、停止任务等等。
+     * @参数 任务id, 任务组, 任务调度表达式
      */
-    public Date addJob(String jobId,String jobGroup,String cron,Date startAt){
+    public Date addJob(String jobId, String jobGroup, String cron, Date startAt) {
 
         try {
             //判断是否重复添加job
@@ -44,121 +43,106 @@ public class JobSchedulerCore implements DisposableBean{
             TriggerKey triggerKey = TriggerKey.triggerKey(jobId, jobGroup);
 
             //加入job到quartz
-            JobDetail jobDetail= JobBuilder.newJob(RpcJobBean.class)
+            JobDetail jobDetail = JobBuilder.newJob(RpcJobBean.class)
                     .withIdentity(jobKey)
                     .build();
 
-            CronScheduleBuilder cronScheduleBuilder=CronScheduleBuilder.cronSchedule(cron).//quartz提出了misfire的理论，让任务在错过之后，还能正常的运行。
+            //TODO 是否等待上次完成，还是不等待直接执行这一次
+            CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cron).//quartz提出了misfire的理论，让任务在错过之后，还能正常的运行。
                     withMisfireHandlingInstructionDoNothing();//所有的misfire不管，执行下一个周期的任务
 
-            CronTrigger trigger=null;
-            if(startAt!=null){
-                 trigger = (CronTrigger) TriggerBuilder
+            CronTrigger trigger = null;
+            if (startAt != null) {
+                trigger = (CronTrigger) TriggerBuilder
                         .newTrigger()
                         .startAt(startAt)      //开始时间
                         .withIdentity(triggerKey)
                         .withSchedule(cronScheduleBuilder).build();
-            }else {
-                 trigger = (CronTrigger) TriggerBuilder
+            } else {
+                trigger = (CronTrigger) TriggerBuilder
                         .newTrigger()
                         .withIdentity(triggerKey)
                         .withSchedule(cronScheduleBuilder).build();
             }
             try {
                 scheduler.start();
-                Date date=scheduler.scheduleJob(jobDetail,trigger);
-                log.info("{}成功加入任务到调度中心-->jobName:{},jobGroup:{},任务开始启动时间:{}", Constants.LOG_PREFIX,jobId,jobGroup,DateTimeUtil.dateToStr(date));
+                Date date = scheduler.scheduleJob(jobDetail, trigger);
+                log.info("{}成功加入任务到调度中心-->jobName:{},jobGroup:{},任务开始启动时间:{}", Constants.LOG_PREFIX, jobId, jobGroup, DateTimeUtil.dateToStr(date));
                 return date;
             } catch (SchedulerException e) {
                 e.printStackTrace();
                 log.error("创建调度任务失败");
                 throw new CommonException(ResultEnum.CREATE_SCHEDULE_ERROR);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new CommonException(ResultEnum.CREATE_SCHEDULE_ERROR);
         }
     }
 
     /**
-      *@描述 校验是否存在相同的任务
-    */
-   public boolean checkExists(String jobName, String jobGroup) throws SchedulerException{
+     * @描述 校验是否存在相同的任务
+     */
+    public boolean checkExists(String jobName, String jobGroup) throws SchedulerException {
         TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
         return scheduler.checkExists(triggerKey);
     }
 
     /**
-
-     *@描述 从quartz中暂停某个任务
-
-     *@创建人  dalizu
-
-     *@创建时间  2018/8/9
-
+     * @描述 从quartz中暂停某个任务
+     * @创建人 dalizu
+     * @创建时间 2018/8/9
      */
-    public void pauseJob(String jobName, String jobGroup){
+    public void pauseJob(String jobName, String jobGroup) {
         try {
             scheduler.pauseJob(JobKey.jobKey(jobName, jobGroup));
         } catch (SchedulerException e) {
             e.printStackTrace();
-            log.error("暂停任务异常:{}",e);
+            log.error("暂停任务异常:{}", e);
             throw new CommonException(ResultEnum.PAUSE_SCHEDULE_ERROR);
         }
     }
 
     /**
-
-     *@描述 从quartz中恢复暂停的任务
-
-     *@创建人  dalizu
-
-     *@创建时间  2018/8/9
-
+     * @描述 从quartz中恢复暂停的任务
+     * @创建人 dalizu
+     * @创建时间 2018/8/9
      */
-    public void resumeJob(String jobName, String jobGroup){
+    public void resumeJob(String jobName, String jobGroup) {
 
         try {
             scheduler.resumeJob(JobKey.jobKey(jobName, jobGroup));
         } catch (SchedulerException e) {
             e.printStackTrace();
-            log.error("恢复暂停任务异常:{}",e);
+            log.error("恢复暂停任务异常:{}", e);
             throw new CommonException(ResultEnum.RESUME_SCHEDULE_ERROR);
         }
     }
 
 
     /**
-
-     *@描述 从quartz中删除某个任务
-
-     *@创建人  dalizu
-
-     *@创建时间  2018/8/9
-
+     * @描述 从quartz中删除某个任务
+     * @创建人 dalizu
+     * @创建时间 2018/8/9
      */
-    public void removeJob(String jobName, String jobGroup){
+    public void removeJob(String jobName, String jobGroup) {
         try {
             scheduler.pauseTrigger(TriggerKey.triggerKey(jobName, jobGroup));
             scheduler.unscheduleJob(TriggerKey.triggerKey(jobName, jobGroup));
             scheduler.deleteJob(JobKey.jobKey(jobName, jobGroup));
         } catch (SchedulerException e) {
             e.printStackTrace();
-            log.error("删除调度任务异常:{}",e);
+            log.error("删除调度任务异常:{}", e);
             throw new CommonException(ResultEnum.REMOVE_SCHEDULE_ERROR);
         }
     }
 
     /**
-
-     *@描述 从quartz修改一个任务的触发时间
-
-     *@创建人  dalizu
-
-     *@创建时间  2018/8/9
-
+     * @描述 从quartz修改一个任务的触发时间
+     * @创建人 dalizu
+     * @创建时间 2018/8/9
      */
-    public void rescheduleJob(String jobName, String jobGroup,String cron){
+    public void rescheduleJob(String jobName, String jobGroup, String cron) {
 
         try {
 
@@ -171,25 +155,20 @@ public class JobSchedulerCore implements DisposableBean{
             }
             String oldTime = trigger.getCronExpression();
 
-            if (!oldTime.equalsIgnoreCase(cron)){
+            if (!oldTime.equalsIgnoreCase(cron)) {
                 trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
 
-                scheduler.rescheduleJob(triggerKey,trigger);
+                scheduler.rescheduleJob(triggerKey, trigger);
                 log.info("{}成功修改任务到调度中心");
-            }else {
+            } else {
                 log.info("{}调度时间没有修改");
             }
         } catch (SchedulerException e) {
             e.printStackTrace();
-            log.error("修改调度任务异常:{}",e);
+            log.error("修改调度任务异常:{}", e);
         }
 
     }
 
 
-    @Override
-    public void destroy() throws Exception {
-        log.info("close Rpc pool");
-        RpcJobHelper.getInstance().toStop();//关闭线程池
-    }
 }

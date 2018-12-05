@@ -19,6 +19,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.extern.slf4j.Slf4j;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
@@ -36,7 +37,7 @@ public class NettyClient {
     private int port;
 
 
-    private static final  EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
+    private static final EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
 
     protected ConcurrentMap<Long, ResponseFuture> callbackMap = new ConcurrentHashMap<Long, ResponseFuture>();
 
@@ -47,10 +48,11 @@ public class NettyClient {
         this.remoteAddress = remoteAddress;
         this.port = port;
     }
-     /**
-       *@描述 连接的建立
+
+    /**
+     * @描述 连接的建立
      */
-    public boolean open()throws Exception{
+    public boolean open() throws Exception {
         //建立连接
         try {
             final Bootstrap bootstrap = new Bootstrap();
@@ -64,36 +66,16 @@ public class NettyClient {
                 protected void initChannel(SocketChannel ch) {
 
                     ch.pipeline().addLast(new Spliter());
-
                     //in
                     ch.pipeline().addLast(new PacketDecoder());
-
-                    ch.pipeline().addLast(new ResponseHandler(new MessageHandler() {
-                        @Override
-                        public Object handle(Object message) {
-                            ResponsePacket response = (ResponsePacket) message;//获取服务的返回
-                            //ResponseFuture responseFuture =callbackMap.remove(response.getRequestId());
-                            ResponseFuture responseFuture =NettyClient.this.removeCallback(response.getRequestId());
-                            if (responseFuture == null) {
-                                log.warn("NettyClient has response from server, but responseFuture not exist, requestId={}",
-                                        response.getRequestId());
-                                return null;
-                            }
-                            if (response.getException() != null) {
-                                responseFuture.onFailure(response);
-                            } else {
-                                responseFuture.onSuccess(response);
-                            }
-                            return null;
-                        }
-                    }));
-
+                    //in
+                    ch.pipeline().addLast(new ResponseHandler(messageHandler));
                     //out
                     ch.pipeline().addLast(new PacketEncoder());
                 }
             });
 
-            channelFuture = bootstrap.connect(remoteAddress,port);
+            channelFuture = bootstrap.connect(remoteAddress, port);
             int timeout = NettyConstants.CONNECTTIMEOUT;
             if (timeout <= 0) {
                 throw new RuntimeException("NettyClient init Error: timeout(" + timeout + ") <= 0 is forbid.");
@@ -106,28 +88,47 @@ public class NettyClient {
                 return true;
             }
             throw new RuntimeException("NettyClient init Error.");
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
 
+    //定义回调函数,处理 服务端返回的信息
+    private final MessageHandler messageHandler = new MessageHandler() {
+        @Override
+        public Object handle(Object message) {
+            ResponsePacket response = (ResponsePacket) message;//获取服务的返回
+            ResponseFuture responseFuture = NettyClient.this.removeCallback(response.getRequestId());
+            if (responseFuture == null) {
+                log.warn("NettyClient has response from server, but responseFuture not exist, requestId={}",
+                        response.getRequestId());
+                return null;
+            }
+            if (response.getException() != null) {
+                responseFuture.onFailure(response);
+            } else {
+                responseFuture.onSuccess(response);
+            }
+            return null;
+        }
+    };
+
 
     /**
-     *@描述 发送请求,返回Response对象
+     * @描述 发送请求, 返回Response对象, 会阻塞，直到服务端真正返回数据
      */
-    public ResponsePacket request(RequestPacket request){
+    public ResponsePacket request(RequestPacket request) {
 
-        ResponseFuture responseFuture=this.channelRequest(request);
+        ResponseFuture responseFuture = this.channelRequest(request);
 
-       return new ResponsePacket(responseFuture);
+        return new ResponsePacket(responseFuture);
     }
 
-
     /**
-     *@描述 发送请求,直接返回ResponseFuture
+     * @描述 发送请求, 直接返回ResponseFuture
      */
-    public ResponseFuture channelRequest(RequestPacket request){
+    public ResponseFuture channelRequest(RequestPacket request) {
         try {
             int timeout = NettyConstants.REQUESTTIMEOUT;
             if (timeout <= 0) {
@@ -140,18 +141,7 @@ public class NettyClient {
             boolean result = writeFuture.awaitUninterruptibly(timeout, TimeUnit.MILLISECONDS);//阻塞直到发送请求成功
 
             if (result && writeFuture.isSuccess()) {
-                response.addListener(new FutureListener() {//新增监听器，当整个请求完成后会调用此回调方法
-                    @Override
-                    public void operationComplete(Future future) throws Exception {
-                        //判断有没有异常
-                        if (future.isSuccess() || (future.isDone() && future.getException() instanceof CommonException)) {
-                            log.info("服务端返回数据完成.");
-                        }else {
-                            //TODO 可以设置异常次数然后禁用此服务
-                            log.info("服务端未知异常请确认!!!");
-                        }
-                    }
-                });
+                response.addListener(futureListener);
                 return response;
             }
 
@@ -162,14 +152,28 @@ public class NettyClient {
             }
             throw new CommonException(ResultEnum.NETTY_SEND_ERROR);
 
-        }finally {
+        } finally {
 
         }
     }
 
-    public void close(){
+    //监听器
+    private final FutureListener futureListener = new FutureListener() {
+        @Override
+        public void operationComplete(Future future) throws Exception {
+            //判断有没有异常
+            if (future.isSuccess() || (future.isDone() && future.getException() instanceof CommonException)) {
+                log.info("server response complete.");
+            } else {
+                log.info("server response exception!!!");
+            }
+        }
+    };
+
+
+    public void close() {
         log.info("关闭客户端连接");
-        if(this.channel!=null){
+        if (this.channel != null) {
             this.channel.close();
         }
         //eventLoopGroup.shutdownGracefully();

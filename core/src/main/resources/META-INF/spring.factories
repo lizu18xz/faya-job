@@ -1,3 +1,3 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.fayayo.job.core.zookeeper.ZkCuratorConfig,\
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.fayayo.job.core.register.ServiceRegistryConfig,\
 com.fayayo.job.core.zookeeper.ZkProperties,\
 com.fayayo.job.core.closable.ClosableConfig

@@ -9,10 +9,10 @@ import lombok.Getter;
  * @desc Ha
  */
 @Getter
-public enum  HaStrategyEnums implements CodeEnum{
+public enum HaStrategyEnums implements CodeEnum {
 
-    FAIL_FAST(1,"failfast"),//快速失败
-    FAIL_OVER(2,"failover"),//失败重试
+    FAIL_FAST(1, "failfast"),//快速失败
+    FAIL_OVER(2, "failover"),//失败重试
     ;
 
     HaStrategyEnums(Integer code, String desc) {

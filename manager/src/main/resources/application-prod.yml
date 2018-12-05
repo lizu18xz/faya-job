@@ -12,13 +12,8 @@ server:
     context-path: /manager
 
 faya-job:
-  zookeeperServer: 192.168.88.130:2181
-  registerPath: /job-register
+  register:
+    server: 192.168.88.130:2181
+    path: /job-register
   upload:
     tempPath: /upload
-#  ftp-server:
-#    ip: 192.168.88.129
-#    username: root
-#    password: root123
-#    serverPath: /root/ftpdata/job_config
-

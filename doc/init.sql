@@ -39,7 +39,7 @@ create table faya_job_group(
 -- 任务流
 drop table if exists faya_job_flow;
 create table faya_job_flow(
-  id int not null auto_increment,
+  id varchar(32) not null comment '主键',
   name varchar(64) not null comment '任务流名称',
   flow_desc varchar(256) not null comment '任务流描述',
   seq int(11) NOT NULL DEFAULT '0' COMMENT '任务流展示的的顺序，由小到大',

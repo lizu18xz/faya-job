@@ -43,7 +43,7 @@ public class TriggerHelper {
      */
     public static void Trigger(String jobId){
 
-        //获取job的详细信息  或者执行器信息
+        //获取job的详细信息 ,执行器信息
         JobInfoService jobInfoService=SpringHelper.popBean(JobInfoService.class);
         JobInfo jobInfo=jobInfoService.findOne(jobId);
         if(jobInfo==null){
@@ -68,13 +68,13 @@ public class TriggerHelper {
         //判断任务类型 是否需要额外配置文件
         String jobExecutorType=jobInfoParam.getExecutorType();
         if(jobExecutorType.equals(JobExecutorTypeEnums.DATAX.getName())){
-            log.info("{}DATAX任务,对jobConfig进行传输");
+            //DATAX 数据交换 获取配置文件信息
             JobConfigService jobConfigService=SpringHelper.popBean(JobConfigService.class);
             JobConfig jobConfig=jobConfigService.findOne(jobId);
             jobInfoParam.setJobConfig(jobConfig.getContent());
         }
 
-        //进行日志信息的统计+DATAX滚动日志(logId 作为日志标志)
+        //保存执行记录,根据jobId查询一个任务执行的记录
         JobLogService jobLogService=SpringHelper.popBean(JobLogService.class);
         JobLog jobLog=new JobLog();
         jobLog.setId(jobLogId);

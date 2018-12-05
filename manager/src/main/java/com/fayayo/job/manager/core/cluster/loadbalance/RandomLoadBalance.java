@@ -33,7 +33,7 @@ public class RandomLoadBalance extends AbstractLoadBalance {
     }
 
     @Override
-    protected void doSelectToHolder(RequestPacket request,List<Endpoint> refersHolder) {
+    protected void doSelectToHolder(RequestPacket request, List<Endpoint> refersHolder) {
         List<Endpoint> endpoints = getEndpoints();
         int idx = (int) (ThreadLocalRandom.current().nextDouble() * endpoints.size());
         for (int i = 0; i < endpoints.size(); i++) {

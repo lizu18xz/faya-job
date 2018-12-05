@@ -27,7 +27,7 @@ public class JobRouteExchange {
     /**
      *@描述  存储策略  每个任务对应自己的策略
      */
-    private static final Map<String,LoadBalance> jobMap=new ConcurrentHashMap<String, LoadBalance>();
+    private static final Map<String,LoadBalance> loadBalanceCenter=new ConcurrentHashMap<String, LoadBalance>();
 
     private List<Endpoint>endpoints;
 
@@ -53,10 +53,9 @@ public class JobRouteExchange {
      *@创建时间  2018/8/12
      */
     public LoadBalance getLoadBalance(JobInfoParam jobInfo){
-        LoadBalance loadBalance=null;
         String jobId=jobInfo.getId();//获取jobId
         //判断当前job是否已经存在负载策略
-        loadBalance=jobMap.get(jobId);
+        LoadBalance loadBalance=loadBalanceCenter.get(jobId);
         if(loadBalance!=null){
             loadBalance.onRefresh(endpoints);
             return loadBalance;
@@ -64,7 +63,7 @@ public class JobRouteExchange {
         Integer loadBalanceCode=jobInfo.getJobLoadBalance();
         String loadBalanceDesc= EnumUtil.getByCode(loadBalanceCode,JobLoadBalanceEnums.class).getDesc();
         loadBalance= ExtensionLoader.getExtensionLoader(LoadBalance.class).getExtension(loadBalanceDesc);
-        jobMap.put(jobInfo.getId(),loadBalance);
+        loadBalanceCenter.put(jobInfo.getId(),loadBalance);
         loadBalance.onRefresh(endpoints);
         return loadBalance;
     }

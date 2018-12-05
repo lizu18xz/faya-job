@@ -23,7 +23,7 @@ public class RpcJobBean extends QuartzJobBean {
         log.info("{}Start to execute quartz job, key：{}",Constants.LOG_PREFIX,jobId);
 
         //执行具体的业务逻辑  发送rpc请求
-        RpcJobHelper.getInstance().addJobInPool(jobId);
+        RpcJobHelper.getInstance().add(jobId);
 
     }
 

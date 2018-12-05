@@ -19,7 +19,6 @@ package com.fayayo.job.core.extension;
 import java.util.Comparator;
 
 /**
- * 
  * Priority comparator
  * 微博Motan框架代码
  */

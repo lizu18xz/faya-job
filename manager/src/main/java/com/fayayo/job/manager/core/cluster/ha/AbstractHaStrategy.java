@@ -19,36 +19,35 @@ public abstract class AbstractHaStrategy implements HaStrategy {
 
     @Override
     public ResponsePacket doCall(RequestPacket request, LoadBalance loadBalance) {
-        log.info("{}HaStrategy start on loadBalance:{}", Constants.LOG_PREFIX, loadBalance.getClass().getSimpleName());
-        return call(request,loadBalance);
+        log.info("{}HaStrategy use loadBalance:{}", Constants.LOG_PREFIX, loadBalance.getClass().getSimpleName());
+        return call(request, loadBalance);
     }
 
     protected abstract ResponsePacket call(RequestPacket request, LoadBalance loadBalance);
 
 
-    public ResponsePacket request(Endpoint endpoint,RequestPacket request){
-        log.info("{}Start request:{}",Constants.LOG_PREFIX,request.toString());
-        NettyClient client=new NettyClient(endpoint.getHost(),endpoint.getPort());
+    public ResponsePacket request(Endpoint endpoint, RequestPacket request) {
+        log.info("{}request Info:{}", Constants.LOG_PREFIX, request.toString());
+        NettyClient client = new NettyClient(endpoint.getHost(), endpoint.getPort());
         endpoint.incrActiveCount();
         try {
-            if(client.open()){
-                ResponsePacket response=client.request(request);
+            if (client.open()) {
+                ResponsePacket response = client.request(request);
                 return response;
-            }else {
+            } else {
                 return null;
             }
 
         } catch (Exception e) {
             e.printStackTrace();
             //TODO
-            throw new RuntimeException("发送RPC请求异常!!!");
-        }finally {
+            throw new RuntimeException("Rpc request error!!!");
+        } finally {
             endpoint.decrActiveCount();
             //关闭资源
             client.close();
         }
     }
-
 
 
 }

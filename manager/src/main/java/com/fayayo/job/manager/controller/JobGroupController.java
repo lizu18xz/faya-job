@@ -5,10 +5,6 @@ import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.common.result.ResultVO;
 import com.fayayo.job.common.result.ResultVOUtil;
-import com.fayayo.job.core.service.ServiceDiscovery;
-import com.fayayo.job.core.service.impl.ZkServiceDiscovery;
-import com.fayayo.job.core.zookeeper.ZKCuratorClient;
-import com.fayayo.job.core.zookeeper.ZkProperties;
 import com.fayayo.job.entity.JobGroup;
 import com.fayayo.job.entity.params.JobGroupParams;
 import com.fayayo.job.manager.service.JobGroupService;
@@ -24,9 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * @author dalizu on 2018/8/23.

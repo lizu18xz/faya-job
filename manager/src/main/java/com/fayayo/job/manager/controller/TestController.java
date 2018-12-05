@@ -6,7 +6,7 @@ import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.common.result.ResultVO;
 import com.fayayo.job.common.result.ResultVOUtil;
 import com.fayayo.job.core.service.impl.ZkServiceDiscovery;
-import com.fayayo.job.core.service.impl.ZkServiceRegistry;
+import com.fayayo.job.core.zookeeper.ZkServiceRegistry;
 import com.fayayo.job.core.zookeeper.ZKCuratorClient;
 import com.fayayo.job.core.zookeeper.ZkProperties;
 import org.springframework.beans.factory.annotation.Autowired;

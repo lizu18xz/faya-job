@@ -16,6 +16,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.extern.slf4j.Slf4j;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -29,7 +30,7 @@ import java.util.concurrent.CountDownLatch;
 public class NettyServer {
 
     //保存调度任务接口和实现类的映射关系
-    private static Map<String, Object> serviceMap = new HashMap<String, Object>();
+    private static Map<String, Object> serviceCenter = new HashMap<String, Object>();
 
     private Integer port;
 
@@ -37,29 +38,29 @@ public class NettyServer {
 
     private StandardThreadExecutor standardThreadExecutor = null;
 
-    public NettyServer(String server, Integer port,String logPath) {
+    public NettyServer(String server, Integer port, String logPath) {
         this.server = server;
         this.port = port;
-        serviceMap.put(ExecutorRun.class.getName(), new ExecutorRunImpl(new StringBuilder().
+        serviceCenter.put(ExecutorRun.class.getName(), new ExecutorRunImpl(new StringBuilder().
                 append(server).append(":").
-                append(port).toString(),logPath));//保存调度任务接口和实现类的映射关系
+                append(port).toString(), logPath));//保存调度任务接口和实现类的映射关系
     }
 
     EventLoopGroup bossGroup = null;
-    EventLoopGroup workerGroup=null;
+    EventLoopGroup workerGroup = null;
 
     /**
      * @描述 启动服务端
      */
     public void start(CountDownLatch countDownLatch) {
 
-         bossGroup = new NioEventLoopGroup();
-         workerGroup = new NioEventLoopGroup();
+        bossGroup = new NioEventLoopGroup();
+        workerGroup = new NioEventLoopGroup();
         //ConnectionCountHandler connectionCountHandler=new ConnectionCountHandler();//统计
         try {
             ServerBootstrap bootstrap = new ServerBootstrap();
 
-            standardThreadExecutor= StandardThreadManager.transportThreadPool();
+            standardThreadExecutor = StandardThreadManager.transportThreadPool();
 
             bootstrap.group(bossGroup, workerGroup);
             bootstrap.channel(NioServerSocketChannel.class);
@@ -74,34 +75,33 @@ public class NettyServer {
                     ch.pipeline().addLast(new PacketDecoder());
 
                     //ch.pipeline().addLast(connectionCountHandler);//统计连接数
-                    ch.pipeline().addLast(new RequestHandler(serviceMap,standardThreadExecutor));
+                    ch.pipeline().addLast(new RequestHandler(serviceCenter, standardThreadExecutor));
 
                     //out
                     ch.pipeline().addLast(new PacketEncoder());
 
                 }
             });
-            //异步 log.info( " 端口[" + port + "]绑定成功!");
-            ChannelFuture f =bootstrap.bind(port).addListener(future -> {
+
+            ChannelFuture channelFuture = bootstrap.bind(port).addListener(future -> {
                 if (future.isSuccess()) {
-                    log.info( " 端口[" + port + "]绑定成功!");
+                    log.info(" 端口[" + port + "]绑定成功!");
                     countDownLatch.countDown();
                 } else {
                     log.error("端口[" + port + "]绑定失败!");
                 }
             });
+            /*channelFuture.syncUninterruptibly();//同步不可中断
+            serverChannel = channelFuture.channel();*/
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
 
         }
-
     }
 
-
     //关闭资源
-    public void close(){
-
+    public void close() {
         try {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
@@ -111,8 +111,5 @@ public class NettyServer {
             e.printStackTrace();
         }
     }
-
-
-
 
 }

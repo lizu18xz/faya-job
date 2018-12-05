@@ -12,7 +12,8 @@ server:
     context-path: /manager
 
 faya-job:
-  zookeeperServer: 192.168.76.139:2181
-  registerPath: /job-register
+  register:
+    server: 192.168.88.130:2181
+    path: /job-register
   upload:
     tempPath: /upload

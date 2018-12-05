@@ -13,31 +13,31 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class JobExecutorHandler {
 
-        public void init(){
-            log.info("init JobExecutorHandler");
-        }
+    public void init() {
+        log.info("init JobExecutorHandler");
+    }
 
 
-        public abstract Result<?> run (JobInfoParam jobInfoParam);
+    public abstract Result<?> run(JobInfoParam jobInfoParam);
 
 
-        public void post(){
+    public void post() {
 
-            LogContextHolder.remove();
+        LogContextHolder.remove();
 
-            log.info("end JobExecutorHandler");
-        }
+        log.info("end JobExecutorHandler");
+    }
 
-        public Result<?> execute(JobInfoParam jobInfoParam){
+    public Result<?> execute(JobInfoParam jobInfoParam) {
 
-            init();
+        init();
 
-            Result<?>result=run(jobInfoParam);
+        Result<?> result = run(jobInfoParam);
 
-            post();
+        post();
 
-            return result;
-        }
+        return result;
+    }
 
 
 }

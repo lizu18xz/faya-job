@@ -35,7 +35,7 @@ public class DefaultResponseFuture implements ResponseFuture {
 
     /**
        *@描述 当服务端返回信息后，会到客户端的handler中,如果正常返回，会把返回结果传递给此处onSuccess方法进行处理
-       *   会唤醒getValue时阻塞的线程
+       *      会唤醒getValue时阻塞的线程
      */
     public void onSuccess(ResponsePacket response) {
         this.result = response.getValue();
@@ -53,9 +53,10 @@ public class DefaultResponseFuture implements ResponseFuture {
     public Object getValue() {
         synchronized (lock) {
             if (!isDoing()) {
-                return getValueOrThrowable();//如果不是在运行就报错
+                return getValueOrThrowable();
             }
-            if (timeout <= 0) {//超时时间
+            //没有设置超时时间,会一直阻塞,直到唤醒
+            if (timeout <= 0) {
                 try {
                     lock.wait();
                 } catch (Exception e) {
@@ -89,7 +90,8 @@ public class DefaultResponseFuture implements ResponseFuture {
                     timeoutSoCancel();
                 }
             }
-            return getValueOrThrowable();//如果不是在运行就报错
+            //返回
+            return getValueOrThrowable();
         }
     }
 

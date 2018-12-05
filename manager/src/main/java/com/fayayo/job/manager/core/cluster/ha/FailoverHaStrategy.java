@@ -8,6 +8,7 @@ import com.fayayo.job.core.transport.protocol.response.ResponsePacket;
 import com.fayayo.job.manager.core.cluster.Endpoint;
 import com.fayayo.job.manager.core.cluster.LoadBalance;
 import lombok.extern.slf4j.Slf4j;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class FailoverHaStrategy extends AbstractHaStrategy {
     public ResponsePacket call(RequestPacket request, LoadBalance loadBalance) {
 
         //根据规则获取一组endpoint
-        List<Endpoint> endpointList = selectReferers(request,loadBalance);
+        List<Endpoint> endpointList = selectReferers(request, loadBalance);
         if (endpointList.isEmpty()) {
             throw new CommonException(999999, String.format("FailoverHaStrategy No Endpoint　loadbalance:%s", loadBalance));
         }
@@ -44,29 +45,29 @@ public class FailoverHaStrategy extends AbstractHaStrategy {
         }
         for (int i = 0; i <= tryCount; i++) {
             Endpoint endpoint = endpointList.get(i % endpointList.size());
-            log.info("{}FailoverHaStrategy start to call ......{},tryCount:{},request:{}", Constants.LOG_PREFIX,endpoint.getHost(),(i+1),request.toString());
+            log.info("{}FailoverHaStrategy start to call ......{},tryCount:{},request:{}", Constants.LOG_PREFIX, endpoint.getHost(), (i + 1), request.toString());
             try {
                 //获取nettyClient  发送RPC请求
-                return request(endpoint,request);
+                return request(endpoint, request);
 
             } catch (RuntimeException e) {
                 // 对于业务异常，直接抛出，不进行重试
                 if (e instanceof CommonException) {
                     throw e;
                 } else if (i >= tryCount) {
-                    log.info("{}tryCount is over......throw e",Constants.LOG_PREFIX);
+                    log.info("{}tryCount is over......throw e", Constants.LOG_PREFIX);
                     throw e;
                 }
-                log.info("{}try run ,tryCount:{}",Constants.LOG_PREFIX,(i+1));
+                log.info("{}try run ,tryCount:{}", Constants.LOG_PREFIX, (i + 1));
             }
         }
-        throw new CommonException(999999,"FailoverHaStrategy.call should not come here!");
+        throw new CommonException(999999, "FailoverHaStrategy.call should not come here!");
     }
 
-    protected List<Endpoint> selectReferers(RequestPacket request,LoadBalance loadBalance) {
+    protected List<Endpoint> selectReferers(RequestPacket request, LoadBalance loadBalance) {
         List<Endpoint> endpoints = endpointHolder.get();
         endpoints.clear();
-        loadBalance.selectToHolder(request,endpoints);
+        loadBalance.selectToHolder(request, endpoints);
         return endpoints;
     }
 

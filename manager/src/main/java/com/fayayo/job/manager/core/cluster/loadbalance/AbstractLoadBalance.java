@@ -51,7 +51,7 @@ public abstract class AbstractLoadBalance implements LoadBalance {
      * @描述 根据规则获取服务集合
      */
     @Override
-    public void selectToHolder(RequestPacket request,List<Endpoint> endpointHolder) {
+    public void selectToHolder(RequestPacket request, List<Endpoint> endpointHolder) {
 
         List<Endpoint> endpoints = this.endpoints;
 
@@ -59,7 +59,7 @@ public abstract class AbstractLoadBalance implements LoadBalance {
             throw new CommonException(999999, this.getClass().getSimpleName() + " No available endpoints for call : endpoints_size= 0");
         }
         if (endpoints.size() > 1) {
-            doSelectToHolder(request,endpointHolder);
+            doSelectToHolder(request, endpointHolder);
         } else if (endpoints.size() == 1) {
             endpointHolder.add(endpoints.get(0));
         }
@@ -76,6 +76,6 @@ public abstract class AbstractLoadBalance implements LoadBalance {
 
     protected abstract Endpoint doSelect(RequestPacket request);
 
-    protected abstract void doSelectToHolder(RequestPacket request,List<Endpoint> refersHolder);
+    protected abstract void doSelectToHolder(RequestPacket request, List<Endpoint> refersHolder);
 
 }

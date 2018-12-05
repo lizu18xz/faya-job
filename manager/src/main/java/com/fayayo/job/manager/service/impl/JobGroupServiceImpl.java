@@ -3,10 +3,7 @@ package com.fayayo.job.manager.service.impl;
 import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
-import com.fayayo.job.core.service.ServiceDiscovery;
-import com.fayayo.job.core.service.impl.ZkServiceDiscovery;
-import com.fayayo.job.core.zookeeper.ZKCuratorClient;
-import com.fayayo.job.core.zookeeper.ZkProperties;
+import com.fayayo.job.core.register.ServiceRegistry;
 import com.fayayo.job.entity.JobGroup;
 import com.fayayo.job.entity.JobInfo;
 import com.fayayo.job.entity.params.JobGroupParams;
@@ -22,7 +19,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -44,10 +40,7 @@ public class JobGroupServiceImpl implements JobGroupService{
     private JobInfoService jobInfoService;
 
     @Autowired
-    private ZKCuratorClient zkCuratorClient;
-
-    @Autowired
-    private ZkProperties zkProperties;
+    private ServiceRegistry serviceRegistry;
 
     @Override
     public JobGroup saveOrUpdate(JobGroupParams jobGroupParams) {
@@ -82,13 +75,12 @@ public class JobGroupServiceImpl implements JobGroupService{
                 bodyList=sortList.stream().map(e->{
                 JobGroupVo jobGroupVo=new JobGroupVo();
                 BeanUtils.copyProperties(e,jobGroupVo);
-                ServiceDiscovery serviceDiscovery = new ZkServiceDiscovery(zkCuratorClient, zkProperties);
-                List<String>list=serviceDiscovery.discover(e.getName());
+                List<String>list=serviceRegistry.discover(e.getName());
                 if(!CollectionUtils.isEmpty(list)){
                     //获取具体的ip
                     List<String> addressList = list.stream().map(p -> {
 
-                        return " 【"+zkCuratorClient.getData(p)+"】";
+                        return " 【"+serviceRegistry.getData(p)+"】";
 
                     }).collect(Collectors.toList());
                     jobGroupVo.setServerList(addressList);

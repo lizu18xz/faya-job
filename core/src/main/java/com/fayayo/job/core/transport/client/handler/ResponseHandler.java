@@ -15,8 +15,8 @@ public class ResponseHandler extends SimpleChannelInboundHandler<ResponsePacket>
 
     private MessageHandler messageHandler;
 
-    public ResponseHandler(MessageHandler messageHandler){
-        this.messageHandler=messageHandler;
+    public ResponseHandler(MessageHandler messageHandler) {
+        this.messageHandler = messageHandler;
     }
 
 

@@ -31,8 +31,11 @@ public class ZKCuratorClient implements Closable {
 
     private CuratorFramework client = null;
 
-    @Autowired
     private ZkProperties zkProperties;
+
+    public ZKCuratorClient(ZkProperties zkProperties) {
+        this.zkProperties = zkProperties;
+    }
 
     public void init() {
 
@@ -43,14 +46,14 @@ public class ZKCuratorClient implements Closable {
         //启动zk客户端
         RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 5);
 
-        client = CuratorFrameworkFactory.builder().connectString(zkProperties.getZookeeperServer())
+        client = CuratorFrameworkFactory.builder().connectString(zkProperties.getServer())
                 .sessionTimeoutMs(10000).connectionTimeoutMs(10000).retryPolicy(retryPolicy).namespace("admin").build();
 
         client.start();
 
         try {
             // 判断在admin命名空间下是否有jobRegister节点  /job-register   后续注册操作在此下面
-            if (client.checkExists().forPath(zkProperties.getRegisterPath()) == null) {
+            if (client.checkExists().forPath(zkProperties.getPath()) == null) {
                 /**
                  * 对于zk来讲，有两种类型的节点:
                  * 持久节点: 当你创建一个节点的时候，这个节点就永远存在，除非你手动删除
@@ -59,10 +62,10 @@ public class ZKCuratorClient implements Closable {
                 client.create().creatingParentsIfNeeded()
                         .withMode(CreateMode.PERSISTENT)        // 节点类型：持久节点
                         .withACL(ZooDefs.Ids.OPEN_ACL_UNSAFE)            // acl：匿名权限
-                        .forPath(zkProperties.getRegisterPath());
+                        .forPath(zkProperties.getPath());
             }
             log.info("zookeeper服务器状态：{}", client.getState());
-            addChildWatch(zkProperties.getRegisterPath());
+            addChildWatch(zkProperties.getPath());
             ShutDownHook.registerShutdownHook(this);//加入到hook事件
         } catch (Exception e) {
             log.error("zookeeper客户端连接、初始化错误...");
@@ -71,7 +74,7 @@ public class ZKCuratorClient implements Closable {
     }
 
 
-    private PathChildrenCache pcache=null;
+    private PathChildrenCache pcache = null;
 
 
     /**
@@ -100,7 +103,7 @@ public class ZKCuratorClient implements Closable {
         });
     }
 
-    private PathChildrenCache cache=null;
+    private PathChildrenCache cache = null;
 
     private void addChildsWatch(String registerPath) throws Exception {
         cache = new PathChildrenCache(client, registerPath, true);
@@ -113,7 +116,7 @@ public class ZKCuratorClient implements Closable {
 
                     String path = event.getData().getPath();
                     String data = new String(event.getData().getData());
-                    log.info("{}执行器:{},有新服务加入:{}", Constants.LOG_PREFIX, registerPath.substring(registerPath.lastIndexOf(Constants.JOIN_SYMBOL)+1,
+                    log.info("{}执行器:{},有新服务加入:{}", Constants.LOG_PREFIX, registerPath.substring(registerPath.lastIndexOf(Constants.JOIN_SYMBOL) + 1,
                             registerPath.length()), data);
 
                 } else if (event.getType().equals(PathChildrenCacheEvent.Type.CHILD_REMOVED)) {
@@ -134,7 +137,7 @@ public class ZKCuratorClient implements Closable {
                         .withMode(CreateMode.PERSISTENT)        // 节点类型：持久节点
                         .withACL(ZooDefs.Ids.OPEN_ACL_UNSAFE)            // acl：匿名权限
                         .forPath(path);
-                log.info("{}create createPersistentNode:{}",  Constants.LOG_PREFIX,path);
+                log.info("{}create createPersistentNode:{}", Constants.LOG_PREFIX, path);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -155,7 +158,7 @@ public class ZKCuratorClient implements Closable {
                         .withMode(CreateMode.EPHEMERAL_SEQUENTIAL)        // 临时顺序节点
                         .withACL(ZooDefs.Ids.OPEN_ACL_UNSAFE)            // acl：匿名权限
                         .forPath(path, address.getBytes());
-                log.info("{}create createePhemeralEphemeralNode:{}", Constants.LOG_PREFIX,path);
+                log.info("{}create createePhemeralEphemeralNode:{}", Constants.LOG_PREFIX, path);
 
             }
         } catch (Exception e) {
@@ -209,18 +212,18 @@ public class ZKCuratorClient implements Closable {
     @Override
     public void closeResource() {
         if (client != null) {
-            log.info("释放zk客户端的连接......{}",client.getState());
-            if(pcache!=null){
+            log.info("释放zk客户端的连接......{}", client.getState());
+            if (pcache != null) {
                 CloseableUtils.closeQuietly(pcache);
             }
-            if(cache!=null){
+            if (cache != null) {
                 CloseableUtils.closeQuietly(cache);
             }
 
-            if(client!=null){
+            if (client != null) {
                 CloseableUtils.closeQuietly(client);
             }
-            log.info("释放zk客户端的连接result......{}",client.getState());
+            log.info("释放zk客户端的连接result......{}", client.getState());
         }
     }
 

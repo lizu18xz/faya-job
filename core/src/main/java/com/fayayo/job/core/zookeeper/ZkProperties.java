@@ -11,16 +11,16 @@ import org.springframework.context.annotation.Configuration;
  * @desc
  */
 @Configuration
-@ConfigurationProperties(prefix="faya-job")
+@ConfigurationProperties(prefix="faya-job.register")
 @Getter
 @Setter
 public class ZkProperties {
 
 
-    private String zookeeperServer;
+    private String server;
 
 
-    private String registerPath;
+    private String path;
 
 
 }

@@ -5,14 +5,13 @@ import com.fayayo.job.common.enums.JobExecutorTypeEnums;
 import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.core.annotation.FayaService;
+import com.fayayo.job.core.register.ServiceRegistry;
 import com.fayayo.job.core.executor.handler.JobExecutorHandler;
+import com.fayayo.job.core.executor.result.Result;
 import com.fayayo.job.core.log.LoggerUtil;
 import com.fayayo.job.core.service.impl.ExecutorRunImpl;
-import com.fayayo.job.core.service.impl.ZkServiceRegistry;
 import com.fayayo.job.core.callback.CallbackThread;
 import com.fayayo.job.core.transport.server.NettyServer;
-import com.fayayo.job.core.zookeeper.ZKCuratorClient;
-import com.fayayo.job.core.zookeeper.ZkProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,17 +29,14 @@ import java.util.concurrent.CountDownLatch;
  * @desc Task执行器 注册，获取服务等功能
  */
 @Slf4j
-public class JobExecutor implements ApplicationContextAware {
+public class JobExecutor implements ApplicationContextAware,CallbackThread.CallBackHandler {
 
     private static ApplicationContext applicationContext;
 
     private static ConcurrentHashMap<String, Object> service = new ConcurrentHashMap<String, Object>();
 
     @Autowired
-    private ZKCuratorClient zkCuratorClient;
-
-    @Autowired
-    private ZkProperties zkProperties;
+    private ServiceRegistry serviceRegistry;
 
     private String server;
 
@@ -54,12 +50,12 @@ public class JobExecutor implements ApplicationContextAware {
 
     private static String mainClass;
 
-    NettyServer nettyServer =null;
+    NettyServer nettyServer = null;
 
     public JobExecutor() {
     }
 
-    public JobExecutor(String server, Integer port, Integer weight, String name, String mainClass,String logPath) {
+    public JobExecutor(String server, Integer port, Integer weight, String name, String mainClass, String logPath) {
         this.server = server;
         this.port = port;
         this.weight = weight;
@@ -74,20 +70,27 @@ public class JobExecutor implements ApplicationContextAware {
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
-        initRpcService();//初始化RPC服务
-        initServer();//启动服务端
 
-        //DATAX任务特殊处理,获取datax自己的日志展示到前台
-        if(!name.equals(JobExecutorTypeEnums.DATAX.getName())){
-            if(!"".equals(logPath)){
-                LoggerUtil.init(logPath);//初始化日志
+        //初始化RPC服务
+        initRpcService();
+
+        //启动服务端
+        initServer();
+
+        //初始化日志 DATAX任务日志单独处理
+        if (!name.equals(JobExecutorTypeEnums.DATAX.getName())) {
+            if (!"".equals(logPath)) {
+                LoggerUtil.init(logPath);
             }
         }
 
-        initRegister();//注册服务
+        //注册服务
+        initRegister();
 
         //启动结果处理线程
-        CallbackThread.getInstance().start();
+        CallbackThread callbackThread=CallbackThread.getInstance();
+        callbackThread.setCallBackHandler(this);
+        callbackThread.start();
 
     }
 
@@ -121,10 +124,10 @@ public class JobExecutor implements ApplicationContextAware {
     }
 
     private void initServer() {
-        log.info("{}执行器初始化,server:{},port:{}", Constants.LOG_PREFIX, server,port);
+        log.info("{}执行器初始化,server:{},port:{}", Constants.LOG_PREFIX, server, port);
         //然后启动这个服务端，准备接收请求
         CountDownLatch countDownLatch = new CountDownLatch(1);//阻塞线程
-        nettyServer = new NettyServer(server,port,logPath);
+        nettyServer = new NettyServer(server, port, logPath);
         nettyServer.start(countDownLatch);
         try {
             countDownLatch.await();
@@ -136,21 +139,28 @@ public class JobExecutor implements ApplicationContextAware {
 
     private void initRegister() {
         //服务端启动成功后，注册此执行器的这个服务到zk
-        ZkServiceRegistry zkServiceRegistry = new ZkServiceRegistry(zkCuratorClient, zkProperties);
+
         String serviceAddress = new StringBuilder().
                 append(server).append(":").
                 append(port).append(":").
                 append(weight).toString();
-        zkServiceRegistry.register(name, serviceAddress);
+        serviceRegistry.register(name, serviceAddress);
         log.info("{}注册到服务中心完成", Constants.LOG_PREFIX);
     }
 
 
-    public void close(){
-        log.info("{}准备关闭资源......", Constants.LOG_PREFIX);
-        ExecutorRunImpl.futureThread.shutdown();
-        CallbackThread.getInstance().toStop();
+    public void close() {
+        log.info("{}start close resources......", Constants.LOG_PREFIX);
         nettyServer.close();
+        CallbackThread.getInstance().toStop();
+        ExecutorRunImpl.futureThread.shutdown();
+    }
+
+    //回调
+    @Override
+    public void onNewMessageArrived(String jobId,Result<?> result) {
+        log.info("{}Callable get jobId:{},Result:{}", Constants.LOG_PREFIX, jobId, result.getData());
+
     }
 
 }

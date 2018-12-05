@@ -9,13 +9,13 @@ import lombok.Getter;
  * @desc 任务执行的策略
  */
 @Getter
-public enum JobLoadBalanceEnums implements CodeEnum{
+public enum JobLoadBalanceEnums implements CodeEnum {
 
-    HASH(1,"consistent"),//hash
-    RANDOM(2,"random"),//随机
-    ROUNDROBIN(3,"roundrobin"),//轮训
-    WEIGHT(4,"configurableWeight"),//权重
-    ACTIVE_WEIGHT(5,"activeWeight")//低并发的机器
+    HASH(1, "consistent"),//hash
+    RANDOM(2, "random"),//随机
+    ROUNDROBIN(3, "roundrobin"),//轮训
+    WEIGHT(4, "configurableWeight"),//权重
+    ACTIVE_WEIGHT(5, "activeWeight")//低并发的机器
     ;
 
     JobLoadBalanceEnums(Integer code, String desc) {

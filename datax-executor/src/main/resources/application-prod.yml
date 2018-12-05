@@ -4,8 +4,9 @@ server:
     context-path: /datax-executor
 
 faya-job:
-  zookeeperServer: 192.168.88.130:2181
-  registerPath: /job-register
+  register:
+    server: 192.168.88.130:2181
+    path: /job-register
   datax-executor:
      server: 192.168.88.130
      port: 8070

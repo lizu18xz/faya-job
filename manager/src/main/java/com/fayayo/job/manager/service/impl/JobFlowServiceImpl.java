@@ -16,9 +16,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author dalizu on 2018/11/3.
@@ -36,17 +38,17 @@ public class JobFlowServiceImpl implements JobFlowService {
 
     @Override
     public JobFlow saveOrUpdate(JobFlowParams jobFlowParams) {
-        JobFlow jobFlow=new JobFlow();
-        String id=jobFlowParams.getId();
-        if(StringUtils.isNotBlank(id)){//修改
+        JobFlow jobFlow = new JobFlow();
+        String id = jobFlowParams.getId();
+        if (StringUtils.isNotBlank(id)) {//修改
 
-            jobFlow=findOne(id);
-            BeanUtils.copyProperties(jobFlowParams,jobFlow);
+            jobFlow = findOne(id);
+            BeanUtils.copyProperties(jobFlowParams, jobFlow);
             jobFlowRepository.save(jobFlow);
 
-        }else {//新增
-            String keyId= KeyUtil.genUniqueKey();
-            BeanUtils.copyProperties(jobFlowParams,jobFlow);
+        } else {//新增
+            String keyId = KeyUtil.genUniqueKey();
+            BeanUtils.copyProperties(jobFlowParams, jobFlow);
             jobFlow.setId(keyId);
             jobFlowRepository.save(jobFlow);
         }
@@ -56,7 +58,7 @@ public class JobFlowServiceImpl implements JobFlowService {
     @Override
     public JobFlow findOne(String jobFlowId) {
 
-        JobFlow jobFlow=jobFlowRepository.findById(jobFlowId).orElse(null);
+        JobFlow jobFlow = jobFlowRepository.findById(jobFlowId).orElse(null);
 
         log.debug("{}查询单个任务执行器信息, 结果:{}", Constants.LOG_PREFIX, jobFlow);
 
@@ -65,20 +67,26 @@ public class JobFlowServiceImpl implements JobFlowService {
 
     @Override
     public Page<JobFlow> query(Pageable pageable) {
-        Page<JobFlow> page=jobFlowRepository.findAll(pageable);
+        Page<JobFlow> page = jobFlowRepository.findAll(pageable);
 
-        List<JobFlow> sortList=page.getContent();
+        List<JobFlow> sortList = page.getContent();//因为是不可修改的，所以我们要再次转换
 
-        if(!CollectionUtils.isEmpty(sortList)){
+        List<JobFlow> listBody = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(sortList)) {
+            sortList.stream().map(f -> {
+                return listBody.add(f);
+            }).collect(Collectors.toList());
+
             //按照seq字段排序 seq从小到大
-            Collections.sort(sortList, new Comparator<JobFlow>() {
+            Collections.sort(listBody, new Comparator<JobFlow>() {
                 @Override
                 public int compare(JobFlow o1, JobFlow o2) {
                     return o1.getSeq() - o2.getSeq();
                 }
             });
         }
-        return new PageImpl<>(sortList,pageable,page.getTotalElements());
+
+        return new PageImpl<>(listBody, pageable, page.getTotalElements());
     }
 
     @Override
