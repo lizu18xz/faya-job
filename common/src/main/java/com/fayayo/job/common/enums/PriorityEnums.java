@@ -8,19 +8,19 @@ import lombok.Getter;
  * @desc 任务流的优先级
  */
 @Getter
-public enum PriorityEnums {
+public enum PriorityEnums implements CodeEnum{
 
     HIGH_PRIORITY(1,"高"),
     MEDIUM_PRIORITY(2,"中"),
     LOW_PRIORITY(3,"低"),
     ;
 
-    private Integer name;
+    private Integer code;
 
     private String message;
 
-    PriorityEnums(Integer name, String message) {
-        this.name = name;
+    PriorityEnums(Integer code, String message) {
+        this.code = code;
         this.message = message;
     }
 }

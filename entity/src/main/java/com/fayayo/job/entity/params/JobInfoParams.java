@@ -23,6 +23,9 @@ public class JobInfoParams {
 
     private String id;
 
+    @NotNull(message = "所属任务流不能为空")
+    private String jobFlow;
+
     @NotNull(message = "执行周期不能为空")
     private String cron;
 
@@ -35,8 +38,6 @@ public class JobInfoParams {
     @NotNull(message = "执行器类型不能为空")
     private String executorType;//执行器类型
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date startAt;
 
     @NotNull(message = "负载策略不能为空")
     private Integer jobLoadBalance;

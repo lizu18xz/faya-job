@@ -8,6 +8,7 @@ import com.fayayo.job.common.result.ResultVOUtil;
 import com.fayayo.job.entity.JobFlow;
 import com.fayayo.job.entity.params.JobFlowParams;
 import com.fayayo.job.manager.service.JobFlowService;
+import com.fayayo.job.manager.vo.JobFlowVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -56,12 +57,12 @@ public class JobFlowController {
      *@返回值  List
      */
     @PostMapping("/list")
-    public ResultVO<Page<JobFlow>>list(@RequestParam(value = "page",defaultValue = "1")Integer page,
+    public ResultVO<Page<JobFlowVo>>list(@RequestParam(value = "page",defaultValue = "1")Integer page,
                                        @RequestParam(value = "size",defaultValue = "10")Integer size){
         log.info("查询执行器,pageNum={},pageSize={}",page,size);
         Sort sort=new Sort(Sort.Direction.DESC,"createTime");
         Pageable pageable = PageRequest.of((page-1),size,sort);
-        Page<JobFlow>jobFlowPage=jobFlowService.query(pageable);
+        Page<JobFlowVo>jobFlowPage=jobFlowService.query(pageable);
         log.info("查询执行器,结果={}", jobFlowPage);
         return ResultVOUtil.success(jobFlowPage);
     }
@@ -83,11 +84,11 @@ public class JobFlowController {
 
 
     @PostMapping("/detail")
-    public ResultVO<JobFlow> detail(@RequestParam(value = "id") String id){
+    public ResultVO<JobFlowVo> detail(@RequestParam(value = "id") String id){
 
-        JobFlow jobFlow=jobFlowService.findOne(id);
+        JobFlowVo jobFlowVo=jobFlowService.findById(id);
 
-        return ResultVOUtil.success(jobFlow);
+        return ResultVOUtil.success(jobFlowVo);
     }
 
 
@@ -95,6 +96,16 @@ public class JobFlowController {
     public ResultVO<JobFlow> delete(@RequestParam(value = "id") String id){
 
         jobFlowService.deleteById(id);
+
+        return ResultVOUtil.success();
+    }
+
+
+    @PostMapping("/upOrDown")
+    public ResultVO<JobFlow> upOrDown(@RequestParam(value = "id") String id,
+                                      @RequestParam(value = "status") Integer status){
+
+        jobFlowService.upOrDown(id,status);
 
         return ResultVOUtil.success();
     }

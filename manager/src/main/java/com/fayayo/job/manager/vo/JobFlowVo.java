@@ -28,11 +28,19 @@ public class JobFlowVo {
 
     private Integer jobCycle;
 
+    private String jobCycleDesc;
+
     private Integer jobCycleValue;
 
     private Integer flowPriority;
 
+    private String flowPriorityDesc;
+
+    private Integer flowStatus;
+
     private Date startAt;
+
+    private String startAtStr;
 
     private Date createTime;
 

@@ -16,6 +16,8 @@ public class JobInfo {
     @Id
     private String id;
 
+    private String jobFlow;
+
     private Integer jobGroup;
 
     private String cron;
@@ -33,8 +35,6 @@ public class JobInfo {
     private Integer retries;//重试次数
 
     private Integer jobStatus;
-
-    private Date startAt;
 
     //@JsonFormat(pattern = "YYYY-MM-DD HH:mm:ss")
     private Date createTime;

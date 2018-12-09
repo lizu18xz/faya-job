@@ -2,6 +2,7 @@ package com.fayayo.job.manager.service;
 
 import com.fayayo.job.entity.JobFlow;
 import com.fayayo.job.entity.params.JobFlowParams;
+import com.fayayo.job.manager.vo.JobFlowVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -19,12 +20,15 @@ public interface JobFlowService {
      */
     JobFlow findOne(String jobFlowId);
 
+    JobFlowVo findById(String jobFlowId);
 
-    Page<JobFlow> query(Pageable pageable);
+    Page<JobFlowVo> query(Pageable pageable);
 
 
     JobFlow findByName(String name);
 
     void deleteById(String id);
+
+    void upOrDown(String id,Integer status);
 
 }

@@ -35,6 +35,8 @@ public class JobFlow {
 
     private Integer flowPriority;
 
+    private Integer flowStatus;
+
     private Date startAt;
 
     private Date createTime;

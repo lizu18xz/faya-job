@@ -92,7 +92,7 @@ public class JobInfoServiceImpl implements JobInfoService {
         jobInfo=jobInfoRepository.save(jobInfo);
 
         //把任务加入到quartz调度
-        jobSchedulerCore.addJob(jobInfo.getId(),String.valueOf(jobInfo.getJobGroup()),jobInfo.getCron(),jobInfo.getStartAt());
+        jobSchedulerCore.addJob(jobInfo.getId(),String.valueOf(jobInfo.getJobGroup()),jobInfo.getCron(),null);
         return jobInfo;
     }
 

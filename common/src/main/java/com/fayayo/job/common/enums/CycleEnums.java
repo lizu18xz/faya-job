@@ -8,22 +8,22 @@ import lombok.Getter;
  * @desc 调度方式 单次任务,分钟任务,小时任务,天任务,周任务，月任务
  */
 @Getter
-public enum CycleEnums {
+public enum CycleEnums implements CodeEnum{
 
-    ONE(1,"单次任务"),
-    MINUTE(2,"分钟任务"),
-    HOUR(3,"小时任务"),
-    DAY(4,"天任务"),
-    WEEK(5,"周任务"),
-    MON(6,"月任务"),
+    ONE(1,"单次"),
+    MINUTE(2,"分钟"),
+    HOUR(3,"小时"),
+    DAY(4,"天"),
+    WEEK(5,"周"),
+    MON(6,"月"),
     ;
 
-    private Integer name;
+    private Integer code;
 
     private String message;
 
-    CycleEnums(Integer name, String message) {
-        this.name = name;
+    CycleEnums(Integer code, String message) {
+        this.code = code;
         this.message = message;
     }
 }

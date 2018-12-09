@@ -46,6 +46,7 @@ create table faya_job_flow(
   job_cycle int not null comment '任务执行周期 0-一次性 1-分钟任务 2-小时任务 3-天任务 4-周任务 5-月任务 6-cron自定义任务',
   job_cycle_value int not null comment '执行周期值',
   flow_priority int not null comment '任务流的优先级',
+  flow_status int not null comment '任务流状态,上线,下线,删除',
   start_at datetime comment '任务开始时间',
   create_time timestamp not null default current_timestamp comment '创建时间',
   update_time timestamp not null default current_timestamp on update current_timestamp comment '修改时间',
@@ -56,9 +57,11 @@ create table faya_job_flow(
 
 -- 任务信息表 job_info
 -- alert table faya_job_info add job_cycle int not null comment '任务执行周期 0-一次性 1-分钟任务 2-小时任务 3-天任务 4-周任务 5-月任务 6-cron自定义任务';
+-- alert table faya_job_info add job_flow int not null comment '所属任务流';
 drop table if exists faya_job_info;
 create table faya_job_info(
   id varchar(32) not null comment '主键',
+  job_flow varchar(32) not null comment '所属任务流',
   job_group int not null comment '所属执行器',
   cron varchar(64) not null comment '任务执行的cron表达式',
   job_desc varchar(256) not null comment '任务描述',
@@ -68,7 +71,6 @@ create table faya_job_info(
   job_ha int not null comment '任务ha的策略',
   retries int not null DEFAULT '0' comment '任务重试次数',
   job_status int not null comment '任务状态,上线,下线,删除',
-  start_at datetime comment '第一次任务开始时间',
   create_time timestamp not null default current_timestamp comment '创建时间',
   update_time timestamp not null default current_timestamp on update current_timestamp comment '修改时间',
   primary key (id)

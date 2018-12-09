@@ -20,6 +20,8 @@ public class JobInfoParam implements Serializable {
 
     private String logId;//没执行一次任务对应一次日志记录,用于唯一的标志
 
+    private String jobFlow;   //任务流id
+
     private Integer jobGroup;//执行器id
 
     private String cron;
@@ -39,8 +41,6 @@ public class JobInfoParam implements Serializable {
     private String jobGroupName;//执行器名称
 
     private Integer jobStatus;
-
-    private Date startAt;
 
     private String jobConfig;
 
