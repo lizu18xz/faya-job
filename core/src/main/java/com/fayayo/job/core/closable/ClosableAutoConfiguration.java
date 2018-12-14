@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * @desc 关闭指定资源的配置
  */
 @Configuration
-public class ClosableConfig {
+public class ClosableAutoConfiguration {
 
 
     @Bean

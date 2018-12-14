@@ -10,7 +10,7 @@ import java.util.List;
  * @version v1.0
  * @desc
  */
-@Service("serviceRegistry")
+//@Service("serviceRegistry")
 public class TestRegister implements ServiceRegistry {
     @Override
     public void register(String serviceName, String serviceAddress) {
