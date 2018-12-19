@@ -98,7 +98,7 @@ public class ExecutorRunImpl implements ExecutorRun {
             }
 
             File file = new File(path.toString());
-            if (file == null) {
+            if (!file.exists()) {
                 return Result.success(new LogResult(0, "日志文件不存在"));
             }
             RandomAccessFile raf = new RandomAccessFile(file, "r");

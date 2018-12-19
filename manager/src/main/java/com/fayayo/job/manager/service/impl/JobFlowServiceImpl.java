@@ -4,13 +4,17 @@ import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.common.enums.CycleEnums;
 import com.fayayo.job.common.enums.FlowStatusEnums;
 import com.fayayo.job.common.enums.PriorityEnums;
+import com.fayayo.job.common.enums.ResultEnum;
+import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.common.util.DateTimeUtil;
 import com.fayayo.job.common.util.EnumUtil;
 import com.fayayo.job.common.util.KeyUtil;
 import com.fayayo.job.entity.JobFlow;
+import com.fayayo.job.entity.JobInfo;
 import com.fayayo.job.entity.params.JobFlowParams;
 import com.fayayo.job.manager.repository.JobFlowRepository;
 import com.fayayo.job.manager.service.JobFlowService;
+import com.fayayo.job.manager.service.JobInfoService;
 import com.fayayo.job.manager.vo.JobFlowVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -41,6 +45,12 @@ public class JobFlowServiceImpl implements JobFlowService {
     @Autowired
     private JobFlowRepository jobFlowRepository;
 
+    @Autowired
+    private JobInfoService jobInfoService;
+
+    @Autowired
+    private JobSchedulerCore jobSchedulerCore;
+
 
     @Override
     public JobFlow saveOrUpdate(JobFlowParams jobFlowParams) {
@@ -51,6 +61,9 @@ public class JobFlowServiceImpl implements JobFlowService {
             jobFlow = findOne(id);
 
             BeanUtils.copyProperties(jobFlowParams, jobFlow);
+            if(jobFlow.getJobCycle().equals(CycleEnums.ONE.getCode())){
+                jobFlow.setJobCycleValue(0);
+            }
             jobFlowRepository.save(jobFlow);
 
         } else {//新增
@@ -58,6 +71,9 @@ public class JobFlowServiceImpl implements JobFlowService {
             BeanUtils.copyProperties(jobFlowParams, jobFlow);
             jobFlow.setId(keyId);
             jobFlow.setFlowStatus(FlowStatusEnums.OFF_LINE.getCode());//设置状态,默认没有上线
+            if(jobFlow.getJobCycle().equals(CycleEnums.ONE.getCode())){
+                jobFlow.setJobCycleValue(0);
+            }
             jobFlowRepository.save(jobFlow);
         }
         return jobFlow;
@@ -79,8 +95,8 @@ public class JobFlowServiceImpl implements JobFlowService {
 
         JobFlow jobFlow = findOne(jobFlowId);
 
-        JobFlowVo jobFlowVo=new JobFlowVo();
-        BeanUtils.copyProperties(jobFlow,jobFlowVo);
+        JobFlowVo jobFlowVo = new JobFlowVo();
+        BeanUtils.copyProperties(jobFlow, jobFlowVo);
         jobFlowVo.setStartAtStr(DateTimeUtil.dateToStr(jobFlow.getStartAt()));
 
         log.debug("{}查询单个任务执行器信息, 结果:{}", Constants.LOG_PREFIX, jobFlowVo);
@@ -97,8 +113,8 @@ public class JobFlowServiceImpl implements JobFlowService {
         List<JobFlowVo> listBody = new ArrayList<>();
         if (!CollectionUtils.isEmpty(sortList)) {
             sortList.stream().map(f -> {
-                JobFlowVo jobFlowVo=new JobFlowVo();
-                BeanUtils.copyProperties(f,jobFlowVo);
+                JobFlowVo jobFlowVo = new JobFlowVo();
+                BeanUtils.copyProperties(f, jobFlowVo);
                 jobFlowVo.setJobCycleDesc(EnumUtil.getByCode(f.getJobCycle(), CycleEnums.class).getMessage());
                 jobFlowVo.setFlowPriorityDesc(EnumUtil.getByCode(f.getFlowPriority(), PriorityEnums.class).getMessage());
                 return listBody.add(jobFlowVo);
@@ -127,27 +143,43 @@ public class JobFlowServiceImpl implements JobFlowService {
 
         //先删除任务流下面的任务
 
-
+        List<JobInfo> jobInfoList = jobInfoService.findByJobFlow(id);
+        if (!CollectionUtils.isEmpty(jobInfoList)) {
+            throw new CommonException(ResultEnum.JOB_FLOW_HAVE_JOB);
+        }
         jobFlowRepository.deleteById(id);
-
     }
 
-    //TODO  下线需要暂停任务流里面真正执行的任务
+
     @Override
     public void upOrDown(String id, Integer status) {
+        //获取任务流的信息
         JobFlow jobFlow = findOne(id);
 
-        if(FlowStatusEnums.ON_LINE.getCode()==status){//现在是上线状态，要改为下线
+        //获取执行的周期信息
+        Integer cycle = jobFlow.getJobCycle();
+        Integer value = jobFlow.getJobCycleValue();
 
+        List<JobInfo> jobInfoList = jobInfoService.findByJobFlow(id);
+        if (CollectionUtils.isEmpty(jobInfoList)) {
+            throw new CommonException(ResultEnum.JOB_FLOW_NOT_HAVE_JOB);
+        }
+        //TODO 获取任务流下面的任务,暂时只获取一个。
+        JobInfo jobInfo = jobInfoList.get(0);
+
+        if (FlowStatusEnums.ON_LINE.getCode() == status) {//现在是上线状态，要改为下线
+            //停止调度
+            jobSchedulerCore.removeFlowJob(jobInfo.getId(), String.valueOf(jobInfo.getJobGroup()));
             jobFlow.setFlowStatus(FlowStatusEnums.OFF_LINE.getCode());
 
-        }else {
+        } else {
+            //开始调度
+            jobSchedulerCore.addFlowJob(jobInfo.getId(), String.valueOf(jobInfo.getJobGroup()), jobFlow.getStartAt(), cycle, value);
             jobFlow.setFlowStatus(FlowStatusEnums.ON_LINE.getCode());
         }
 
         jobFlowRepository.save(jobFlow);
     }
-
 
 
     public static void main(String[] args) {

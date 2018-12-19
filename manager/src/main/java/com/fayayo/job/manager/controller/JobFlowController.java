@@ -38,7 +38,7 @@ public class JobFlowController {
     private JobFlowService jobFlowService;
 
     /**
-     *@描述 新增执行器
+     *@描述 新增任务流
      */
     @PostMapping("/save")
     public ResultVO add(@Valid JobFlowParams jobFlowParams, BindingResult bindingResult){
@@ -53,22 +53,22 @@ public class JobFlowController {
     }
 
     /**
-     *@描述 执行器列表展示
+     *@描述 任务流列表展示
      *@返回值  List
      */
     @PostMapping("/list")
     public ResultVO<Page<JobFlowVo>>list(@RequestParam(value = "page",defaultValue = "1")Integer page,
                                        @RequestParam(value = "size",defaultValue = "10")Integer size){
-        log.info("查询执行器,pageNum={},pageSize={}",page,size);
+        log.info("查询任务流,pageNum={},pageSize={}",page,size);
         Sort sort=new Sort(Sort.Direction.DESC,"createTime");
         Pageable pageable = PageRequest.of((page-1),size,sort);
         Page<JobFlowVo>jobFlowPage=jobFlowService.query(pageable);
-        log.info("查询执行器,结果={}", jobFlowPage);
+        log.info("查询任务流,结果={}", jobFlowPage);
         return ResultVOUtil.success(jobFlowPage);
     }
 
     /**
-     *@描述 修改执行器
+     *@描述 修改任务流
      */
     @PostMapping("/update")
     public ResultVO updateJob(@Valid  JobFlowParams jobFlowParams, BindingResult bindingResult){
@@ -77,7 +77,7 @@ public class JobFlowController {
             throw new CommonException(ResultEnum.PARAM_ERROR.getCode(),bindingResult.getFieldError().getDefaultMessage());
         }
 
-        log.info("{}修改执行器,参数:{}", Constants.LOG_PREFIX,jobFlowParams);
+        log.info("{}修改任务流,参数:{}", Constants.LOG_PREFIX,jobFlowParams);
         JobFlow jobFlow=jobFlowService.saveOrUpdate(jobFlowParams);
         return ResultVOUtil.success();
     }
@@ -101,6 +101,7 @@ public class JobFlowController {
     }
 
 
+    //任务流上下线
     @PostMapping("/upOrDown")
     public ResultVO<JobFlow> upOrDown(@RequestParam(value = "id") String id,
                                       @RequestParam(value = "status") Integer status){
@@ -109,6 +110,7 @@ public class JobFlowController {
 
         return ResultVOUtil.success();
     }
+
 
 
 }

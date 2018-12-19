@@ -16,6 +16,8 @@ public class JobInfoVo {
 
     private String id;
 
+    private String jobFlow;
+
     private Integer jobGroup;
 
     private String cron;
@@ -41,5 +43,12 @@ public class JobInfoVo {
     private Date updateTime;
 
     private String jobContent;
+
+    //任务流信息
+    private String flowName;
+
+    private Integer flowStatus;
+
+    private String cycle;
 
 }

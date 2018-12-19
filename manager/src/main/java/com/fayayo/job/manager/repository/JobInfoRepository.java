@@ -15,4 +15,6 @@ public interface JobInfoRepository extends JpaRepository<JobInfo,String>,JpaSpec
 
     List<JobInfo>findByJobGroup(Integer jobGroup);
 
+    List<JobInfo>findByJobFlow(String jobFlow);
+
 }

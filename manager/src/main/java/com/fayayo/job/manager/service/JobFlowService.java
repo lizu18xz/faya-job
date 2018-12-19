@@ -24,7 +24,6 @@ public interface JobFlowService {
 
     Page<JobFlowVo> query(Pageable pageable);
 
-
     JobFlow findByName(String name);
 
     void deleteById(String id);

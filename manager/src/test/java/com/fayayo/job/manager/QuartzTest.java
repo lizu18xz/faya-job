@@ -22,7 +22,9 @@ public class QuartzTest {
 
     public static void main(String[] args) throws ParseException {
 
-        min();//分钟任务
+        one();
+
+        //min();//分钟任务
 
         //hour();//小时任务
 
@@ -33,10 +35,51 @@ public class QuartzTest {
     }
     //CalendarIntervalScheduleBuilder.calendarIntervalSchedule()  intervalUnit 执行间隔的单位（秒，分钟，小时，天，月，年，星期）
 
+
+    private static void one() throws ParseException {
+
+        //指定开始时间
+        String time="2018-12-19 19:27:10";
+        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            //创建scheduler
+            Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+
+            //定义一个Trigger
+            Trigger trigger = newTrigger().withIdentity("trigger1", "group1")
+                    //.startNow()
+                    .startAt(simpleDateFormat.parse(time))
+                    .withSchedule(simpleSchedule()
+                            //.withRepeatCount(0)  //只执行一次
+                            .repeatForever()
+                            .withIntervalInSeconds(1)
+                            .withMisfireHandlingInstructionFireNow()//忽略已经MisFire的任务，并且立即执行调度。这通常只适用于只执行一次的任务。
+                    )
+                    .build();
+
+            JobDetail job = newJob(HelloQuartz.class)
+                    .withIdentity("job1", "group1")
+                    .usingJobData("name", "quartz")
+                    .build();
+
+            scheduler.scheduleJob(job, trigger);
+
+            scheduler.start();
+
+            /*//运行一段时间后关闭
+            Thread.sleep(10000);
+            scheduler.shutdown(true);*/
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
     private static void min() throws ParseException {
 
         //指定开始时间
-        String time="2018-11-01 20:02:01";
+        String time="2018-12-19 15:22:50";
         SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             //创建scheduler
@@ -47,7 +90,9 @@ public class QuartzTest {
                     //.startNow()
                     .startAt(simpleDateFormat.parse(time))
                     .withSchedule(calendarIntervalSchedule()
-                            .withIntervalInMinutes(1))
+                            .withIntervalInMinutes(1)
+                            .withMisfireHandlingInstructionDoNothing()
+                             )
                     .build();
 
 

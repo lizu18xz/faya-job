@@ -28,7 +28,7 @@ public class JobFlowParams {
     @NotNull(message = "任务流执行周期类型不能为空")
     private Integer jobCycle;
 
-    @NotNull(message = "任务流执行周期值不能为空")
+
     private Integer jobCycleValue;
 
     private Integer flowPriority;

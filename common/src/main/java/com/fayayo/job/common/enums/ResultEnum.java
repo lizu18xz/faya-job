@@ -57,7 +57,9 @@ public enum ResultEnum {
     JOB_INFO_NOT_EXIST(50003,"任务记录不存在"),
     JOB_NOT_SUPPORT_LOG(50004,"任务不支持在线查看日志"),
     GROUP_HAVE_JOB(50005,"请先删除执行器下配置的任务"),
-
+    JOB_FLOW_HAVE_JOB(50006,"请先删除任务流下配置的任务"),
+    JOB_FLOW_NOT_HAVE_JOB(50007,"请先去任务流下配置任务"),
+    ERROR_DELETE_JOB(50008,"删除任务请先下线任务所属任务流"),
     ;
 
     private Integer code;

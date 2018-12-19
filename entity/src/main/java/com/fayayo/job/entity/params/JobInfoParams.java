@@ -26,8 +26,6 @@ public class JobInfoParams {
     @NotNull(message = "所属任务流不能为空")
     private String jobFlow;
 
-    @NotNull(message = "执行周期不能为空")
-    private String cron;
 
     @NotNull(message = "任务的描述不能为空")
     private String jobDesc;

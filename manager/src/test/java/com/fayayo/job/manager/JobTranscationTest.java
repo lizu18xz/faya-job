@@ -30,7 +30,7 @@ public class JobTranscationTest {
     public void test(){
 
         JobInfoParams jobInfoParams=new JobInfoParams();
-        jobInfoParams.setCron("123");
+        //jobInfoParams.setCron("123");
         jobInfoParams.setExecutorType("DATAX");
         jobInfoParams.setJobConfig("112121212");
         jobInfoParams.setJobDesc("dddd");
@@ -40,7 +40,7 @@ public class JobTranscationTest {
         jobInfoParams.setJobType("BEAN");
         //jobInfoParams.setJobType("BEANBEANBEANBEANBEANBEANBEANBEANBEANBEAN");//error
 
-        jobInfoService.addJob(jobInfoParams);
+        jobInfoService.saveOrUpdate(jobInfoParams);
 
     }
 

@@ -19,15 +19,11 @@ public interface JobInfoService {
       *@描述 新增job
       */
 
-     JobInfo addJob(JobInfoParams jobInfoParams);
-
-     JobInfo updateJob(JobInfoParams jobInfoParams);
-
      void pauseJob(String jobId,String groupId);
 
      void resumeJob(String jobId,String groupId);
 
-     void deleteJob(String jobId,String groupId);
+     void deleteJob(String jobId);
 
      /**
       *@描述 获取jobInfo
@@ -36,9 +32,16 @@ public interface JobInfoService {
 
      JobInfoVo findJobInfoVo(String jobId);
 
-     Page<JobInfo>query(Pageable pageable,String executorType,Integer status);
+     Page<JobInfoVo>query(Pageable pageable,String executorType,Integer status);
 
 
      List<JobInfo>findByGroupId(Integer groupId);
 
+     //任务流下面的任务
+     JobInfo saveOrUpdate(JobInfoParams jobInfoParams);
+
+     Page<JobInfo>queryByFlowId(Pageable pageable,String flowId);
+
+
+     List<JobInfo> findByJobFlow(String flowId);
 }

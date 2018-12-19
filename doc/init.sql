@@ -63,7 +63,7 @@ create table faya_job_info(
   id varchar(32) not null comment '主键',
   job_flow varchar(32) not null comment '所属任务流',
   job_group int not null comment '所属执行器',
-  cron varchar(64) not null comment '任务执行的cron表达式',
+  cron varchar(64) DEFAULT null comment '任务执行的cron表达式',
   job_desc varchar(256) not null comment '任务描述',
   executor_type varchar(32) not null comment '执行器类型',
   job_type varchar(16) not null comment '任务类型(result,...)',
