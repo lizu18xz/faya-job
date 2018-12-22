@@ -36,9 +36,11 @@ public class JobRouteExchange {
             //解析address:port:weight
             String[]servers=e.split(":");
             if(servers.length==3){
-                return new Endpoint(servers[0],Integer.parseInt(servers[1]),Integer.parseInt(servers[2]));//构造Endpoint
+                //构造Endpoint
+                return new Endpoint(servers[0],Integer.parseInt(servers[1]),Integer.parseInt(servers[2]));
             }else if(servers.length==2){
-                return new Endpoint(servers[0],Integer.parseInt(servers[1]));//构造Endpoint
+                //构造Endpoint
+                return new Endpoint(servers[0],Integer.parseInt(servers[1]));
             }else {
                 log.info("{}服务地址注册格式有误!!!", Constants.LOG_PREFIX);
                 return null;
@@ -53,7 +55,7 @@ public class JobRouteExchange {
      *@创建时间  2018/8/12
      */
     public LoadBalance getLoadBalance(JobInfoParam jobInfo){
-        String jobId=jobInfo.getId();//获取jobId
+        String jobId=jobInfo.getId();
         //判断当前job是否已经存在负载策略
         LoadBalance loadBalance=loadBalanceCenter.get(jobId);
         if(loadBalance!=null){

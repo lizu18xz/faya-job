@@ -15,5 +15,6 @@ faya-job:
   register:
     server: 192.168.88.130:2181
     path: /job-register
+    open: true
   upload:
     tempPath: /upload

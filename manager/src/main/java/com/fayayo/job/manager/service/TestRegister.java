@@ -26,4 +26,9 @@ public class TestRegister implements ServiceRegistry {
     public String getData(String path) {
         return null;
     }
+
+    @Override
+    public void deleteNode(String path) {
+
+    }
 }

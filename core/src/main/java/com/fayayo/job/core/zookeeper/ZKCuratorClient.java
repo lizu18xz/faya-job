@@ -5,6 +5,7 @@ import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.core.closable.Closable;
 import com.fayayo.job.core.closable.ShutDownHook;
+import com.fayayo.job.core.zookeeper.cache.ServerCache;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
@@ -19,6 +20,7 @@ import org.apache.zookeeper.ZooDefs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -65,7 +67,10 @@ public class ZKCuratorClient implements Closable {
                         .forPath(zkProperties.getPath());
             }
             log.info("zookeeper服务器状态：{}", client.getState());
-            addChildWatch(zkProperties.getPath());
+            if(zkProperties.isOpen()){
+                addChildWatch(zkProperties.getPath());
+            }
+
             ShutDownHook.registerShutdownHook(this);//加入到hook事件
         } catch (Exception e) {
             log.error("zookeeper客户端连接、初始化错误...");
@@ -91,12 +96,14 @@ public class ZKCuratorClient implements Closable {
                 if (event.getType().equals(PathChildrenCacheEvent.Type.CHILD_ADDED)) {
 
                     String path = event.getData().getPath();
-                    log.info("{}当前系统存在的执行器:{}", Constants.LOG_PREFIX, path);
+                    log.info("{}注册新的执行器:{}", Constants.LOG_PREFIX, path);
 
                     addChildsWatch(path);
 
                 } else if (event.getType().equals(PathChildrenCacheEvent.Type.CHILD_REMOVED)) {
 
+                } else if (event.getType().equals(PathChildrenCacheEvent.Type.CONNECTION_RECONNECTED)) {
+                    log.info("{}重新启动zk", Constants.LOG_PREFIX);
                 }
 
             }
@@ -112,15 +119,16 @@ public class ZKCuratorClient implements Closable {
             @Override
             public void childEvent(CuratorFramework curatorFramework, PathChildrenCacheEvent event) throws Exception {
 
+                String data = new String(event.getData().getData());
+                String executorName=registerPath.substring(registerPath.lastIndexOf(Constants.JOIN_SYMBOL) + 1,registerPath.length());
                 if (event.getType().equals(PathChildrenCacheEvent.Type.CHILD_ADDED)) {
 
-                    String path = event.getData().getPath();
-                    String data = new String(event.getData().getData());
-                    log.info("{}执行器:{},有新服务加入:{}", Constants.LOG_PREFIX, registerPath.substring(registerPath.lastIndexOf(Constants.JOIN_SYMBOL) + 1,
-                            registerPath.length()), data);
-
+                    log.info("{}执行器:{},有新服务加入:{}", Constants.LOG_PREFIX, executorName, data);
+                    ServerCache.addCache(executorName,data);
                 } else if (event.getType().equals(PathChildrenCacheEvent.Type.CHILD_REMOVED)) {
+
                     log.info("{}执行器:{},有服务退出", Constants.LOG_PREFIX, registerPath);
+                    ServerCache.removeCache(executorName,data);
                 }
             }
         });
@@ -193,6 +201,27 @@ public class ZKCuratorClient implements Closable {
     /**
      * @描述 获取节点下面的值  ip地址
      */
+    public void deletePersistentNode(String path) {
+        String persistentNode = zkProperties.getPath() + Constants.JOIN_SYMBOL + path;
+        try {
+            if (client.checkExists().forPath(persistentNode) != null) {
+
+                client.delete().forPath(persistentNode);
+
+                log.info("{}delete createPersistentNode:{}", Constants.LOG_PREFIX, persistentNode);
+            } else {
+                log.info("zookeeper持久节点不存在...{}", persistentNode);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("zookeeper持久节点删除异常{}", persistentNode);
+        }
+    }
+
+
+    /**
+     * @描述 获取节点下面的值  ip地址
+     */
     public String getData(String path) {
 
         String dataPath = path;
@@ -205,6 +234,7 @@ public class ZKCuratorClient implements Closable {
         }
 
     }
+
 
     /**
      * @描述 关闭zk连接

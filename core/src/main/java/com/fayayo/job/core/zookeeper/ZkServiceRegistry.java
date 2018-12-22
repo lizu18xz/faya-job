@@ -2,6 +2,7 @@ package com.fayayo.job.core.zookeeper;
 
 import com.fayayo.job.common.constants.Constants;
 import com.fayayo.job.core.register.ServiceRegistry;
+import com.fayayo.job.core.zookeeper.cache.ServerCache;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
@@ -46,17 +47,25 @@ public class ZkServiceRegistry implements ServiceRegistry {
 
     @Override
     public List<String> discover(String executorName) {
+
+        //从本地缓存获取
+        List<String> list=ServerCache.getAllServer(executorName);
+        if(!CollectionUtils.isEmpty(list)){
+            return list;
+        }
+
         //获取service节点
         String serviceNode = zkProperties.getPath() + Constants.JOIN_SYMBOL + executorName;
 
-        List<String> list = zkCuratorClient.getChildNode(serviceNode);
+        list = zkCuratorClient.getChildNode(serviceNode);
         if (CollectionUtils.isEmpty(list)) {
             log.info("{}找不到对应执行器:{} 的注册地址,请先确定服务是否部署", Constants.LOG_PREFIX, executorName);
             return null;
         }
 
+        //返回具体的IP地址
         list = list.stream().map(e -> {
-            return serviceNode + Constants.JOIN_SYMBOL + e;//加上前缀返回完整的路径
+            return getData(serviceNode + Constants.JOIN_SYMBOL + e);//加上前缀返回完整的路径
         }).collect(Collectors.toList());
 
         return list;
@@ -65,6 +74,11 @@ public class ZkServiceRegistry implements ServiceRegistry {
     @Override
     public String getData(String path) {
         return zkCuratorClient.getData(path);
+    }
+
+    @Override
+    public void deleteNode(String path) {
+        zkCuratorClient.deletePersistentNode(path);
     }
 
 

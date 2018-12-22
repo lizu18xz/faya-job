@@ -52,7 +52,6 @@ public class ClusterSupport {
      */
     private static LoadBalance getLoadBalance(JobInfoParam jobInfoParam) {
 
-        //TODO 先从缓存获取ip地址列表，减少每次去zk查询的次数,有新执行器加入时候会主动刷新缓存
         String executorName = jobInfoParam.getJobGroupName();
 
         List<String> addressList = getExecutorAddress(executorName);
@@ -102,12 +101,8 @@ public class ClusterSupport {
         if (CollectionUtils.isEmpty(list)) {
             throw new CommonException(ResultEnum.EXECUTOR_ADDRESS_NOT_EXIST);
         }
-        //获取具体的ip
-        List addressList = list.stream().map(e -> {
-            return serviceRegistry.getData(e);
-        }).collect(Collectors.toList());
 
-        return addressList;
+        return list;
     }
 
 }

@@ -79,13 +79,7 @@ public class JobGroupServiceImpl implements JobGroupService{
                 BeanUtils.copyProperties(e,jobGroupVo);
                 List<String>list=serviceRegistry.discover(e.getName());
                 if(!CollectionUtils.isEmpty(list)){
-                    //获取具体的ip
-                    List<String> addressList = list.stream().map(p -> {
-
-                        return " 【"+serviceRegistry.getData(p)+"】";
-
-                    }).collect(Collectors.toList());
-                    jobGroupVo.setServerList(addressList);
+                    jobGroupVo.setServerList(list);
                 }
                 return jobGroupVo;
 
@@ -113,10 +107,15 @@ public class JobGroupServiceImpl implements JobGroupService{
     public void deleteById(Integer groupId) {
 
 
+        //判断执行器下面是否存在任务
         List<JobInfo>jobInfoList=jobInfoService.findByGroupId(groupId);
         if(!CollectionUtils.isEmpty(jobInfoList)){
             throw new CommonException(ResultEnum.GROUP_HAVE_JOB);
         }
+
+        JobGroup jobGroup=findOne(groupId);
+        //删除zk上面注册的执行器
+        serviceRegistry.deleteNode(jobGroup.getName());
 
         jobGroupRepository.deleteById(groupId);
     }

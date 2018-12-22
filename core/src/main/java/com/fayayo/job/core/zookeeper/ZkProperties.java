@@ -16,11 +16,10 @@ import org.springframework.context.annotation.Configuration;
 @Setter
 public class ZkProperties {
 
-
     private String server;
-
 
     private String path;
 
+    private boolean open;
 
 }

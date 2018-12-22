@@ -12,16 +12,23 @@ public interface ServiceRegistry {
 
     /**
      * @描述 服务注册
-     * @参数 服务名称(执行器标示)，服务地址
      */
     void register(String serviceName, String serviceAddress);
 
     /**
      * @描述 服务发现
-     * @参数 服务名称
      */
     List<String> discover(String executorName);
 
+    /**
+     * @描述 获取节点的值
+     */
     String getData(String path);
+
+
+    /**
+     * @描述 删除节点
+     */
+    void deleteNode(String path);
 
 }
