@@ -18,7 +18,7 @@
     <module>entity</module>
     <module>manager</module>
     <module>datax-executor</module>
-      <module>demo-executor</module>
+    <module>demo-executor</module>
   </modules>
 
   <properties>
