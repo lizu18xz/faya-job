@@ -141,6 +141,11 @@ public class JobSchedulerCore {
                     .withIntervalInMonths(cycleValue)
                     .withMisfireHandlingInstructionDoNothing();//所有的misfire不管，执行下一个周期的任务
 
+        }else if (cycle.equals(CycleEnums.CRON.getCode())) {
+            //TODO 暂时不支持
+            scheduleBuilder = CronScheduleBuilder.cronSchedule("").//quartz提出了misfire的理论，让任务在错过之后，还能正常的运行。
+                    withMisfireHandlingInstructionDoNothing();
+
         }
 
         scheduler(jobId, jobGroup, time, scheduleBuilder);
@@ -203,53 +208,6 @@ public class JobSchedulerCore {
             e.printStackTrace();
             log.error("删除调度任务异常:{}", e);
             throw new CommonException(ResultEnum.REMOVE_SCHEDULE_ERROR);
-        }
-    }
-
-
-    /**
-     * @描述 新增任务到quartz调度  name+group才是组成一个唯一key，通过key可以更新、停止任务等等。
-     * @参数 Cron 任务id, 任务组, 任务调度表达式
-     */
-    public Date addJob(String jobId, String jobGroup, String cron) {
-
-        try {
-            //判断是否重复添加job
-            if (checkExists(jobId, jobGroup)) {
-                log.info("addJob fail, job already exist, jobGroup:{}, jobName:{}", jobGroup, jobId);
-                throw new CommonException(ResultEnum.CREATE_SCHEDULE_ERROR);
-            }
-
-            JobKey jobKey = new JobKey(jobId, jobGroup);
-            TriggerKey triggerKey = TriggerKey.triggerKey(jobId, jobGroup);
-
-            //加入job到quartz
-            JobDetail jobDetail = JobBuilder.newJob(RpcJobBean.class)
-                    .withIdentity(jobKey)
-                    .build();
-
-            CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cron).//quartz提出了misfire的理论，让任务在错过之后，还能正常的运行。
-                    withMisfireHandlingInstructionDoNothing();//所有的misfire不管，执行下一个周期的任务
-
-            CronTrigger trigger = null;
-
-            trigger = (CronTrigger) TriggerBuilder
-                    .newTrigger()
-                    .withIdentity(triggerKey)
-                    .withSchedule(cronScheduleBuilder).build();
-            try {
-                scheduler.start();
-                Date date = scheduler.scheduleJob(jobDetail, trigger);
-                log.info("{}成功加入任务到调度中心-->jobName:{},jobGroup:{},任务开始启动时间:{}", Constants.LOG_PREFIX, jobId, jobGroup, DateTimeUtil.dateToStr(date));
-                return date;
-            } catch (SchedulerException e) {
-                e.printStackTrace();
-                log.error("创建调度任务失败");
-                throw new CommonException(ResultEnum.CREATE_SCHEDULE_ERROR);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new CommonException(ResultEnum.CREATE_SCHEDULE_ERROR);
         }
     }
 

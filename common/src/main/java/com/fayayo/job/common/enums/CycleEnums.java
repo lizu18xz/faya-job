@@ -16,6 +16,7 @@ public enum CycleEnums implements CodeEnum{
     DAY(4,"天"),
     WEEK(5,"周"),
     MON(6,"月"),
+    CRON(7,"cron表达式"),
     ;
 
     private Integer code;
