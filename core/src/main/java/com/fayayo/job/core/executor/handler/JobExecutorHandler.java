@@ -21,13 +21,6 @@ public abstract class JobExecutorHandler {
     public abstract Result<?> run(JobInfoParam jobInfoParam);
 
 
-    public void post() {
-
-        LogContextHolder.remove();
-
-        log.info("end JobExecutorHandler");
-    }
-
     public Result<?> execute(JobInfoParam jobInfoParam) {
 
         init();
@@ -39,5 +32,10 @@ public abstract class JobExecutorHandler {
         return result;
     }
 
+    public void post() {
 
+        LogContextHolder.remove();
+
+        log.info("end JobExecutorHandler");
+    }
 }

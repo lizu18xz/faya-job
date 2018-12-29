@@ -77,22 +77,17 @@ public class JobExecutor implements ApplicationContextAware,CallbackThread.CallB
         //启动服务端
         initServer();
 
-        //初始化日志 DATAX任务日志单独处理
-        if (!name.equals(JobExecutorTypeEnums.DATAX.getName())) {
-            if (!"".equals(logPath)) {
-                LoggerUtil.init(logPath);
-            }
-        }
+        //初始化日志
+        initLog();
 
         //注册服务
         initRegister();
 
         //启动结果处理线程
-        CallbackThread callbackThread=CallbackThread.getInstance();
-        callbackThread.setCallBackHandler(this);
-        callbackThread.start();
+        callbackStart();
 
     }
+
 
     /**
      * @描述 服务发现 把RPC的服务保存起来
@@ -149,11 +144,28 @@ public class JobExecutor implements ApplicationContextAware,CallbackThread.CallB
     }
 
 
+    private void initLog() {
+        //DATAX任务日志单独处理
+        if (!name.equals(JobExecutorTypeEnums.DATAX.getName())) {
+            if (!"".equals(logPath)) {
+                LoggerUtil.init(logPath);
+            }
+        }
+    }
+
+    private void callbackStart() {
+        CallbackThread callbackThread=CallbackThread.getInstance();
+        callbackThread.setCallBackHandler(this);
+        callbackThread.start();
+    }
+
+
     public void close() {
         log.info("{}start close resources......", Constants.LOG_PREFIX);
         nettyServer.close();
         CallbackThread.getInstance().toStop();
         ExecutorRunImpl.futureThread.shutdown();
+        LoggerUtil.stop();
     }
 
     //回调
