@@ -1,7 +1,7 @@
 package com.fayayo.job.core.transport.server;
 
-import com.fayayo.job.common.constants.Constants;
-import com.fayayo.job.core.log.LoggerUtil;
+import com.fayayo.job.core.extension.SpiMeta;
+import com.fayayo.job.core.rpc.RpcServer;
 import com.fayayo.job.core.service.ExecutorRun;
 import com.fayayo.job.core.service.impl.ExecutorRunImpl;
 import com.fayayo.job.core.thread.StandardThreadExecutor;
@@ -16,7 +16,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.extern.slf4j.Slf4j;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -26,8 +25,9 @@ import java.util.concurrent.CountDownLatch;
  * @version v1.0
  * @desc netty 服务端类
  */
+@SpiMeta(name = "nettyServer")
 @Slf4j
-public class NettyServer {
+public class NettyServer implements RpcServer{
 
     //保存调度任务接口和实现类的映射关系
     private static Map<String, Object> serviceCenter = new HashMap<String, Object>();
@@ -38,16 +38,17 @@ public class NettyServer {
 
     private StandardThreadExecutor standardThreadExecutor = null;
 
-    public NettyServer(String server, Integer port, String logPath) {
+    EventLoopGroup bossGroup = null;
+    EventLoopGroup workerGroup = null;
+
+    @Override
+    public void init(Integer port, String server, String logPath) {
         this.server = server;
         this.port = port;
         serviceCenter.put(ExecutorRun.class.getName(), new ExecutorRunImpl(new StringBuilder().
                 append(server).append(":").
                 append(port).toString(), logPath));//保存调度任务接口和实现类的映射关系
     }
-
-    EventLoopGroup bossGroup = null;
-    EventLoopGroup workerGroup = null;
 
     /**
      * @描述 启动服务端
@@ -100,8 +101,8 @@ public class NettyServer {
         }
     }
 
-    //关闭资源
-    public void close() {
+    @Override
+    public void closeResource() {
         try {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
@@ -111,5 +112,4 @@ public class NettyServer {
             e.printStackTrace();
         }
     }
-
 }

@@ -17,8 +17,10 @@ import com.fayayo.job.core.callback.CallBackParam;
 import com.fayayo.job.core.callback.CallbackThread;
 import com.fayayo.job.core.callback.task.HandlerTask;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.hadoop.ipc.ProtocolSignature;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Date;
 import java.util.concurrent.Future;
@@ -124,4 +126,13 @@ public class ExecutorRunImpl implements ExecutorRun {
         return Result.success(new LogResult(pointer, result.toString()));
     }
 
+    @Override
+    public long getProtocolVersion(String s, long l) throws IOException {
+        return ExecutorRun.versionID;
+    }
+
+    @Override
+    public ProtocolSignature getProtocolSignature(String s, long l, int i) throws IOException {
+        return null;
+    }
 }

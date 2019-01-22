@@ -1,0 +1,2 @@
+com.fayayo.job.core.transport.server.NettyServer
+com.fayayo.job.core.rpc.hadoop.HadoopServer

@@ -13,7 +13,7 @@ server:
 
 faya-job:
   register:
-    server: 192.168.88.130:2181
+    server: 192.168.88.129:2181
     path: /job-register
     open: true
   upload:

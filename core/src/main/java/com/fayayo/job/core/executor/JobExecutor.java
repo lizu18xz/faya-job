@@ -5,10 +5,12 @@ import com.fayayo.job.common.enums.JobExecutorTypeEnums;
 import com.fayayo.job.common.enums.ResultEnum;
 import com.fayayo.job.common.exception.CommonException;
 import com.fayayo.job.core.annotation.FayaService;
+import com.fayayo.job.core.extension.ExtensionLoader;
 import com.fayayo.job.core.register.ServiceRegistry;
 import com.fayayo.job.core.executor.handler.JobExecutorHandler;
 import com.fayayo.job.core.executor.result.Result;
 import com.fayayo.job.core.log.LoggerUtil;
+import com.fayayo.job.core.rpc.RpcServer;
 import com.fayayo.job.core.service.impl.ExecutorRunImpl;
 import com.fayayo.job.core.callback.CallbackThread;
 import com.fayayo.job.core.transport.server.NettyServer;
@@ -29,7 +31,7 @@ import java.util.concurrent.CountDownLatch;
  * @desc Task执行器 注册，获取服务等功能
  */
 @Slf4j
-public class JobExecutor implements ApplicationContextAware,CallbackThread.CallBackHandler {
+public class JobExecutor implements ApplicationContextAware, CallbackThread.CallBackHandler {
 
     private static ApplicationContext applicationContext;
 
@@ -119,14 +121,18 @@ public class JobExecutor implements ApplicationContextAware,CallbackThread.CallB
     }
 
     private void initServer() {
+
         log.info("{}执行器初始化,server:{},port:{}", Constants.LOG_PREFIX, server, port);
         //然后启动这个服务端，准备接收请求
         CountDownLatch countDownLatch = new CountDownLatch(1);//阻塞线程
-        nettyServer = new NettyServer(server, port, logPath);
-        nettyServer.start(countDownLatch);
+
         try {
+            //获取server 默认netty
+            RpcServer rpcServer = ExtensionLoader.getExtensionLoader(RpcServer.class).getExtension("nettyServer");
+            rpcServer.init(port, server, logPath);
+            rpcServer.start(countDownLatch);
             countDownLatch.await();
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         log.info("{}服务端启动完毕,注册服务到注册中心", Constants.LOG_PREFIX);
@@ -154,15 +160,14 @@ public class JobExecutor implements ApplicationContextAware,CallbackThread.CallB
     }
 
     private void callbackStart() {
-        CallbackThread callbackThread=CallbackThread.getInstance();
+        CallbackThread callbackThread = CallbackThread.getInstance();
         callbackThread.setCallBackHandler(this);
         callbackThread.start();
     }
 
-
     public void close() {
         log.info("{}start close resources......", Constants.LOG_PREFIX);
-        nettyServer.close();
+        nettyServer.closeResource();
         CallbackThread.getInstance().toStop();
         ExecutorRunImpl.futureThread.shutdown();
         LoggerUtil.stop();
@@ -170,7 +175,7 @@ public class JobExecutor implements ApplicationContextAware,CallbackThread.CallB
 
     //回调
     @Override
-    public void onNewMessageArrived(String jobId,Result<?> result) {
+    public void onNewMessageArrived(String jobId, Result<?> result) {
         log.info("{}Callable get jobId:{},Result:{}", Constants.LOG_PREFIX, jobId, result.getData());
 
     }

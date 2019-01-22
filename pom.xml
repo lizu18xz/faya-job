@@ -41,6 +41,7 @@
     <joda.version>2.9.9</joda.version>
     <fastjson.version>1.2.29</fastjson.version>
     <hessian.version>4.0.38</hessian.version>
+    <hadoop-common.version>2.7.2</hadoop-common.version>
   </properties>
 
   <dependencyManagement>
@@ -217,6 +218,12 @@
         <groupId>joda-time</groupId>
         <artifactId>joda-time</artifactId>
         <version>${joda.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-common</artifactId>
+        <version>${hadoop-common.version}</version>
       </dependency>
 
     </dependencies>

@@ -14,7 +14,8 @@ public class TransportServerTest {
     //服务启动
     public static void main(String[] args) {
         try {
-            NettyServer nettyServer=new NettyServer("127.0.0.1",8888,"ccc");
+            NettyServer nettyServer=new NettyServer();
+            nettyServer.init(8888,"127.0.0.1","ccc");
             nettyServer.start(new CountDownLatch(1));
         }catch (Exception e){
             e.printStackTrace();

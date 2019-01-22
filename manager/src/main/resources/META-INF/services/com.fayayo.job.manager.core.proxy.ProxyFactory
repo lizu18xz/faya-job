@@ -1,1 +1,2 @@
 com.fayayo.job.manager.core.proxy.impl.JdkProxyFactory
+com.fayayo.job.manager.core.proxy.impl.HadoopRpcProxyFactory

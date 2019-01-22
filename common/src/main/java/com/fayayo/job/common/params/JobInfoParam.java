@@ -1,9 +1,16 @@
 package com.fayayo.job.common.params;
 
+import com.fayayo.job.common.util.JsonMapper;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.io.WritableUtils;
+import org.springframework.beans.BeanUtils;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -14,7 +21,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
-public class JobInfoParam implements Serializable {
+public class JobInfoParam implements Serializable,Writable {
 
     private String id;
 
@@ -52,5 +59,18 @@ public class JobInfoParam implements Serializable {
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this);
+    }
+
+    @Override
+    public void write(DataOutput dataOutput) throws IOException {
+        String jsonStr = JsonMapper.obj2String(this);
+        WritableUtils.writeString(dataOutput, jsonStr);
+    }
+
+    @Override
+    public void readFields(DataInput dataInput) throws IOException {
+        String jsonStr = WritableUtils.readString(dataInput);
+        JobInfoParam event = JsonMapper.string2Obj(jsonStr, JobInfoParam.class);
+        BeanUtils.copyProperties(event, this);
     }
 }

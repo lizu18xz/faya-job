@@ -32,5 +32,6 @@ public class Constants {
      * */
     public static final String PROXY_JDK = "jdk";
 
+    public static final String PROXY_HADOOP = "hadoop-rpc";
 
 }
