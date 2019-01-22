@@ -44,7 +44,7 @@ Auto Configureation
 
 (4) transport层的实现
 - 使用Netty实现RPC的通信
-- 直接使用hadoop-common包下面的RPC
+- 直接使用hadoop-common包下面的RPC(暂时不可以使用,获取日志的请求还没有进行改造)
 
 (5) 业务相关的实现
 - 调度流程，日志输出等
